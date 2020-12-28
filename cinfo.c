@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2020-12-27T21:38:33+0100
+ * date:       2020-12-28T13:08:35+0100
  */
 
 #include <stdio.h>
@@ -44,7 +44,7 @@ void detectDistro() {
 }
 
 void detectKernel() {
-    FILE *pathKernel = popen("uname -rsm", "r");
+    FILE *pathKernel = popen("uname -r", "r");
 
     fscanf(pathKernel, "%[^\n]s", kernel);
     fclose(pathKernel);
@@ -75,24 +75,29 @@ void detectPackages() {
 }
 
 void detectCPU() {
-    FILE *cpuinfo = popen("lscpu \
-            | grep 'Modellname:' \
-            | sed -r 's/Modellname:\\s{1,}//'", "r");
+    FILE *cpuinfo = popen("cat /proc/cpuinfo \
+            | grep 'model name	:' \
+            | sed -r 's/model name	:\\s{1,}//'", "r");
 
     fscanf(cpuinfo, "%[^\n]s", cpu);
     fclose(cpuinfo);
 }
 
 void detectRAM() {
-    FILE *used = popen("vmstat -s -S M \
-            | grep ' benutzter Speicher'", "r");
-    FILE *total = popen("vmstat -s -S M \
-            | grep ' Gesamtspeicher'", "r");
+    FILE *total = popen("cat /proc/meminfo \
+            | grep 'MemTotal:' \
+            | sed 's/MemTotal://'", "r");
+    FILE *used = popen("cat /proc/meminfo \
+            | grep 'MemFree:' \
+            | sed 's/MemFree://'", "r");
 
-    fscanf(used, "%d", &ramused);
     fscanf(total, "%d", &ramtotal);
-    fclose(used);
+    fscanf(used, "%d", &ramused);
     fclose(total);
+    fclose(used);
+
+    ramtotal = (ramtotal/1024);
+    ramused = (ramused/1024);
 }
 
 void detectUptime() {
@@ -131,23 +136,26 @@ void getSysinfo() {
 
 int main() {
     getSysinfo();
-    printf("\n%s     %s%s@%s%s%s\n", \
+    printf("\n");
+    printf("%s%s%s@%s%s%s\n", \
             bold, user, reset, bold, host, reset);
-    printf("%s██%s██%s OS     %s\n", \
-            black, bold, reset, os);
-    printf("%s██%s██%s MODEL  %s %s\n", \
-            red, bold, reset, model, modelversion);
-    printf("%s██%s██%s KERNEL %s\n", \
-            green, bold, reset, kernel);
-    printf("%s██%s██%s UPTIME %dd %dh %dm\n", \
-            yellow, bold, reset, day, hour, min);
-    printf("%s██%s██%s PKGS   %d(pacman)\n", \
-            blue, bold, reset, pacman);
-    printf("%s██%s██%s SHELL  %s\n", \
-            magenta, bold, reset, shell);
-    printf("%s██%s██%s CPU    %s\n", \
-            cyan, bold, reset, cpu);
-    printf("%s██%s██%s RAM    %dM / %dM\n\n", \
-            white, bold, reset, ramused, ramtotal);
+    printf("─────────────┬──────────────────────────────────────────────────────────────────\n");
+    printf(" %s██%s██%s%s     os %s│ %s\n", \
+            black, bold, reset, bold, reset, os);
+    printf(" %s██%s██%s%s  model %s│ %s %s\n", \
+            red, bold, reset, bold, reset, model, modelversion);
+    printf(" %s██%s██%s%s kernel %s│ %s\n", \
+            green, bold, reset, bold, reset, kernel);
+    printf(" %s██%s██%s%s uptime %s│ %dd %dh %dm\n", \
+            yellow, bold, reset, bold, reset, day, hour, min);
+    printf(" %s██%s██%s%s   pkgs %s│ %d(pacman)\n", \
+            blue, bold, reset, bold, reset, pacman);
+    printf(" %s██%s██%s%s  shell %s│ %s\n", \
+            magenta, bold, reset, bold, reset, shell);
+    printf(" %s██%s██%s%s    cpu %s│ %s\n", \
+            cyan, bold, reset, bold, reset, cpu);
+    printf(" %s██%s██%s%s    ram %s│ %dM / %dM\n", \
+            white, bold, reset, bold, reset, ramused, ramtotal);
+    printf("\n");
     return 0;
 }
