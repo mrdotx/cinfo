@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2020-12-28T13:08:35+0100
+ * date:       2020-12-28T23:32:53+0100
  */
 
 #include <stdio.h>
@@ -12,7 +12,7 @@ int day,
     min,
     sec,
     pacman,
-    ramused,
+    ramavailable,
     ramtotal;
 
 char user[50],
@@ -84,20 +84,20 @@ void detectCPU() {
 }
 
 void detectRAM() {
+    FILE *available = popen("cat /proc/meminfo \
+            | grep 'MemAvailable:' \
+            | sed 's/MemAvailable://'", "r");
     FILE *total = popen("cat /proc/meminfo \
             | grep 'MemTotal:' \
             | sed 's/MemTotal://'", "r");
-    FILE *used = popen("cat /proc/meminfo \
-            | grep 'MemFree:' \
-            | sed 's/MemFree://'", "r");
 
+    fscanf(available, "%d", &ramavailable);
     fscanf(total, "%d", &ramtotal);
-    fscanf(used, "%d", &ramused);
+    fclose(available);
     fclose(total);
-    fclose(used);
 
+    ramavailable = ((ramtotal-ramavailable)/1024);
     ramtotal = (ramtotal/1024);
-    ramused = (ramused/1024);
 }
 
 void detectUptime() {
@@ -155,7 +155,7 @@ int main() {
     printf(" %s██%s██%s%s    cpu %s│ %s\n", \
             cyan, bold, reset, bold, reset, cpu);
     printf(" %s██%s██%s%s    ram %s│ %dM / %dM\n", \
-            white, bold, reset, bold, reset, ramused, ramtotal);
+            white, bold, reset, bold, reset, ramavailable, ramtotal);
     printf("\n");
     return 0;
 }
