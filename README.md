@@ -1,6 +1,6 @@
 # cinfo
 
-a minimal system information tool for linux-based operating systems
+a minimal system information tool for arch-based distributions
 
 ![screenshot](screenshot.png)
 
@@ -19,5 +19,5 @@ make clean install
 ## run
 
 ```bash
-cinfo
+cinfo -h
 ```
