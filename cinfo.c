@@ -2,10 +2,21 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2020-12-28T23:32:53+0100
+ * date:       2020-12-29T18:39:46+0100
  */
 
 #include <stdio.h>
+
+#define reset "\x1b[0m"
+#define bold "\x1b[1m"
+#define black "\x1b[30m"
+#define red "\x1b[31m"
+#define green "\x1b[32m"
+#define yellow "\x1b[33m"
+#define blue "\x1b[34m"
+#define magenta "\x1b[35m"
+#define cyan "\x1b[36m"
+#define white "\x1b[37m"
 
 int day,
     hour,
@@ -123,39 +134,37 @@ void getSysinfo() {
     detectRAM();
 }
 
-#define reset "\x1b[0m"
-#define bold "\x1b[1m"
-#define black "\x1b[30m"
-#define red "\x1b[31m"
-#define green "\x1b[32m"
-#define yellow "\x1b[33m"
-#define blue "\x1b[34m"
-#define magenta "\x1b[35m"
-#define cyan "\x1b[36m"
-#define white "\x1b[37m"
-
 int main() {
+    char lineleft[] = "─────────────",
+         linedivider[] = "┬",
+         lineright[] = "──────────────────────────────────────────────────────────────────",
+         divider[] = "│",
+         blocks[] = "██";
+
     getSysinfo();
+
     printf("\n");
     printf("%s%s%s@%s%s%s\n", \
             bold, user, reset, bold, host, reset);
-    printf("─────────────┬──────────────────────────────────────────────────────────────────\n");
-    printf(" %s██%s██%s%s     os %s│ %s\n", \
-            black, bold, reset, bold, reset, os);
-    printf(" %s██%s██%s%s  model %s│ %s %s\n", \
-            red, bold, reset, bold, reset, model, modelversion);
-    printf(" %s██%s██%s%s kernel %s│ %s\n", \
-            green, bold, reset, bold, reset, kernel);
-    printf(" %s██%s██%s%s uptime %s│ %dd %dh %dm\n", \
-            yellow, bold, reset, bold, reset, day, hour, min);
-    printf(" %s██%s██%s%s   pkgs %s│ %d(pacman)\n", \
-            blue, bold, reset, bold, reset, pacman);
-    printf(" %s██%s██%s%s  shell %s│ %s\n", \
-            magenta, bold, reset, bold, reset, shell);
-    printf(" %s██%s██%s%s    cpu %s│ %s\n", \
-            cyan, bold, reset, bold, reset, cpu);
-    printf(" %s██%s██%s%s    ram %s│ %dM / %dM\n", \
-            white, bold, reset, bold, reset, ramavailable, ramtotal);
+    printf("%s%s%s\n",
+            lineleft, linedivider, lineright);
+    printf(" %s%s%s%s%s%s     os %s%s %s\n", \
+            black, blocks, bold, blocks, reset, bold, divider, reset, os);
+    printf(" %s%s%s%s%s%s  model %s%s %s %s\n", \
+            red, blocks, bold, blocks, reset, bold, divider, reset, model, modelversion);
+    printf(" %s%s%s%s%s%s kernel %s%s %s\n", \
+            green, blocks, bold, blocks, reset, bold, divider, reset, kernel);
+    printf(" %s%s%s%s%s%s uptime %s%s %dd %dh %dm\n", \
+            yellow, blocks, bold, blocks, reset, bold, divider, reset, day, hour, min);
+    printf(" %s%s%s%s%s%s   pkgs %s%s %d(pacman)\n", \
+            blue, blocks, bold, blocks, reset, bold, divider, reset, pacman);
+    printf(" %s%s%s%s%s%s  shell %s%s %s\n", \
+            magenta, blocks, bold, blocks, reset, bold, divider, reset, shell);
+    printf(" %s%s%s%s%s%s    cpu %s%s %s\n", \
+            cyan, blocks, bold, blocks, reset, bold, divider, reset, cpu);
+    printf(" %s%s%s%s%s%s    ram %s%s %dM / %dM\n", \
+            white, blocks, bold, blocks, reset, bold, divider, reset, ramavailable, ramtotal);
     printf("\n");
+
     return 0;
 }
