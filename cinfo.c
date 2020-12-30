@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2020-12-29T20:29:40+0100
+ * date:       2020-12-30T11:20:21+0100
  */
 
 #include <stdio.h>
@@ -80,13 +80,21 @@ void detectKernel() {
 }
 
 void detectModel() {
-    FILE *productName = fopen("/sys/devices/virtual/dmi/id/product_name", "r");
-    FILE *productVersion = fopen("/sys/devices/virtual/dmi/id/product_version", "r");
+    FILE *file;
 
-    fscanf(productName, "%[^\n]s", model);
-    fscanf(productVersion, "%s", modelversion);
-    fclose(productName);
-    fclose(productVersion);
+    if ((file = fopen("/sys/devices/virtual/dmi/id/product_name", "r")))
+    {
+        fscanf(file, "%s", model);
+        fclose(file);
+    } else {
+        strcpy(model, "not found");
+    }
+
+    if ((file = fopen("/sys/devices/virtual/dmi/id/product_version", "r")))
+    {
+        fscanf(file, "%s", modelversion);
+        fclose(file);
+    }
 }
 
 void detectShell() {
@@ -130,14 +138,17 @@ void detectRAM() {
 }
 
 void detectUptime() {
-    FILE *pathUptime = fopen("/proc/uptime", "r");
+    FILE *file;
 
-    fscanf(pathUptime, "%d", &sec);
-    fclose(pathUptime);
+    if ((file = fopen("/proc/uptime", "r")))
+    {
+        fscanf(file, "%d", &sec);
+        fclose(file);
 
-    day = (sec/60/60/24);
-    hour = (sec/60/60%24);
-    min = (sec/60%60);
+        day = (sec/60/60/24);
+        hour = (sec/60/60%24);
+        min = (sec/60%60);
+    }
 }
 
 void getSysinfo() {
