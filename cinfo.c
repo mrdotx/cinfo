@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2020-12-30T11:20:21+0100
+ * date:       2020-12-30T11:29:49+0100
  */
 
 #include <stdio.h>
@@ -176,7 +176,7 @@ int main(int argc, char *argv[]) {
             strcpy(lineright, "-----------------------------------------------------------------------");
             strcpy(divider, "|");
 
-            printf("\n%s@%s\n", user, host);
+            printf("%s@%s\n", user, host);
             printf("%s%s%s\n", lineleft, linedivider, lineright);
 
             printf("     os %s %s\n", divider, os);
@@ -188,10 +188,10 @@ int main(int argc, char *argv[]) {
             printf("    cpu %s %s\n", divider, cpu);
             printf("    ram %s %dM / %dM\n\n", divider, ramavailable, ramtotal);
         } else if (strcmp(argv[1],"-h") == 0) {
-            printf("\n%s\n\n", help);
+            printf("%s\n\n", help);
         }
     } else {
-        printf("\n%s%s%s@%s%s%s\n", bold, user, reset, bold, host, reset);
+        printf("%s%s%s@%s%s%s\n", bold, user, reset, bold, host, reset);
         printf("%s%s%s\n", lineleft, linedivider, lineright);
 
         printf(" %s%s%s%s%s", black, blocks, bold, blocks, reset);
