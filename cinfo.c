@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2020-12-30T18:22:14+0100
+ * date:       2020-12-30T18:33:01+0100
  */
 
 #include <stdio.h>
@@ -33,13 +33,13 @@
 
 char user[50],
      host[50],
-     zeit[17],
+     zeit[20],
      os[50],
-     model[75],
+     model[80],
      kernel[50],
      uptime[50],
-     packages[12],
-     shell[6],
+     packages[15],
+     shell[10],
      cpu[50],
      ram[10];
 
