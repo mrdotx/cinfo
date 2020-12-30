@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2020-12-30T18:33:01+0100
+ * date:       2020-12-30T18:52:33+0100
  */
 
 #include <stdio.h>
@@ -35,13 +35,13 @@ char user[50],
      host[50],
      zeit[20],
      os[50],
-     model[80],
+     model[65],
      kernel[50],
      uptime[50],
      packages[15],
      shell[10],
      cpu[50],
-     ram[10];
+     ram[15];
 
 int fexists(const char *fname)
 {
