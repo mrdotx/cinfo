@@ -2,11 +2,12 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2020-12-30T11:29:49+0100
+ * date:       2020-12-30T14:17:10+0100
  */
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #define help "cinfo [-h] -- a minimal system information tool\n\
               for arch-based distributions\n\
@@ -40,11 +41,11 @@ int day,
 
 char user[50],
      host[50],
-     os[25],
+     os[50],
      model[50],
      modelversion[25],
      kernel[50],
-     shell[10],
+     shell[15],
      cpu[50];
 
 char lineleft[] = "─────────────",
@@ -53,17 +54,35 @@ char lineleft[] = "─────────────",
      divider[] = "│",
      blocks[] = "██";
 
-void detectUser() {
-    FILE *userName = popen("printf '%s\n' $USER", "r");
-    FILE *userHost = popen("cat /proc/sys/kernel/hostname", "r");
-
-    fscanf(userName, "%s", user);
-    fscanf(userHost, "%s", host);
-    fclose(userName);
-    fclose(userHost);
+int fexists(const char *fname)
+{
+    FILE *file;
+    if ((file = fopen(fname, "r")))
+    {
+        fclose(file);
+        return 1;
+    }
+    return 0;
 }
 
-void detectDistro() {
+void detectUser()
+{
+    FILE *userName = popen("printf '%s\n' $USER", "r");
+
+    fscanf(userName, "%s", user);
+    fclose(userName);
+
+    if (fexists("/proc/sys/kernel/hostname") == 1)
+    {
+        FILE *userHost = fopen("/proc/sys/kernel/hostname", "r");
+
+        fscanf(userHost, "%s", host);
+        fclose(userHost);
+    }
+}
+
+void detectDistro()
+{
     FILE *distroName = popen("cat /etc/*-release \
             | grep 'PRETTY_NAME=' \
             | cut -d '\"' -f2", "r");
@@ -72,78 +91,96 @@ void detectDistro() {
     fclose(distroName);
 }
 
-void detectKernel() {
-    FILE *pathKernel = popen("uname -r", "r");
+void detectKernel()
+{
+    if (fexists("/proc/sys/kernel/osrelease") == 1)
+    {
+        FILE *pathKernel = fopen("/proc/sys/kernel/osrelease", "r");
 
-    fscanf(pathKernel, "%[^\n]s", kernel);
-    fclose(pathKernel);
+        fscanf(pathKernel, "%[^\n]s", kernel);
+        fclose(pathKernel);
+    }
 }
 
-void detectModel() {
-    FILE *file;
-
-    if ((file = fopen("/sys/devices/virtual/dmi/id/product_name", "r")))
+void detectModel()
+{
+    if (fexists("/sys/devices/virtual/dmi/id/product_name") == 1)
     {
-        fscanf(file, "%s", model);
-        fclose(file);
+        FILE *productName = fopen("/sys/devices/virtual/dmi/id/product_name", "r");
+
+        fscanf(productName, "%[^\n]s", model);
+        fclose(productName);
     } else {
         strcpy(model, "not found");
     }
 
-    if ((file = fopen("/sys/devices/virtual/dmi/id/product_version", "r")))
+    if (fexists("/sys/devices/virtual/dmi/id/product_version") == 1)
     {
-        fscanf(file, "%s", modelversion);
-        fclose(file);
+        FILE *productVersion = fopen("/sys/devices/virtual/dmi/id/product_version", "r");
+
+        fscanf(productVersion, "%s", modelversion);
+        fclose(productVersion);
     }
 }
 
-void detectShell() {
+void detectShell()
+{
     FILE *shellpath = popen("basename $SHELL", "r");
 
     fscanf(shellpath, "%s", shell);
     fclose(shellpath);
 }
 
-void detectPackages() {
+void detectPackages()
+{
     FILE *packageman = popen("pacman -Q | wc -l", "r");
 
     fscanf(packageman, "%d", &pacman);
     fclose(packageman);
 }
 
-void detectCPU() {
-    FILE *cpuinfo = popen("cat /proc/cpuinfo \
-            | grep 'model name	:' \
-            | sed -r 's/model name	:\\s{1,}//'", "r");
-
-    fscanf(cpuinfo, "%[^\n]s", cpu);
-    fclose(cpuinfo);
-}
-
-void detectRAM() {
-    FILE *available = popen("cat /proc/meminfo \
-            | grep 'MemAvailable:' \
-            | sed 's/MemAvailable://'", "r");
-    FILE *total = popen("cat /proc/meminfo \
-            | grep 'MemTotal:' \
-            | sed 's/MemTotal://'", "r");
-
-    fscanf(available, "%d", &ramavailable);
-    fscanf(total, "%d", &ramtotal);
-    fclose(available);
-    fclose(total);
-
-    ramavailable = ((ramtotal-ramavailable)/1024);
-    ramtotal = (ramtotal/1024);
-}
-
-void detectUptime() {
-    FILE *file;
-
-    if ((file = fopen("/proc/uptime", "r")))
+void detectCPU()
+{
+    if (fexists("/proc/cpuinfo") == 1)
     {
-        fscanf(file, "%d", &sec);
-        fclose(file);
+        FILE *cpuinfo = popen("cat /proc/cpuinfo \
+                | grep 'model name	:' \
+                | sed -r 's/model name	:\\s{1,}//'", "r");
+
+        fscanf(cpuinfo, "%[^\n]s", cpu);
+        fclose(cpuinfo);
+    }
+}
+
+void detectRAM()
+{
+    if (fexists("/proc/meminfo") == 1)
+    {
+        FILE *available = popen("cat /proc/meminfo \
+                | grep 'MemAvailable:' \
+                | sed 's/MemAvailable://'", "r");
+        FILE *total = popen("cat /proc/meminfo \
+                | grep 'MemTotal:' \
+                | sed 's/MemTotal://'", "r");
+
+        fscanf(available, "%d", &ramavailable);
+        fscanf(total, "%d", &ramtotal);
+        fclose(available);
+        fclose(total);
+
+        ramavailable = ((ramtotal-ramavailable)/1024);
+        ramtotal = (ramtotal/1024);
+    }
+}
+
+void detectUptime()
+{
+    if (fexists("/proc/uptime") == 1)
+    {
+        FILE *pathUptime = fopen("/proc/uptime", "r");
+
+        fscanf(pathUptime, "%d", &sec);
+        fclose(pathUptime);
 
         day = (sec/60/60/24);
         hour = (sec/60/60%24);
@@ -151,7 +188,8 @@ void detectUptime() {
     }
 }
 
-void getSysinfo() {
+void getSysinfo()
+{
     detectUser();
     detectDistro();
     detectModel();
@@ -163,20 +201,25 @@ void getSysinfo() {
     detectRAM();
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
+    time_t t;
+    struct tm * zeit;
+    time(&t);
+    zeit = localtime(&t);
 
     getSysinfo();
 
-    if(argc > 1)
+    if (argc > 1)
     {
-        if(strcmp(argv[1],"-a") == 0)
+        if (strcmp(argv[1], "-a") == 0)
         {
             strcpy(lineleft, "--------");
             strcpy(linedivider, "+");
             strcpy(lineright, "-----------------------------------------------------------------------");
             strcpy(divider, "|");
 
-            printf("%s@%s\n", user, host);
+            printf("%s@%s - %02d.%02d.%04d %02d:%02d:%02d\n", user, host, zeit->tm_mday, zeit->tm_mon+1, zeit->tm_year+1900, zeit->tm_hour, zeit->tm_min, zeit->tm_sec);
             printf("%s%s%s\n", lineleft, linedivider, lineright);
 
             printf("     os %s %s\n", divider, os);
@@ -191,7 +234,7 @@ int main(int argc, char *argv[]) {
             printf("%s\n\n", help);
         }
     } else {
-        printf("%s%s%s@%s%s%s\n", bold, user, reset, bold, host, reset);
+        printf("%s%s%s@%s%s%s - %02d.%02d.%04d %02d:%02d:%02d\n", bold, user, reset, bold, host, reset, zeit->tm_mday, zeit->tm_mon+1, zeit->tm_year+1900, zeit->tm_hour, zeit->tm_min, zeit->tm_sec);
         printf("%s%s%s\n", lineleft, linedivider, lineright);
 
         printf(" %s%s%s%s%s", black, blocks, bold, blocks, reset);
