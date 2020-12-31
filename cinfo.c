@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2020-12-30T18:52:33+0100
+ * date:       2020-12-31T13:29:54+0100
  */
 
 #include <stdio.h>
@@ -31,18 +31,6 @@
 #define cyan "\x1b[36m"
 #define white "\x1b[37m"
 
-char user[50],
-     host[50],
-     zeit[20],
-     os[50],
-     model[65],
-     kernel[50],
-     uptime[50],
-     packages[15],
-     shell[10],
-     cpu[50],
-     ram[15];
-
 int fexists(const char *fname)
 {
     FILE *file;
@@ -54,24 +42,34 @@ int fexists(const char *fname)
     return 0;
 }
 
-void detectUser()
+const char* detectUser()
 {
-    FILE *userName = popen("printf '%s\n' $USER", "r");
+    static char user[50];
 
+    FILE *userName = popen("printf '%s\n' $USER", "r");
     fscanf(userName, "%s", user);
     fclose(userName);
+
+    return(user);
+}
+
+const char* detectHost()
+{
+    static char host[50];
 
     if (fexists("/proc/sys/kernel/hostname") == 1)
     {
         FILE *userHost = fopen("/proc/sys/kernel/hostname", "r");
-
         fscanf(userHost, "%s", host);
         fclose(userHost);
     }
+    return(host);
 }
 
-void detectTime()
+const char* detectTime()
 {
+    static char zeit[20];
+
     time_t raw;
     struct tm * part;
     time(&raw);
@@ -84,27 +82,32 @@ void detectTime()
             part->tm_hour, \
             part->tm_min, \
             part->tm_sec);
+
+    return(zeit);
 }
 
-void detectDistro()
+const char* detectDistro()
 {
+    static char os[50];
+
     FILE *distroName = popen("cat /etc/*-release \
             | grep 'PRETTY_NAME=' \
             | cut -d '\"' -f2", "r");
-
     fscanf(distroName, "%[^\n]s", os);
     fclose(distroName);
+
+    return(os);
 }
 
-void detectModel()
+const char* detectModel()
 {
     char modelname[50] = "",
          modelversion[25] = "";
+    static char model[65];
 
     if (fexists("/sys/devices/virtual/dmi/id/product_name") == 1)
     {
         FILE *productName = fopen("/sys/devices/virtual/dmi/id/product_name", "r");
-
         fscanf(productName, "%[^\n]s", modelname);
         fclose(productName);
     } else {
@@ -114,36 +117,38 @@ void detectModel()
     if (fexists("/sys/devices/virtual/dmi/id/product_version") == 1)
     {
         FILE *productVersion = fopen("/sys/devices/virtual/dmi/id/product_version", "r");
-
         fscanf(productVersion, "%s", modelversion);
         fclose(productVersion);
     }
 
     sprintf(model, "%s %s", modelname, modelversion);
+    return(model);
 }
 
-void detectKernel()
+const char* detectKernel()
 {
+    static char kernel[50];
+
     if (fexists("/proc/sys/kernel/osrelease") == 1)
     {
         FILE *pathKernel = fopen("/proc/sys/kernel/osrelease", "r");
-
         fscanf(pathKernel, "%[^\n]s", kernel);
         fclose(pathKernel);
     }
+    return(kernel);
 }
 
-void detectUptime()
+const char* detectUptime()
 {
     int sec,
         day,
         hour,
         min;
+    static char uptime[] = "999d 23d 59m";
 
     if (fexists("/proc/uptime") == 1)
     {
         FILE *pathUptime = fopen("/proc/uptime", "r");
-
         fscanf(pathUptime, "%d", &sec);
         fclose(pathUptime);
 
@@ -153,58 +158,66 @@ void detectUptime()
 
         sprintf(uptime, "%dd %dh %dm", day, hour, min);
     }
+    return(uptime);
 }
 
-void detectPackages()
+const char* detectPackages()
 {
     int pacman;
+    static char packages[] = "99999 (pacman)";
 
     FILE *packageman = popen("pacman -Q | wc -l", "r");
-
     fscanf(packageman, "%d", &pacman);
     fclose(packageman);
 
     sprintf(packages, "%d (pacman)", pacman);
+    return(packages);
 }
 
-void detectShell()
+const char* detectShell()
 {
-    FILE *shellpath = popen("basename $SHELL", "r");
+    static char shell[] = "dash";
 
+    FILE *shellpath = popen("basename $SHELL", "r");
     fscanf(shellpath, "%s", shell);
     fclose(shellpath);
+
+    return(shell);
 }
 
-void detectCPU()
+const char* detectCPU()
 {
+    static char cpu[50];
+
     if (fexists("/proc/cpuinfo") == 1)
     {
         FILE *cpuinfo = popen("cat /proc/cpuinfo \
                 | grep 'model name	:' \
                 | sed -r 's/model name	:\\s{1,}//'", "r");
-
         fscanf(cpuinfo, "%[^\n]s", cpu);
         fclose(cpuinfo);
     }
+    return(cpu);
 }
 
-void detectRAM()
+const char* detectRAM()
 {
     int ramavailable,
         ramtotal;
+    static char ram[] = "99999M / 99999M";
 
     if (fexists("/proc/meminfo") == 1)
     {
         FILE *available = popen("cat /proc/meminfo \
                 | grep 'MemAvailable:' \
                 | sed 's/MemAvailable://'", "r");
+        fscanf(available, "%d", &ramavailable);
+        fclose(available);
+
         FILE *total = popen("cat /proc/meminfo \
                 | grep 'MemTotal:' \
                 | sed 's/MemTotal://'", "r");
-
-        fscanf(available, "%d", &ramavailable);
         fscanf(total, "%d", &ramtotal);
-        fclose(available);
         fclose(total);
 
         ramavailable = ((ramtotal-ramavailable)/1024);
@@ -212,6 +225,7 @@ void detectRAM()
 
         sprintf(ram, "%dM / %dM", ramavailable, ramtotal);
     }
+    return(ram);
 }
 
 int main(int argc, char *argv[])
@@ -222,17 +236,6 @@ int main(int argc, char *argv[])
          divider[] = "│",
          blocks[] = "██";
 
-    detectUser();
-    detectTime();
-    detectDistro();
-    detectModel();
-    detectKernel();
-    detectUptime();
-    detectPackages();
-    detectShell();
-    detectCPU();
-    detectRAM();
-
     if (argc > 1)
     {
         if (strcmp(argv[1], "-a") == 0)
@@ -242,40 +245,42 @@ int main(int argc, char *argv[])
             strcpy(lineright, "-----------------------------------------------------------------------");
             strcpy(divider, "|");
 
-            printf("%s@%s - %s\n", user, host, zeit);
+            printf("%s@%s - %s\n", detectUser(), detectHost(), detectTime());
             printf("%s%s%s\n", lineleft, linedivider, lineright);
 
-            printf("     os %s %s\n", divider, os);
-            printf("  model %s %s\n", divider, model);
-            printf(" kernel %s %s\n", divider, kernel);
-            printf(" uptime %s %s\n", divider, uptime);
-            printf("   pkgs %s %s\n", divider, packages);
-            printf("  shell %s %s\n", divider, shell);
-            printf("    cpu %s %s\n", divider, cpu);
-            printf("    ram %s %s\n\n", divider, ram);
+            printf("     os %s %s\n", divider, detectDistro());
+            printf("  model %s %s\n", divider, detectModel());
+            printf(" kernel %s %s\n", divider, detectKernel());
+            printf(" uptime %s %s\n", divider, detectUptime());
+            printf("   pkgs %s %s\n", divider, detectPackages());
+            printf("  shell %s %s\n", divider, detectShell());
+            printf("    cpu %s %s\n", divider, detectCPU());
+            printf("    ram %s %s\n", divider, detectRAM());
+            printf("\n");
         } else if (strcmp(argv[1],"-h") == 0) {
             printf("%s\n\n", help);
         }
     } else {
-        printf("%s%s%s@%s%s%s - %s\n", bold, user, reset, bold, host, reset, zeit);
+        printf("%s%s%s@%s%s%s - %s\n", bold, detectUser(), reset, bold, detectHost(), reset, detectTime());
         printf("%s%s%s\n", lineleft, linedivider, lineright);
 
         printf(" %s%s%s%s%s", black, blocks, bold, blocks, reset);
-        printf("%s     os %s%s %s\n", bold, divider, reset, os);
+        printf("%s     os %s%s %s\n", bold, divider, reset, detectDistro());
         printf(" %s%s%s%s%s", red, blocks, bold, blocks, reset);
-        printf("%s  model %s%s %s\n", bold, divider, reset, model);
+        printf("%s  model %s%s %s\n", bold, divider, reset, detectModel());
         printf(" %s%s%s%s%s", green, blocks, bold, blocks, reset);
-        printf("%s kernel %s%s %s\n", bold, divider, reset, kernel);
+        printf("%s kernel %s%s %s\n", bold, divider, reset, detectKernel());
         printf(" %s%s%s%s%s", yellow, blocks, bold, blocks, reset);
-        printf("%s uptime %s%s %s\n", bold, divider, reset, uptime);
+        printf("%s uptime %s%s %s\n", bold, divider, reset, detectUptime());
         printf(" %s%s%s%s%s", blue, blocks, bold, blocks, reset);
-        printf("%s   pkgs %s%s %s\n", bold, divider, reset, packages);
+        printf("%s   pkgs %s%s %s\n", bold, divider, reset, detectPackages());
         printf(" %s%s%s%s%s", magenta, blocks, bold, blocks, reset);
-        printf("%s  shell %s%s %s\n", bold, divider, reset, shell);
+        printf("%s  shell %s%s %s\n", bold, divider, reset, detectShell());
         printf(" %s%s%s%s%s", cyan, blocks, bold, blocks, reset);
-        printf("%s    cpu %s%s %s\n", bold, divider, reset, cpu);
+        printf("%s    cpu %s%s %s\n", bold, divider, reset, detectCPU());
         printf(" %s%s%s%s%s", white, blocks, bold, blocks, reset);
-        printf("%s    ram %s%s %s\n\n", bold, divider, reset, ram);
+        printf("%s    ram %s%s %s\n", bold, divider, reset, detectRAM());
+        printf("\n");
     }
     return 0;
 }
