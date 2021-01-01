@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-01T12:45:48+0100
+ * date:       2021-01-01T13:25:12+0100
  */
 
 #include <stdio.h>
@@ -40,7 +40,7 @@ char user[50],
      distro[50],
      model[65],
      kernel[50],
-     uptime[] = "999d 23h 59m",
+     uptime[] = "999 days, 23 hours, 59 mins",
      pkgs[] = "99999 (pacman)",
      shell[] = "dash",
      cpu[50],
@@ -155,7 +155,15 @@ void getUptime() {
         hour = (sec / 60 / 60 % 24);
         min = (sec / 60 % 60);
 
-        sprintf(uptime, "%dd %dh %dm", day, hour, min);
+        if (day == 0) {
+            sprintf(uptime, "%d hours, %d mins", hour, min);
+        } else if (day == 0 && hour == 0) {
+            sprintf(uptime, "%d mins", min);
+        } else if (day == 0 && hour == 0 && min == 0) {
+            sprintf(uptime, "under one minute");
+        } else {
+            sprintf(uptime, "%d days, %d hours %d mins", day, hour, min);
+        }
 
         if (linelen < strlen(uptime)) {
             linelen = strlen(uptime);
