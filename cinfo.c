@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-01T11:21:03+0100
+ * date:       2021-01-01T11:33:58+0100
  */
 
 #include <stdio.h>
@@ -49,6 +49,8 @@ char user[50],
 const char* getSpacer(char *character, int length) {
     static char spacer[] = "";
     int i = 1;
+
+    strcpy(spacer, "");
 
     while (i <= length) {
         strcat(spacer, character);
@@ -258,7 +260,8 @@ void getAscii() {
     printf("  shell | %s\n", shell);
     printf("    cpu | %s\n", cpu);
     printf("    ram | %s\n", ram);
-    printf("\n");
+
+    printf("--------+%s\n", getSpacer("-", linelen + 2));
 }
 
 void getColor() {
@@ -280,7 +283,8 @@ void getColor() {
     printf("%s%s%s shell%s │ %s\n", magenta, color, bold, reset, shell);
     printf("%s%s%s   cpu%s │ %s\n", cyan, color, bold, reset, cpu);
     printf("%s%s%s   ram%s │ %s\n", white, color, bold, reset, ram);
-    printf("\n");
+
+    printf("─────────────┴%s\n", getSpacer("─", linelen + 2));
 }
 
 int main(int argc, char *argv[]) {
