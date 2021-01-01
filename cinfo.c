@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2020-12-31T19:51:22+0100
+ * date:       2021-01-01T10:06:35+0100
  */
 
 #include <stdio.h>
@@ -116,14 +116,17 @@ void getModel()
     {
         fscanf(file, "%[^\n]s", modelname);
         fclose(file);
+
+        if ((file = fopen("/sys/devices/virtual/dmi/id/product_version", "r")))
+        {
+            fscanf(file, "%s", modelversion);
+            fclose(file);
+        }
+    } else if ((file = fopen("/sys/firmwar/devicetree/base/model", "r"))) {
+        fscanf(file, "%[^\n]s", modelname);
+        fclose(file);
     } else {
         strcpy(modelname, "not found");
-    }
-
-    if ((file = fopen("/sys/devices/virtual/dmi/id/product_version", "r")))
-    {
-        fscanf(file, "%s", modelversion);
-        fclose(file);
     }
 
     sprintf(model, "%s %s", modelname, modelversion);
