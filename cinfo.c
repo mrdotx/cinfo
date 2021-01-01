@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-01T10:06:35+0100
+ * date:       2021-01-01T10:10:05+0100
  */
 
 #include <stdio.h>
@@ -122,7 +122,7 @@ void getModel()
             fscanf(file, "%s", modelversion);
             fclose(file);
         }
-    } else if ((file = fopen("/sys/firmwar/devicetree/base/model", "r"))) {
+    } else if ((file = fopen("/sys/firmware/devicetree/base/model", "r"))) {
         fscanf(file, "%[^\n]s", modelname);
         fclose(file);
     } else {
