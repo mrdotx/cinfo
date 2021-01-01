@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-01T11:33:58+0100
+ * date:       2021-01-01T12:45:48+0100
  */
 
 #include <stdio.h>
@@ -31,7 +31,8 @@
 #define cyan "\x1b[36m"
 #define white "\x1b[37m"
 
-int linelen;
+int linelen,
+    headerlen;
 
 char user[50],
      host[50],
@@ -244,12 +245,14 @@ void getSysInfo() {
 }
 
 void getAscii() {
-    if (linelen < strlen(user) + strlen(host) + strlen(zeit) - 5)
+    headerlen = strlen(user) + strlen(host) + strlen(zeit);
+    if (linelen < headerlen - 7)
     {
-        linelen = strlen(user) + strlen(host) + strlen(zeit) - 7;
+        linelen = headerlen - 9;
     }
 
-    printf("%s@%s - %s\n", user, host, zeit);
+    printf("%s@%s", user, host);
+    printf("%s%s\n", getSpacer(" ", linelen - headerlen + 10) ,zeit);
     printf("--------+%s\n", getSpacer("-", linelen + 2));
 
     printf(" distro | %s\n", distro);
@@ -267,12 +270,14 @@ void getAscii() {
 void getColor() {
     sprintf(color, " ██%s██%s ", bold, reset);
 
-    if (linelen < strlen(user) + strlen(host) + strlen(zeit) - 10)
+    headerlen = strlen(user) + strlen(host) + strlen(zeit);
+    if (linelen < headerlen - 12)
     {
-        linelen = strlen(user) + strlen(host) + strlen(zeit) - 12;
+        linelen = headerlen - 14;
     }
 
-    printf("%s%s%s@%s%s%s - %s\n", bold, user, reset, bold, host, reset, zeit);
+    printf("%s%s%s@%s%s%s", bold, user, reset, bold, host, reset);
+    printf("%s%s\n", getSpacer(" ", linelen - headerlen + 15), zeit);
     printf("─────────────┬%s\n", getSpacer("─", linelen + 2));
 
     printf("%s%s%sdistro%s │ %s\n", black, color, bold, reset, distro);
