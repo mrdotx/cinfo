@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-02T18:28:03+0100
+ * date:       2021-01-02T19:13:37+0100
  */
 
 #include <stdio.h>
@@ -197,8 +197,8 @@ void getShell() {
 void getCPU() {
     FILE *file;
     if ((file = fopen("/proc/cpuinfo", "r"))) {
-        file = popen("grep 'model name	:' /proc/cpuinfo \
-                | sed -r 's/model name	:\\s{1,}//'", "r");
+        file = popen("grep -m 1 'model name	:' /proc/cpuinfo \
+                | sed 's/model name	: //'", "r");
         fscanf(file, "%[^\n]s", cpu);
         fclose(file);
 
@@ -234,21 +234,7 @@ void getRAM() {
     }
 }
 
-void getSysInfo() {
-    getUser();
-    getHost();
-    getTime();
-    getDistro();
-    getModel();
-    getKernel();
-    getUptime();
-    getPackages();
-    getShell();
-    getCPU();
-    getRAM();
-}
-
-void getAscii() {
+void printAscii() {
     headerlen = strlen(user) + strlen(host) + strlen(zeit);
     if (linelen < headerlen - 7)
     {
@@ -271,7 +257,7 @@ void getAscii() {
     printf("--------+%s\n", getSpacer("-", linelen + 2));
 }
 
-void getColor() {
+void printColor() {
     sprintf(color, " ██%s██%s ", bold, reset);
 
     headerlen = strlen(user) + strlen(host) + strlen(zeit);
@@ -297,16 +283,26 @@ void getColor() {
 }
 
 int main(int argc, char *argv[]) {
-    getSysInfo();
+    getUser();
+    getHost();
+    getTime();
+    getDistro();
+    getModel();
+    getKernel();
+    getUptime();
+    getPackages();
+    getShell();
+    getCPU();
+    getRAM();
 
     if (argc > 1) {
         if (strcmp(argv[1], "-a") == 0) {
-            getAscii();
+            printAscii();
         } else if (strcmp(argv[1],"-h") == 0) {
             printf("%s\n\n", help);
         }
     } else {
-        getColor();
+        printColor();
     }
     return 0;
 }
