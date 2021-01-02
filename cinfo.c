@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-02T21:34:39+0100
+ * date:       2021-01-02T22:01:14+0100
  */
 
 #include <stdio.h>
@@ -152,13 +152,13 @@ void getUptime() {
 }
 
 void getPackages() {
-    int pacman;
+    int pkgcnt;
 
     FILE *file = popen(PKGCMD, "r");
-    fscanf(file, "%d", &pacman);
+    fscanf(file, "%d", &pkgcnt);
     fclose(file);
 
-    sprintf(pkgs, "%d (pacman)", pacman);
+    sprintf(pkgs, "%d%s", pkgcnt, PKGDESC);
 
     if (linelen < strlen(pkgs)) {
         linelen = strlen(pkgs);
@@ -226,14 +226,14 @@ void printAscii() {
     printf("%s", ASCIILINEDIVIDER);
     printf("%s\n", getSpacer(ASCIILINE, linelen + 2));
 
-    printf("%s%s%s\n", DISTROTEXT, ASCIIDIVIDER, distro);
-    printf("%s%s%s\n", MODELTEXT, ASCIIDIVIDER, model);
-    printf("%s%s%s\n", KERNELTEXT, ASCIIDIVIDER, kernel);
-    printf("%s%s%s\n", UPTIMETEXT, ASCIIDIVIDER, uptime);
-    printf("%s%s%s\n", PKGSTEXT, ASCIIDIVIDER, pkgs);
-    printf("%s%s%s\n", SHELLTEXT, ASCIIDIVIDER, shell);
-    printf("%s%s%s\n", CPUTEXT, ASCIIDIVIDER, cpu);
-    printf("%s%s%s\n", RAMTEXT, ASCIIDIVIDER, ram);
+    printf("%s%s%s\n", DISTROTXT, ASCIIDIVIDER, distro);
+    printf("%s%s%s\n", MODELTXT, ASCIIDIVIDER, model);
+    printf("%s%s%s\n", KERNELTXT, ASCIIDIVIDER, kernel);
+    printf("%s%s%s\n", UPTIMETXT, ASCIIDIVIDER, uptime);
+    printf("%s%s%s\n", PKGSTXT, ASCIIDIVIDER, pkgs);
+    printf("%s%s%s\n", SHELLTXT, ASCIIDIVIDER, shell);
+    printf("%s%s%s\n", CPUTXT, ASCIIDIVIDER, cpu);
+    printf("%s%s%s\n", RAMTXT, ASCIIDIVIDER, ram);
 
     printf("%s", getSpacer(ASCIILINE, 8));
     printf("%s", ASCIILINEDIVIDER);
@@ -256,35 +256,35 @@ void printColor() {
     printf(" %s%s%s%s", \
             BLACK, COLORSYMBOL, BBLACK, COLORSYMBOL);
     printf("%s%s%s%s%s\n", \
-            BWHITE, DISTROTEXT, RESET, COLORDIVIDER, distro);
+            BWHITE, DISTROTXT, RESET, COLORDIVIDER, distro);
     printf(" %s%s%s%s", \
             RED, COLORSYMBOL, BRED, COLORSYMBOL);
     printf("%s%s%s%s%s\n", \
-            BWHITE, MODELTEXT, RESET, COLORDIVIDER, model);
+            BWHITE, MODELTXT, RESET, COLORDIVIDER, model);
     printf(" %s%s%s%s", \
             GREEN, COLORSYMBOL, BGREEN, COLORSYMBOL);
     printf("%s%s%s%s%s\n", \
-            BWHITE, KERNELTEXT, RESET, COLORDIVIDER, kernel);
+            BWHITE, KERNELTXT, RESET, COLORDIVIDER, kernel);
     printf(" %s%s%s%s", \
             YELLOW, COLORSYMBOL, BYELLOW, COLORSYMBOL);
     printf("%s%s%s%s%s\n", \
-            BWHITE, UPTIMETEXT, RESET, COLORDIVIDER, uptime);
+            BWHITE, UPTIMETXT, RESET, COLORDIVIDER, uptime);
     printf(" %s%s%s%s", \
             BLUE, COLORSYMBOL, BBLUE, COLORSYMBOL);
     printf("%s%s%s%s%s\n", \
-            BWHITE, PKGSTEXT, RESET, COLORDIVIDER, pkgs);
+            BWHITE, PKGSTXT, RESET, COLORDIVIDER, pkgs);
     printf(" %s%s%s%s", \
             MAGENTA, COLORSYMBOL, BMAGENTA, COLORSYMBOL);
     printf("%s%s%s%s%s\n", \
-            BWHITE, SHELLTEXT, RESET, COLORDIVIDER, shell);
+            BWHITE, SHELLTXT, RESET, COLORDIVIDER, shell);
     printf(" %s%s%s%s", \
             CYAN, COLORSYMBOL, BCYAN, COLORSYMBOL);
     printf("%s%s%s%s%s\n", \
-            BWHITE, CPUTEXT, RESET, COLORDIVIDER, cpu);
+            BWHITE, CPUTXT, RESET, COLORDIVIDER, cpu);
     printf(" %s%s%s%s", \
             WHITE, COLORSYMBOL, BWHITE, COLORSYMBOL);
     printf("%s%s%s%s%s\n", \
-            BWHITE, RAMTEXT, RESET, COLORDIVIDER, ram);
+            BWHITE, RAMTXT, RESET, COLORDIVIDER, ram);
 
     printf("%s", getSpacer(COLORLINE, 13));
     printf("%s", COLORLINEDIVIDERBOTTOM);

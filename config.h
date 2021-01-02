@@ -2,19 +2,20 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/config.h
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-02T21:36:51+0100
+ * date:       2021-01-02T22:00:18+0100
  */
 
 #define PKGCMD "pacman -Qq | wc -l"
+#define PKGDESC " (pacman)"
 
-#define DISTROTEXT  " distro"
-#define MODELTEXT   "  model"
-#define KERNELTEXT  " kernel"
-#define UPTIMETEXT  " uptime"
-#define PKGSTEXT    "   pkgs"
-#define SHELLTEXT   "  shell"
-#define CPUTEXT     "    cpu"
-#define RAMTEXT     "    ram"
+#define DISTROTXT   " distro"
+#define MODELTXT    "  model"
+#define KERNELTXT   " kernel"
+#define UPTIMETXT   " uptime"
+#define PKGSTXT     "   pkgs"
+#define SHELLTXT    "  shell"
+#define CPUTXT      "    cpu"
+#define RAMTXT      "    ram"
 
 #define HEADERSPACER " "
 
