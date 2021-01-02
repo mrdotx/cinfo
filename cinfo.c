@@ -2,10 +2,11 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-02T11:23:02+0100
+ * date:       2021-01-02T16:34:02+0100
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
@@ -36,16 +37,16 @@ int linelen,
 
 char user[50],
      host[50],
-     zeit[] = "31.12.2020 23:59:59",
+     zeit[20],
      distro[50],
      model[65],
      kernel[50],
-     uptime[] = "999d 23h 59m",
-     pkgs[] = "99999 (pacman)",
-     shell[] = "dash",
+     uptime[10],
+     pkgs[15],
+     shell[25],
      cpu[50],
-     ram[] = "99999MiB / 99999MiB",
-     color[15];
+     ram[20],
+     color[20];
 
 const char* getSpacer(char *character, int length) {
     static char spacer[] = "";
@@ -62,9 +63,7 @@ const char* getSpacer(char *character, int length) {
 }
 
 void getUser() {
-    FILE *userName = popen("printf '%s\n' $USER", "r");
-    fscanf(userName, "%s", user);
-    fclose(userName);
+    sprintf(user, "%s", getenv("USER"));
 }
 
 void getHost() {
@@ -186,9 +185,7 @@ void getPackages() {
 }
 
 void getShell() {
-    FILE *shellpath = popen("basename $SHELL", "r");
-    fscanf(shellpath, "%s", shell);
-    fclose(shellpath);
+    sprintf(shell, "%s", getenv("SHELL"));
 
     if (linelen < strlen(shell)) {
         linelen = strlen(shell);
