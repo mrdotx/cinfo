@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-01T13:28:17+0100
+ * date:       2021-01-02T11:23:02+0100
  */
 
 #include <stdio.h>
@@ -40,11 +40,11 @@ char user[50],
      distro[50],
      model[65],
      kernel[50],
-     uptime[] = "999 days, 23 hours, 59 mins",
+     uptime[] = "999d 23h 59m",
      pkgs[] = "99999 (pacman)",
      shell[] = "dash",
      cpu[50],
-     ram[] = "99999M / 99999M",
+     ram[] = "99999MiB / 99999MiB",
      color[15];
 
 const char* getSpacer(char *character, int length) {
@@ -156,13 +156,13 @@ void getUptime() {
         min = (sec / 60 % 60);
 
         if (day == 0) {
-            sprintf(uptime, "%d hours, %d mins", hour, min);
+            sprintf(uptime, "%dh %dm", hour, min);
         } else if (day == 0 && hour == 0) {
-            sprintf(uptime, "%d mins", min);
+            sprintf(uptime, "%dm", min);
         } else if (day == 0 && hour == 0 && min == 0) {
-            sprintf(uptime, "under one minute");
+            sprintf(uptime, "0m");
         } else {
-            sprintf(uptime, "%d days, %d hours, %d mins", day, hour, min);
+            sprintf(uptime, "%dd %dh %dm", day, hour, min);
         }
 
         if (linelen < strlen(uptime)) {
@@ -230,7 +230,7 @@ void getRAM() {
         ramavailable = ((ramtotal - ramavailable) / 1024);
         ramtotal = (ramtotal / 1024);
 
-        sprintf(ram, "%dM / %dM", ramavailable, ramtotal);
+        sprintf(ram, "%dMiB / %dMiB", ramavailable, ramtotal);
 
         if (linelen < strlen(ram)) {
             linelen = strlen(ram);
