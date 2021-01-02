@@ -1,6 +1,6 @@
 # cinfo
 
-a minimal system information tool for arch-based distributions
+a minimal system information tool for linux-based operating systems
 
 ![screenshot](screenshot.png)
 
