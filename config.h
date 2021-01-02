@@ -2,11 +2,26 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/config.h
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-02T22:00:18+0100
+ * date:       2021-01-02T23:20:34+0100
  */
 
 #define PKGCMD "pacman -Qq | wc -l"
 #define PKGDESC " (pacman)"
+
+#define HEADERSPACER " "
+#define HEADERBINDER "@"
+
+#define ASCIILINELEFTLEN 8
+#define ASCIILINE "-"
+#define ASCIILINEDIVIDER "+"
+#define ASCIIDIVIDER " | "
+
+#define COLORLINELEFTLEN 13
+#define COLORLINE "─"
+#define COLORLINEDIVIDERTOP "┬"
+#define COLORLINEDIVIDERBOTTOM "┴"
+#define COLORDIVIDER " │ "
+#define COLORSYMBOL "██"
 
 #define DISTROTXT   " distro"
 #define MODELTXT    "  model"
@@ -16,18 +31,6 @@
 #define SHELLTXT    "  shell"
 #define CPUTXT      "    cpu"
 #define RAMTXT      "    ram"
-
-#define HEADERSPACER " "
-
-#define ASCIILINE "-"
-#define ASCIILINEDIVIDER "+"
-#define ASCIIDIVIDER " | "
-
-#define COLORLINE "─"
-#define COLORLINEDIVIDERTOP "┬"
-#define COLORLINEDIVIDERBOTTOM "┴"
-#define COLORDIVIDER " │ "
-#define COLORSYMBOL "██"
 
 #define HELP "cinfo [-h] -- a minimal system information tool\n\
               for arch-based distributions\n\

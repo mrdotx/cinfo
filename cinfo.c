@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-02T22:01:14+0100
+ * date:       2021-01-02T23:21:23+0100
  */
 
 #include <stdio.h>
@@ -215,14 +215,17 @@ void getRAM() {
 
 void printAscii() {
     headerlen = strlen(user) + strlen(host) + strlen(zeit);
-    if (linelen < headerlen - 7)
+    if (linelen < headerlen - ASCIILINELEFTLEN - 1)
     {
-        linelen = headerlen - 9;
+        linelen = headerlen - ASCIILINELEFTLEN - 2;
     }
 
-    printf("%s@%s", user, host);
-    printf("%s%s\n", getSpacer(HEADERSPACER, linelen - headerlen + 10) ,zeit);
-    printf("%s", getSpacer(ASCIILINE, 8));
+    printf("%s", user);
+    printf("%s", HEADERBINDER);
+    printf("%s", host);
+    printf("%s", getSpacer(HEADERSPACER, linelen - headerlen + ASCIILINELEFTLEN + 2));
+    printf("%s\n",zeit);
+    printf("%s", getSpacer(ASCIILINE, ASCIILINELEFTLEN));
     printf("%s", ASCIILINEDIVIDER);
     printf("%s\n", getSpacer(ASCIILINE, linelen + 2));
 
@@ -235,21 +238,24 @@ void printAscii() {
     printf("%s%s%s\n", CPUTXT, ASCIIDIVIDER, cpu);
     printf("%s%s%s\n", RAMTXT, ASCIIDIVIDER, ram);
 
-    printf("%s", getSpacer(ASCIILINE, 8));
+    printf("%s", getSpacer(ASCIILINE, ASCIILINELEFTLEN));
     printf("%s", ASCIILINEDIVIDER);
     printf("%s\n", getSpacer(ASCIILINE, linelen + 2));
 }
 
 void printColor() {
     headerlen = strlen(user) + strlen(host) + strlen(zeit);
-    if (linelen < headerlen - 12)
+    if (linelen < headerlen - COLORLINELEFTLEN - 1)
     {
-        linelen = headerlen - 14;
+        linelen = headerlen - COLORLINELEFTLEN - 2;
     }
 
-    printf("%s%s%s@%s%s%s", BWHITE, user, RESET, BWHITE, host, RESET);
-    printf("%s%s\n", getSpacer(HEADERSPACER, linelen - headerlen + 15), zeit);
-    printf("%s", getSpacer(COLORLINE, 13));
+    printf("%s%s%s", BWHITE, user, RESET);
+    printf("%s", HEADERBINDER);
+    printf("%s%s%s", BWHITE, host, RESET);
+    printf("%s", getSpacer(HEADERSPACER, linelen - headerlen + COLORLINELEFTLEN + 2));
+    printf("%s\n", zeit);
+    printf("%s", getSpacer(COLORLINE, COLORLINELEFTLEN));
     printf("%s", COLORLINEDIVIDERTOP);
     printf("%s\n", getSpacer(COLORLINE, linelen + 2));
 
@@ -286,7 +292,7 @@ void printColor() {
     printf("%s%s%s%s%s\n", \
             BWHITE, RAMTXT, RESET, COLORDIVIDER, ram);
 
-    printf("%s", getSpacer(COLORLINE, 13));
+    printf("%s", getSpacer(COLORLINE, COLORLINELEFTLEN));
     printf("%s", COLORLINEDIVIDERBOTTOM);
     printf("%s\n", getSpacer(COLORLINE, linelen + 2));
 }
