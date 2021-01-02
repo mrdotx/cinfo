@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-02T16:34:02+0100
+ * date:       2021-01-02T17:17:07+0100
  */
 
 #include <stdio.h>
@@ -90,14 +90,17 @@ void getTime() {
 }
 
 void getDistro() {
-    FILE *distroName = popen("cat /etc/*-release \
-            | grep 'PRETTY_NAME=' \
-            | cut -d '\"' -f2", "r");
-    fscanf(distroName, "%[^\n]s", distro);
-    fclose(distroName);
+    FILE *file;
+    if ((file = fopen("/etc/os-release", "r"))) {
+        file = popen("cat /etc/os-release \
+                | grep 'PRETTY_NAME=' \
+                | cut -d '\"' -f2", "r");
+        fscanf(file, "%[^\n]s", distro);
+        fclose(file);
 
-    if (linelen < strlen(distro)) {
-        linelen = strlen(distro);
+        if (linelen < strlen(distro)) {
+            linelen = strlen(distro);
+        }
     }
 }
 
