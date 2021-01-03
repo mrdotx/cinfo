@@ -19,5 +19,10 @@ make clean install
 ## run
 
 ```bash
-cinfo -h
+cinfo
 ```
+
+## manual
+
+you can view the manual by running `man cinfo.1`, or `man afetch`
+if you've already ran `make clean install`.
