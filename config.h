@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/config.h
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-02T23:48:27+0100
+ * date:       2021-01-03T00:52:29+0100
  */
 
 #define PKGCMD "pacman -Qq | wc -l"
@@ -32,8 +32,8 @@
 #define CPUTXT      "    cpu"
 #define RAMTXT      "    ram"
 
-#define HELP "cinfo [-h] -- a minimal system information tool\n\
-              for linux-based operating systems\n\
+#define HELP "cinfo [-h/--help] -- a minimal system information tool\n\
+                     for linux-based operating systems\n\
   Usage:\n\
     cinfo [-a]\n\n\
   Settings:\n\

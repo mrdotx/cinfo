@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-02T23:21:23+0100
+ * date:       2021-01-03T01:22:54+0100
  */
 
 #include <stdio.h>
@@ -311,10 +311,13 @@ int main(int argc, char *argv[]) {
     getRAM();
 
     if (argc > 1) {
-        if (strcmp(argv[1], "-a") == 0) {
-            printAscii();
-        } else if (strcmp(argv[1],"-h") == 0) {
-            printf("%s\n\n", HELP);
+        switch ((*++argv)[1]) {
+            case 'a':
+                printAscii();
+                break;
+            default:
+                printf("%s\n\n", HELP);
+                break;
         }
     } else {
         printColor();
