@@ -1,0 +1,47 @@
+.\" cinfo
+.TH CINFO 1 cinfo\-VERSION
+.SH NAME
+cinfo \- system information utility
+.SH SYNOPSIS
+.B cinfo
+.RB [ \-a ]
+.SH DESCRIPTION
+.B cinfo
+is a minimal system information tool for linux-based operating systems
+.SH OPTIONS
+without given setting, start colored version
+.TP
+.B \-a
+start plain ascii version
+.SH CUSTOMIZATION
+.B cinfo
+can be customized by creating a custom config.h and (re)compiling the source
+code.
+.TP
+.B PKG*
+values to configure package manager count
+.TP
+.B HEADER*
+values to configure header symbols
+.TP
+.B ASCII*
+values to configure ascii table
+.TP
+.B COLOR*
+values to configure color table
+.TP
+.B *TXT
+values to configure labels for ascii and colored output
+.SH EXAMPLES
+.B cinfo
+.PD 0
+.P
+.PD
+.B cinfo
+.RB \-a
+.SH AUTHORS
+.B cinfo
+was written by mrdotx
+.RI < klassiker@gmx.de >
+.SH LICENSE
+See the LICENSE file for the terms of redistribution.
