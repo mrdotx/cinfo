@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-03T01:22:54+0100
+ * date:       2021-01-03T21:30:15+0100
  */
 
 #include <stdio.h>
@@ -11,6 +11,26 @@
 #include <time.h>
 
 #include "config.h"
+
+#define RESET "\033[0m"
+
+#define BLACK "\033[0;30m"
+#define RED "\033[0;31m"
+#define GREEN "\033[0;32m"
+#define YELLOW "\033[0;33m"
+#define BLUE "\033[0;34m"
+#define MAGENTA "\033[0;35m"
+#define CYAN "\033[0;36m"
+#define WHITE "\033[0;37m"
+
+#define BBLACK "\033[1;30m"
+#define BRED "\033[1;31m"
+#define BGREEN "\033[1;32m"
+#define BYELLOW "\033[1;33m"
+#define BBLUE "\033[1;34m"
+#define BMAGENTA "\033[1;35m"
+#define BCYAN "\033[1;36m"
+#define BWHITE "\033[1;37m"
 
 int linelen,
     headerlen;
@@ -188,29 +208,33 @@ void getCPU() {
 }
 
 void getRAM() {
-    int ramavailable,
-        ramtotal;
+    int memtotal,
+        memavailable;
 
     FILE *file;
     if ((file = fopen("/proc/meminfo", "r"))) {
-        file = popen("grep 'MemAvailable:' /proc/meminfo \
-                | sed 's/MemAvailable://'", "r");
-        fscanf(file, "%d", &ramavailable);
-
         file = popen("grep 'MemTotal:' /proc/meminfo \
                 | sed 's/MemTotal://'", "r");
-        fscanf(file, "%d", &ramtotal);
+        fscanf(file, "%d", &memtotal);
+
+        file = popen("grep 'MemAvailable:' /proc/meminfo \
+                | sed 's/MemAvailable://'", "r");
+        fscanf(file, "%d", &memavailable);
         fclose(file);
 
-        ramavailable = ((ramtotal - ramavailable) / 1024);
-        ramtotal = (ramtotal / 1024);
+        memavailable = ((memtotal - memavailable) / 1024);
+        memtotal = (memtotal / 1024);
 
-        sprintf(ram, "%dMiB / %dMiB", ramavailable, ramtotal);
+        sprintf(ram, "%dMiB / %dMiB", memavailable, memtotal);
 
         if (linelen < strlen(ram)) {
             linelen = strlen(ram);
         }
     }
+}
+
+void printUsage() {
+    printf("usage: cinfo [-a]\n");
 }
 
 void printAscii() {
@@ -310,17 +334,12 @@ int main(int argc, char *argv[]) {
     getCPU();
     getRAM();
 
-    if (argc > 1) {
-        switch ((*++argv)[1]) {
-            case 'a':
-                printAscii();
-                break;
-            default:
-                printf("%s\n\n", HELP);
-                break;
-        }
-    } else {
+    if (argc == 1) {
         printColor();
+    } else if (strcmp(argv[1], "-a") == 0) {
+        printAscii();
+    } else {
+        printUsage();
     }
     return 0;
 }

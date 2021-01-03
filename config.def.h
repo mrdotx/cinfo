@@ -1,8 +1,8 @@
 /*
- * path:       /home/klassiker/.local/share/repos/cinfo/config.h
+ * path:       /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-03T12:52:09+0100
+ * date:       2021-01-03T19:06:00+0100
  */
 
 #define PKGCMD "pacman -Qq | wc -l"
@@ -31,35 +31,3 @@
 #define SHELLTXT    "  shell"
 #define CPUTXT      "    cpu"
 #define RAMTXT      "    ram"
-
-/* predifined constants */
-#define RESET "\033[0m"
-
-#define BLACK "\033[0;30m"
-#define RED "\033[0;31m"
-#define GREEN "\033[0;32m"
-#define YELLOW "\033[0;33m"
-#define BLUE "\033[0;34m"
-#define MAGENTA "\033[0;35m"
-#define CYAN "\033[0;36m"
-#define WHITE "\033[0;37m"
-
-#define BBLACK "\033[1;30m"
-#define BRED "\033[1;31m"
-#define BGREEN "\033[1;32m"
-#define BYELLOW "\033[1;33m"
-#define BBLUE "\033[1;34m"
-#define BMAGENTA "\033[1;35m"
-#define BCYAN "\033[1;36m"
-#define BWHITE "\033[1;37m"
-
-#define HELP "cinfo [-h/--help] -- a minimal system information tool\n\
-                     for linux-based operating systems\n\
-  Usage:\n\
-    cinfo [-a]\n\n\
-  Settings:\n\
-    without given settings, start colored version\n\
-    [-a] = start plain ascii version\n\n\
-  Examples:\n\
-    cinfo\n\
-    cinfo -a"
