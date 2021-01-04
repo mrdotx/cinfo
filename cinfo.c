@@ -2,13 +2,14 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-04T13:20:08+0100
+ * date:       2021-01-04T15:57:50+0100
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <pthread.h>
 
 #include "config.h"
 
@@ -60,19 +61,23 @@ const char* getSpacer(const char *character,
     return(spacer);
 }
 
-void getUser() {
+void *getUser() {
     sprintf(user, "%s", getenv("USER"));
+
+    return NULL;
 }
 
-void getHost() {
+void *getHost() {
     FILE *file;
     if ((file = fopen("/proc/sys/kernel/hostname", "r"))) {
         fscanf(file, "%s", host);
         fclose(file);
     }
+
+    return NULL;
 }
 
-void getTime() {
+void *getTime() {
     time_t raw;
     struct tm * part;
     time(&raw);
@@ -85,9 +90,11 @@ void getTime() {
             part->tm_hour, \
             part->tm_min, \
             part->tm_sec);
+
+    return NULL;
 }
 
-void getDistro() {
+void *getDistro() {
     FILE *file;
     if ((file = fopen("/etc/os-release", "r"))) {
         file = popen("grep 'PRETTY_NAME=' /etc/os-release \
@@ -99,9 +106,11 @@ void getDistro() {
             linelen = strlen(distro);
         }
     }
+
+    return NULL;
 }
 
-void getModel() {
+void *getModel() {
     char modelname[50] = "",
          modelversion[25] = "";
 
@@ -125,9 +134,11 @@ void getModel() {
     if (linelen < strlen(model)) {
         linelen = strlen(model);
     }
+
+    return NULL;
 }
 
-void getKernel() {
+void *getKernel() {
     FILE *file;
     if ((file = fopen("/proc/sys/kernel/osrelease", "r"))) {
         fscanf(file, "%[^\n]s", kernel);
@@ -137,9 +148,11 @@ void getKernel() {
             linelen = strlen(kernel);
         }
     }
+
+    return NULL;
 }
 
-void getUptime() {
+void *getUptime() {
     int sec,
         day,
         hour,
@@ -168,9 +181,11 @@ void getUptime() {
             linelen = strlen(uptime);
         }
     }
+
+    return NULL;
 }
 
-void getPackages() {
+void *getPackages() {
     int pkgcnt;
 
     FILE *file = popen(PKGCMD, "r");
@@ -182,17 +197,21 @@ void getPackages() {
     if (linelen < strlen(pkgs)) {
         linelen = strlen(pkgs);
     }
+
+    return NULL;
 }
 
-void getShell() {
+void *getShell() {
     sprintf(shell, "%s", getenv("SHELL"));
 
     if (linelen < strlen(shell)) {
         linelen = strlen(shell);
     }
+
+    return NULL;
 }
 
-void getCPU() {
+void *getCPU() {
     FILE *file;
     if ((file = fopen("/proc/cpuinfo", "r"))) {
         file = popen("grep -m 1 'model name	:' /proc/cpuinfo \
@@ -204,9 +223,11 @@ void getCPU() {
             linelen = strlen(cpu);
         }
     }
+
+    return NULL;
 }
 
-void getRAM() {
+void *getRAM() {
     int memtotal,
         memavailable;
 
@@ -230,6 +251,8 @@ void getRAM() {
             linelen = strlen(ram);
         }
     }
+
+    return NULL;
 }
 
 void printUsage() {
@@ -321,17 +344,31 @@ void printColor() {
 }
 
 int main(int argc, char *argv[]) {
-    getUser();
-    getHost();
-    getTime();
-    getDistro();
-    getModel();
-    getKernel();
-    getUptime();
-    getPackages();
-    getShell();
-    getCPU();
-    getRAM();
+    pthread_t threads[12];
+
+    pthread_create(&threads[0], NULL, getUser, NULL);
+    pthread_create(&threads[1], NULL, getHost, NULL);
+    pthread_create(&threads[2], NULL, getTime, NULL);
+    pthread_create(&threads[3], NULL, getDistro, NULL);
+    pthread_create(&threads[4], NULL, getModel, NULL);
+    pthread_create(&threads[5], NULL, getKernel, NULL);
+    pthread_create(&threads[6], NULL, getUptime, NULL);
+    pthread_create(&threads[7], NULL, getPackages, NULL);
+    pthread_create(&threads[8], NULL, getShell, NULL);
+    pthread_create(&threads[9], NULL, getCPU, NULL);
+    pthread_create(&threads[10], NULL, getRAM, NULL);
+
+    pthread_join(threads[0], NULL);
+    pthread_join(threads[1], NULL);
+    pthread_join(threads[2], NULL);
+    pthread_join(threads[3], NULL);
+    pthread_join(threads[4], NULL);
+    pthread_join(threads[5], NULL);
+    pthread_join(threads[6], NULL);
+    pthread_join(threads[7], NULL);
+    pthread_join(threads[8], NULL);
+    pthread_join(threads[9], NULL);
+    pthread_join(threads[10], NULL);
 
     if (argc == 1) {
         printColor();
@@ -340,5 +377,7 @@ int main(int argc, char *argv[]) {
     } else {
         printUsage();
     }
+
+    pthread_exit(NULL);
     return 0;
 }
