@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-04T15:57:50+0100
+ * date:       2021-01-04T23:58:27+0100
  */
 
 #include <stdio.h>
@@ -20,7 +20,7 @@ char user[50],
      host[50],
      zeit[20],
      distro[50],
-     model[65],
+     model[75],
      kernel[50],
      uptime[10],
      pkgs[15],
@@ -95,16 +95,13 @@ void *getTime() {
 }
 
 void *getDistro() {
-    FILE *file;
-    if ((file = fopen("/etc/os-release", "r"))) {
-        file = popen("grep 'PRETTY_NAME=' /etc/os-release \
-                | cut -d '\"' -f2", "r");
-        fscanf(file, "%[^\n]s", distro);
-        fclose(file);
+    FILE *file = popen("grep 'PRETTY_NAME=' /etc/os-release \
+            | cut -d '\"' -f2", "r");
+    fscanf(file, "%[^\n]s", distro);
+    pclose(file);
 
-        if (linelen < strlen(distro)) {
-            linelen = strlen(distro);
-        }
+    if (linelen < strlen(distro)) {
+        linelen = strlen(distro);
     }
 
     return NULL;
@@ -126,7 +123,7 @@ void *getModel() {
         fscanf(file, "%[^\n]s", modelname);
         fclose(file);
     } else {
-        strcpy(modelname, "not found");
+        strcpy(modelname, "file not found");
     }
 
     sprintf(model, "%s %s", modelname, modelversion);
@@ -186,13 +183,13 @@ void *getUptime() {
 }
 
 void *getPackages() {
-    int pkgcnt;
+    int pkgcount;
 
     FILE *file = popen(PKGCMD, "r");
-    fscanf(file, "%d", &pkgcnt);
-    fclose(file);
+    fscanf(file, "%d", &pkgcount);
+    pclose(file);
 
-    sprintf(pkgs, "%d%s", pkgcnt, PKGDESC);
+    sprintf(pkgs, "%d%s", pkgcount, PKGDESC);
 
     if (linelen < strlen(pkgs)) {
         linelen = strlen(pkgs);
@@ -212,16 +209,13 @@ void *getShell() {
 }
 
 void *getCPU() {
-    FILE *file;
-    if ((file = fopen("/proc/cpuinfo", "r"))) {
-        file = popen("grep -m 1 'model name	:' /proc/cpuinfo \
-                | sed 's/model name	: //'", "r");
-        fscanf(file, "%[^\n]s", cpu);
-        fclose(file);
+    FILE *file = popen("grep -m 1 'model name	:' /proc/cpuinfo \
+            | sed 's/model name	: //'", "r");
+    fscanf(file, "%[^\n]s", cpu);
+    pclose(file);
 
-        if (linelen < strlen(cpu)) {
-            linelen = strlen(cpu);
-        }
+    if (linelen < strlen(cpu)) {
+        linelen = strlen(cpu);
     }
 
     return NULL;
@@ -232,24 +226,22 @@ void *getRAM() {
         memavailable;
 
     FILE *file;
-    if ((file = fopen("/proc/meminfo", "r"))) {
-        file = popen("grep 'MemTotal:' /proc/meminfo \
-                | sed 's/MemTotal://'", "r");
-        fscanf(file, "%d", &memtotal);
+    file = popen("grep 'MemTotal:' /proc/meminfo \
+            | sed 's/MemTotal://'", "r");
+    fscanf(file, "%d", &memtotal);
 
-        file = popen("grep 'MemAvailable:' /proc/meminfo \
-                | sed 's/MemAvailable://'", "r");
-        fscanf(file, "%d", &memavailable);
-        fclose(file);
+    file = popen("grep 'MemAvailable:' /proc/meminfo \
+            | sed 's/MemAvailable://'", "r");
+    fscanf(file, "%d", &memavailable);
+    pclose(file);
 
-        memavailable = (memtotal - memavailable) / 1024;
-        memtotal = memtotal / 1024;
+    memavailable = (memtotal - memavailable) / 1024;
+    memtotal /= 1024;
 
-        sprintf(ram, "%dMiB / %dMiB", memavailable, memtotal);
+    sprintf(ram, "%dMiB / %dMiB", memavailable, memtotal);
 
-        if (linelen < strlen(ram)) {
-            linelen = strlen(ram);
-        }
+    if (linelen < strlen(ram)) {
+        linelen = strlen(ram);
     }
 
     return NULL;
@@ -305,38 +297,22 @@ void printColor() {
     printf("%s", COLORLINEDIVIDERTOP);
     printf("%s\n", getSpacer(COLORLINE, linelen + 2));
 
-    printf(" %s%s%s%s", \
-            BLACK, COLORSYMBOL, BBLACK, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", \
-            BWHITE, DISTROTXT, RESET, COLORDIVIDER, distro);
-    printf(" %s%s%s%s", \
-            RED, COLORSYMBOL, BRED, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", \
-            BWHITE, MODELTXT, RESET, COLORDIVIDER, model);
-    printf(" %s%s%s%s", \
-            GREEN, COLORSYMBOL, BGREEN, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", \
-            BWHITE, KERNELTXT, RESET, COLORDIVIDER, kernel);
-    printf(" %s%s%s%s", \
-            YELLOW, COLORSYMBOL, BYELLOW, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", \
-            BWHITE, UPTIMETXT, RESET, COLORDIVIDER, uptime);
-    printf(" %s%s%s%s", \
-            BLUE, COLORSYMBOL, BBLUE, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", \
-            BWHITE, PKGSTXT, RESET, COLORDIVIDER, pkgs);
-    printf(" %s%s%s%s", \
-            MAGENTA, COLORSYMBOL, BMAGENTA, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", \
-            BWHITE, SHELLTXT, RESET, COLORDIVIDER, shell);
-    printf(" %s%s%s%s", \
-            CYAN, COLORSYMBOL, BCYAN, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", \
-            BWHITE, CPUTXT, RESET, COLORDIVIDER, cpu);
-    printf(" %s%s%s%s", \
-            WHITE, COLORSYMBOL, BWHITE, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", \
-            BWHITE, RAMTXT, RESET, COLORDIVIDER, ram);
+    printf(" %s%s%s%s", BLACK, COLORSYMBOL, BBLACK, COLORSYMBOL);
+    printf("%s%s%s%s%s\n", BWHITE, DISTROTXT, RESET, COLORDIVIDER, distro);
+    printf(" %s%s%s%s", RED, COLORSYMBOL, BRED, COLORSYMBOL);
+    printf("%s%s%s%s%s\n", BWHITE, MODELTXT, RESET, COLORDIVIDER, model);
+    printf(" %s%s%s%s", GREEN, COLORSYMBOL, BGREEN, COLORSYMBOL);
+    printf("%s%s%s%s%s\n", BWHITE, KERNELTXT, RESET, COLORDIVIDER, kernel);
+    printf(" %s%s%s%s", YELLOW, COLORSYMBOL, BYELLOW, COLORSYMBOL);
+    printf("%s%s%s%s%s\n", BWHITE, UPTIMETXT, RESET, COLORDIVIDER, uptime);
+    printf(" %s%s%s%s", BLUE, COLORSYMBOL, BBLUE, COLORSYMBOL);
+    printf("%s%s%s%s%s\n", BWHITE, PKGSTXT, RESET, COLORDIVIDER, pkgs);
+    printf(" %s%s%s%s", MAGENTA, COLORSYMBOL, BMAGENTA, COLORSYMBOL);
+    printf("%s%s%s%s%s\n", BWHITE, SHELLTXT, RESET, COLORDIVIDER, shell);
+    printf(" %s%s%s%s", CYAN, COLORSYMBOL, BCYAN, COLORSYMBOL);
+    printf("%s%s%s%s%s\n", BWHITE, CPUTXT, RESET, COLORDIVIDER, cpu);
+    printf(" %s%s%s%s", WHITE, COLORSYMBOL, BWHITE, COLORSYMBOL);
+    printf("%s%s%s%s%s\n", BWHITE, RAMTXT, RESET, COLORDIVIDER, ram);
 
     printf("%s", getSpacer(COLORLINE, COLORLINELEFTLEN));
     printf("%s", COLORLINEDIVIDERBOTTOM);
@@ -344,7 +320,7 @@ void printColor() {
 }
 
 int main(int argc, char *argv[]) {
-    pthread_t threads[12];
+    pthread_t threads[11];
 
     pthread_create(&threads[0], NULL, getUser, NULL);
     pthread_create(&threads[1], NULL, getHost, NULL);
