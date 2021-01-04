@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-03T21:30:15+0100
+ * date:       2021-01-04T13:20:08+0100
  */
 
 #include <stdio.h>
@@ -11,26 +11,6 @@
 #include <time.h>
 
 #include "config.h"
-
-#define RESET "\033[0m"
-
-#define BLACK "\033[0;30m"
-#define RED "\033[0;31m"
-#define GREEN "\033[0;32m"
-#define YELLOW "\033[0;33m"
-#define BLUE "\033[0;34m"
-#define MAGENTA "\033[0;35m"
-#define CYAN "\033[0;36m"
-#define WHITE "\033[0;37m"
-
-#define BBLACK "\033[1;30m"
-#define BRED "\033[1;31m"
-#define BGREEN "\033[1;32m"
-#define BYELLOW "\033[1;33m"
-#define BBLUE "\033[1;34m"
-#define BMAGENTA "\033[1;35m"
-#define BCYAN "\033[1;36m"
-#define BWHITE "\033[1;37m"
 
 int linelen,
     headerlen;
@@ -47,7 +27,26 @@ char user[50],
      cpu[50],
      ram[20];
 
-const char* getSpacer(char *character, int length) {
+const char *RESET = "\033[0m",
+           *BLACK = "\033[0;30m",
+           *RED = "\033[0;31m",
+           *GREEN = "\033[0;32m",
+           *YELLOW = "\033[0;33m",
+           *BLUE = "\033[0;34m",
+           *MAGENTA = "\033[0;35m",
+           *CYAN = "\033[0;36m",
+           *WHITE = "\033[0;37m",
+           *BBLACK = "\033[1;30m",
+           *BRED = "\033[1;31m",
+           *BGREEN = "\033[1;32m",
+           *BYELLOW = "\033[1;33m",
+           *BBLUE = "\033[1;34m",
+           *BMAGENTA = "\033[1;35m",
+           *BCYAN = "\033[1;36m",
+           *BWHITE = "\033[1;37m";
+
+const char* getSpacer(const char *character,
+                      int length) {
     static char spacer[] = "";
     int i = 1;
 
@@ -151,9 +150,9 @@ void getUptime() {
         fscanf(file, "%d", &sec);
         fclose(file);
 
-        day = (sec / 60 / 60 / 24);
-        hour = (sec / 60 / 60 % 24);
-        min = (sec / 60 % 60);
+        day = sec / 60 / 60 / 24;
+        hour = sec / 60 / 60 % 24;
+        min = sec / 60 % 60;
 
         if (day == 0) {
             sprintf(uptime, "%dh %dm", hour, min);
@@ -222,8 +221,8 @@ void getRAM() {
         fscanf(file, "%d", &memavailable);
         fclose(file);
 
-        memavailable = ((memtotal - memavailable) / 1024);
-        memtotal = (memtotal / 1024);
+        memavailable = (memtotal - memavailable) / 1024;
+        memtotal = memtotal / 1024;
 
         sprintf(ram, "%dMiB / %dMiB", memavailable, memtotal);
 

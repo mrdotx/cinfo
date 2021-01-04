@@ -2,32 +2,37 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-03T19:06:00+0100
+ * date:       2021-01-04T11:31:10+0100
  */
 
-#define PKGCMD "pacman -Qq | wc -l"
-#define PKGDESC " (pacman)"
+/* package manager */
+const char *PKGCMD = "pacman -Qq | wc -l",
+           *PKGDESC = " (pacman)";
 
-#define HEADERSPACER " "
-#define HEADERBINDER "@"
+/* header */
+const char *HEADERSPACER = " ",
+           *HEADERBINDER = "@";
 
-#define ASCIILINELEFTLEN 8
-#define ASCIILINE "-"
-#define ASCIILINEDIVIDER "+"
-#define ASCIIDIVIDER " | "
+/* ascii version */
+const int ASCIILINELEFTLEN = 8;
+const char *ASCIILINE = "-",
+           *ASCIILINEDIVIDER = "+",
+           *ASCIIDIVIDER = " | ";
 
-#define COLORLINELEFTLEN 13
-#define COLORLINE "─"
-#define COLORLINEDIVIDERTOP "┬"
-#define COLORLINEDIVIDERBOTTOM "┴"
-#define COLORDIVIDER " │ "
-#define COLORSYMBOL "██"
+/* color version */
+const int COLORLINELEFTLEN = 13;
+const char *COLORLINE = "─",
+           *COLORLINEDIVIDERTOP = "┬",
+           *COLORLINEDIVIDERBOTTOM = "┴",
+           *COLORDIVIDER = " │ ",
+           *COLORSYMBOL = "██";
 
-#define DISTROTXT   " distro"
-#define MODELTXT    "  model"
-#define KERNELTXT   " kernel"
-#define UPTIMETXT   " uptime"
-#define PKGSTXT     "   pkgs"
-#define SHELLTXT    "  shell"
-#define CPUTXT      "    cpu"
-#define RAMTXT      "    ram"
+/* label */
+const char *DISTROTXT = " distro",
+           *MODELTXT  = "  model",
+           *KERNELTXT = " kernel",
+           *UPTIMETXT = " uptime",
+           *PKGSTXT   = "   pkgs",
+           *SHELLTXT  = "  shell",
+           *CPUTXT    = "    cpu",
+           *RAMTXT    = "    ram";
