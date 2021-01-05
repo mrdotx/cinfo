@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-04T23:58:27+0100
+ * date:       2021-01-05T12:33:14+0100
  */
 
 #include <stdio.h>
@@ -209,10 +209,23 @@ void *getShell() {
 }
 
 void *getCPU() {
-    FILE *file = popen("grep -m 1 'model name	:' /proc/cpuinfo \
+    char cpumodel[45];
+    float cpudegrees;
+
+    FILE *file;
+    file = popen("grep -m 1 'model name	:' /proc/cpuinfo \
             | sed 's/model name	: //'", "r");
-    fscanf(file, "%[^\n]s", cpu);
+    fscanf(file, "%[^\n]s", cpumodel);
     pclose(file);
+
+    if ((file = fopen("/sys/class/thermal/thermal_zone0/temp", "r"))) {
+        fscanf(file, "%f", &cpudegrees);
+        fclose(file);
+    }
+
+    cpudegrees /= 1000;
+
+    sprintf(cpu, "%s [%.0fC]", cpumodel, cpudegrees);
 
     if (linelen < strlen(cpu)) {
         linelen = strlen(cpu);
@@ -224,6 +237,8 @@ void *getCPU() {
 void *getRAM() {
     int memtotal,
         memavailable;
+
+    float mempercent;
 
     FILE *file;
     file = popen("grep 'MemTotal:' /proc/meminfo \
@@ -237,8 +252,9 @@ void *getRAM() {
 
     memavailable = (memtotal - memavailable) / 1024;
     memtotal /= 1024;
+    mempercent = (float)memavailable / memtotal * 100;
 
-    sprintf(ram, "%dMiB / %dMiB", memavailable, memtotal);
+    sprintf(ram, "%dMiB / %dMiB [%.0f%%]", memavailable, memtotal, mempercent);
 
     if (linelen < strlen(ram)) {
         linelen = strlen(ram);
