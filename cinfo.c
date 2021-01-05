@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-05T12:39:19+0100
+ * date:       2021-01-05T12:50:34+0100
  */
 
 #include <stdio.h>
@@ -20,13 +20,13 @@ char user[50],
      host[50],
      zeit[20],
      distro[50],
-     model[75],
+     model[65],
      kernel[50],
      uptime[10],
      pkgs[15],
      shell[25],
      cpu[50],
-     ram[20];
+     ram[25];
 
 const char *RESET = "\033[0m",
            *BLACK = "\033[0;30m",
@@ -109,7 +109,7 @@ void *getDistro() {
 
 void *getModel() {
     char modelname[50] = "",
-         modelversion[25] = "";
+         modelversion[15] = "";
 
     FILE *file;
     if ((file = fopen("/sys/devices/virtual/dmi/id/product_name", "r"))) {
