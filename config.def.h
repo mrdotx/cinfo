@@ -2,12 +2,12 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-04T11:31:10+0100
+ * date:       2021-01-05T12:21:08+0100
  */
 
 /* package manager */
 const char *PKGCMD = "pacman -Qq | wc -l",
-           *PKGDESC = " (pacman)";
+           *PKGDESC = " [pacman]";
 
 /* header */
 const char *HEADERSPACER = " ",
