@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-05T19:19:55+0100
+ * date:       2021-01-06T11:53:25+0100
  */
 
 #include <stdio.h>
@@ -63,6 +63,8 @@ const char* getSpacer(const char *character, int length) {
 void *getUser() {
     sprintf(user, "%s", getenv("USER"));
 
+    headerlen += strlen(user);
+
     return NULL;
 }
 
@@ -72,6 +74,8 @@ void *getHost() {
         fscanf(file, "%s", host);
         fclose(file);
     }
+
+    headerlen += strlen(host);
 
     return NULL;
 }
@@ -89,6 +93,8 @@ void *getTime() {
             part->tm_hour, \
             part->tm_min, \
             part->tm_sec);
+
+    headerlen += strlen(zeit);
 
     return NULL;
 }
@@ -273,7 +279,6 @@ void printLine(const int lineleftlen, const char *line, const char *linedivider)
 }
 
 void printAscii() {
-    headerlen = strlen(user) + strlen(host) + strlen(zeit);
     if (linelen < headerlen - ASCIILINELEFTLEN) {
         linelen = headerlen - ASCIILINELEFTLEN - 1;
     }
@@ -297,7 +302,6 @@ void printAscii() {
 }
 
 void printColor() {
-    headerlen = strlen(user) + strlen(host) + strlen(zeit);
     if (linelen < headerlen - COLORLINELEFTLEN) {
         linelen = headerlen - COLORLINELEFTLEN - 1;
     }
@@ -329,7 +333,9 @@ void printColor() {
 }
 
 int main(int argc, char *argv[]) {
-    pthread_t threads[11];
+    const int NUMTHREADS = 11;
+    pthread_t threads[NUMTHREADS];
+    int i;
 
     pthread_create(&threads[0], NULL, getUser, NULL);
     pthread_create(&threads[1], NULL, getHost, NULL);
@@ -343,17 +349,9 @@ int main(int argc, char *argv[]) {
     pthread_create(&threads[9], NULL, getCPU, NULL);
     pthread_create(&threads[10], NULL, getRAM, NULL);
 
-    pthread_join(threads[0], NULL);
-    pthread_join(threads[1], NULL);
-    pthread_join(threads[2], NULL);
-    pthread_join(threads[3], NULL);
-    pthread_join(threads[4], NULL);
-    pthread_join(threads[5], NULL);
-    pthread_join(threads[6], NULL);
-    pthread_join(threads[7], NULL);
-    pthread_join(threads[8], NULL);
-    pthread_join(threads[9], NULL);
-    pthread_join(threads[10], NULL);
+    for (i = 0; i < NUMTHREADS; i++) {
+        pthread_join(threads[i], NULL);
+    }
 
     if (argc == 1) {
         printColor();
@@ -364,5 +362,6 @@ int main(int argc, char *argv[]) {
     }
 
     pthread_exit(NULL);
+
     return 0;
 }
