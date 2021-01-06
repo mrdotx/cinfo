@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-06T11:53:25+0100
+ * date:       2021-01-06T17:13:29+0100
  */
 
 #include <stdio.h>
@@ -14,7 +14,8 @@
 #include "config.h"
 
 int linelen,
-    headerlen;
+    headerlen,
+    startcolor = 30;
 
 char user[50],
      host[50],
@@ -27,24 +28,6 @@ char user[50],
      shell[25],
      cpu[50],
      ram[25];
-
-const char *RESET = "\033[0m",
-           *BLACK = "\033[0;30m",
-           *RED = "\033[0;31m",
-           *GREEN = "\033[0;32m",
-           *YELLOW = "\033[0;33m",
-           *BLUE = "\033[0;34m",
-           *MAGENTA = "\033[0;35m",
-           *CYAN = "\033[0;36m",
-           *WHITE = "\033[0;37m",
-           *BBLACK = "\033[1;30m",
-           *BRED = "\033[1;31m",
-           *BGREEN = "\033[1;32m",
-           *BYELLOW = "\033[1;33m",
-           *BBLUE = "\033[1;34m",
-           *BMAGENTA = "\033[1;35m",
-           *BCYAN = "\033[1;36m",
-           *BWHITE = "\033[1;37m";
 
 const char* getSpacer(const char *character, int length) {
     static char spacer[65];
@@ -190,11 +173,11 @@ void *getUptime() {
 void *getPackages() {
     int pkgcount;
 
-    FILE *file = popen(PKGCMD, "r");
+    FILE *file = popen(PKG_CMD, "r");
     fscanf(file, "%d", &pkgcount);
     pclose(file);
 
-    sprintf(pkgs, "%d%s", pkgcount, PKGDESC);
+    sprintf(pkgs, "%d%s", pkgcount, PKG_DESC);
 
     if (linelen < strlen(pkgs)) {
         linelen = strlen(pkgs);
@@ -278,63 +261,66 @@ void printLine(const int lineleftlen, const char *line, const char *linedivider)
     printf("%s\n", getSpacer(line, linelen + 2));
 }
 
+void printInfo(const char *label, const char *result) {
+    if (startcolor >= 30 && startcolor <= 37) {
+        printf(" \033[0;%dm%s", startcolor, COLOR_SYMBOL);
+        printf("\033[1;%dm%s", startcolor, COLOR_SYMBOL);
+        startcolor++;
+    } else {
+        printf("     ");
+    }
+    printf("%s%s%s%s%s%s%s\n", COLOR_PRIMARY, label, COLOR_TABLE, COLOR_DIVIDER, COLOR_SECONDARY, result, COLOR_TABLE);
+}
+
 void printAscii() {
-    if (linelen < headerlen - ASCIILINELEFTLEN) {
-        linelen = headerlen - ASCIILINELEFTLEN - 1;
+    if (linelen < headerlen - ASCII_LINELEFTLEN) {
+        linelen = headerlen - ASCII_LINELEFTLEN - 1;
     }
 
-    printf("%s", user);
-    printf("%s", HEADERBINDER);
-    printf("%s", host);
-    printf("%s", getSpacer(HEADERSPACER, linelen - headerlen + ASCIILINELEFTLEN + 2));
+    printf("%s@%s", user, host);
+    printf("%s", getSpacer(" ", linelen - headerlen + ASCII_LINELEFTLEN + 2));
     printf("%s\n",zeit);
-    printLine(ASCIILINELEFTLEN, ASCIILINE, ASCIILINEDIVIDER);
 
-    printf("%s%s%s\n", DISTROTXT, ASCIIDIVIDER, distro);
-    printf("%s%s%s\n", MODELTXT, ASCIIDIVIDER, model);
-    printf("%s%s%s\n", KERNELTXT, ASCIIDIVIDER, kernel);
-    printf("%s%s%s\n", UPTIMETXT, ASCIIDIVIDER, uptime);
-    printf("%s%s%s\n", PKGSTXT, ASCIIDIVIDER, pkgs);
-    printf("%s%s%s\n", SHELLTXT, ASCIIDIVIDER, shell);
-    printf("%s%s%s\n", CPUTXT, ASCIIDIVIDER, cpu);
-    printf("%s%s%s\n", RAMTXT, ASCIIDIVIDER, ram);
-    printLine(ASCIILINELEFTLEN, ASCIILINE, ASCIILINEDIVIDER);
+    printLine(ASCII_LINELEFTLEN, ASCII_LINE, ASCII_LINEDIVIDER);
+
+    printf("%s%s%s\n", DISTRO_TXT, ASCII_DIVIDER, distro);
+    printf("%s%s%s\n", MODEL_TXT, ASCII_DIVIDER, model);
+    printf("%s%s%s\n", KERNEL_TXT, ASCII_DIVIDER, kernel);
+    printf("%s%s%s\n", UPTIME_TXT, ASCII_DIVIDER, uptime);
+    printf("%s%s%s\n", PKGS_TXT, ASCII_DIVIDER, pkgs);
+    printf("%s%s%s\n", SHELL_TXT, ASCII_DIVIDER, shell);
+    printf("%s%s%s\n", CPU_TXT, ASCII_DIVIDER, cpu);
+    printf("%s%s%s\n", RAM_TXT, ASCII_DIVIDER, ram);
+
+    printLine(ASCII_LINELEFTLEN, ASCII_LINE, ASCII_LINEDIVIDER);
 }
 
 void printColor() {
-    if (linelen < headerlen - COLORLINELEFTLEN) {
-        linelen = headerlen - COLORLINELEFTLEN - 1;
+    if (linelen < headerlen - COLOR_LINELEFTLEN) {
+        linelen = headerlen - COLOR_LINELEFTLEN - 1;
     }
 
-    printf("%s%s%s", BWHITE, user, RESET);
-    printf("%s", HEADERBINDER);
-    printf("%s%s%s", BWHITE, host, RESET);
-    printf("%s", getSpacer(HEADERSPACER, linelen - headerlen + COLORLINELEFTLEN + 2));
-    printf("%s\n", zeit);
-    printLine(COLORLINELEFTLEN, COLORLINE, COLORLINEDIVIDERTOP);
+    printf("%s%s@%s%s", COLOR_PRIMARY, user, host, COLOR_SECONDARY);
+    printf("%s", getSpacer(" ", linelen - headerlen + COLOR_LINELEFTLEN + 2));
+    printf("%s%s\n", zeit, COLOR_TABLE);
 
-    printf(" %s%s%s%s", BLACK, COLORSYMBOL, BBLACK, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", BWHITE, DISTROTXT, RESET, COLORDIVIDER, distro);
-    printf(" %s%s%s%s", RED, COLORSYMBOL, BRED, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", BWHITE, MODELTXT, RESET, COLORDIVIDER, model);
-    printf(" %s%s%s%s", GREEN, COLORSYMBOL, BGREEN, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", BWHITE, KERNELTXT, RESET, COLORDIVIDER, kernel);
-    printf(" %s%s%s%s", YELLOW, COLORSYMBOL, BYELLOW, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", BWHITE, UPTIMETXT, RESET, COLORDIVIDER, uptime);
-    printf(" %s%s%s%s", BLUE, COLORSYMBOL, BBLUE, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", BWHITE, PKGSTXT, RESET, COLORDIVIDER, pkgs);
-    printf(" %s%s%s%s", MAGENTA, COLORSYMBOL, BMAGENTA, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", BWHITE, SHELLTXT, RESET, COLORDIVIDER, shell);
-    printf(" %s%s%s%s", CYAN, COLORSYMBOL, BCYAN, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", BWHITE, CPUTXT, RESET, COLORDIVIDER, cpu);
-    printf(" %s%s%s%s", WHITE, COLORSYMBOL, BWHITE, COLORSYMBOL);
-    printf("%s%s%s%s%s\n", BWHITE, RAMTXT, RESET, COLORDIVIDER, ram);
-    printLine(COLORLINELEFTLEN, COLORLINE, COLORLINEDIVIDERBOTTOM);
+    printLine(COLOR_LINELEFTLEN, COLOR_LINE, COLOR_LINEDIVIDERTOP);
+
+    printInfo(DISTRO_TXT, distro);
+    printInfo(MODEL_TXT, model);
+    printInfo(KERNEL_TXT, kernel);
+    printInfo(UPTIME_TXT, uptime);
+    printInfo(PKGS_TXT, pkgs);
+    printInfo(SHELL_TXT, shell);
+    printInfo(CPU_TXT, cpu);
+    printInfo(RAM_TXT, ram);
+
+    printLine(COLOR_LINELEFTLEN, COLOR_LINE, COLOR_LINEDIVIDERBOTTOM);
 }
 
 int main(int argc, char *argv[]) {
-    const int NUMTHREADS = 11;
-    pthread_t threads[NUMTHREADS];
+    const int THREADS_NUM = 11;
+    pthread_t threads[THREADS_NUM];
     int i;
 
     pthread_create(&threads[0], NULL, getUser, NULL);
@@ -349,7 +335,7 @@ int main(int argc, char *argv[]) {
     pthread_create(&threads[9], NULL, getCPU, NULL);
     pthread_create(&threads[10], NULL, getRAM, NULL);
 
-    for (i = 0; i < NUMTHREADS; i++) {
+    for (i = 0; i < THREADS_NUM; i++) {
         pthread_join(threads[i], NULL);
     }
 
