@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-06T18:44:23+0100
+ * date:       2021-01-06T20:15:49+0100
  */
 
 /* package manager */
@@ -28,11 +28,11 @@ const char *COLOR_PRIMARY = "\033[1;37m",
            *COLOR_SYMBOL = "██";
 
 /* label */
-const char *DISTRO_TXT = " distro",
-           *MODEL_TXT  = "  model",
-           *KERNEL_TXT = " kernel",
-           *UPTIME_TXT = " uptime",
-           *PKGS_TXT   = "   pkgs",
-           *SHELL_TXT  = "  shell",
-           *CPU_TXT    = "    cpu",
-           *RAM_TXT    = "    ram";
+const char *LABEL_DISTRO = " distro",
+           *LABEL_MODEL  = "  model",
+           *LABEL_KERNEL = " kernel",
+           *LABEL_UPTIME = " uptime",
+           *LABEL_PKGS   = "   pkgs",
+           *LABEL_SHELL  = "  shell",
+           *LABEL_CPU    = "    cpu",
+           *LABEL_RAM    = "    ram";

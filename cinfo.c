@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-06T18:40:57+0100
+ * date:       2021-01-06T20:47:49+0100
  */
 
 #include <stdio.h>
@@ -15,7 +15,7 @@
 
 int linelen,
     headerlen,
-    startcolor = 30;
+    colorcode = 30;
 
 char user[50],
      host[50],
@@ -261,15 +261,17 @@ void printLine(const int lineleftlen, const char *line, const char *linedivider)
     printf("%s\n", getSpacer(line, linelen + 2));
 }
 
-void printInfo(const char *label, const char *result) {
-    if (startcolor >= 30 && startcolor <= 37) {
-        printf(" \033[0;%dm%s", startcolor, COLOR_SYMBOL);
-        printf("\033[1;%dm%s", startcolor, COLOR_SYMBOL);
-        startcolor++;
+void printInfo(const char *label, const char *info) {
+    if (colorcode >= 30 && colorcode <= 37) {
+        printf(" \033[0;%dm%s", colorcode, COLOR_SYMBOL);
+        printf("\033[1;%dm%s", colorcode, COLOR_SYMBOL);
+        colorcode++;
     } else {
         printf("     ");
     }
-    printf("%s%s%s%s%s%s%s\n", COLOR_PRIMARY, label, COLOR_TABLE, COLOR_DIVIDER, COLOR_SECONDARY, result, COLOR_TABLE);
+    printf("%s%s%s", COLOR_PRIMARY, label, COLOR_TABLE);
+    printf("%s", COLOR_DIVIDER);
+    printf("%s%s%s\n", COLOR_SECONDARY, info, COLOR_TABLE);
 }
 
 void printAscii() {
@@ -283,14 +285,14 @@ void printAscii() {
 
     printLine(ASCII_LINELEFTLEN, ASCII_LINE, ASCII_LINEDIVIDERTOP);
 
-    printf("%s%s%s\n", DISTRO_TXT, ASCII_DIVIDER, distro);
-    printf("%s%s%s\n", MODEL_TXT, ASCII_DIVIDER, model);
-    printf("%s%s%s\n", KERNEL_TXT, ASCII_DIVIDER, kernel);
-    printf("%s%s%s\n", UPTIME_TXT, ASCII_DIVIDER, uptime);
-    printf("%s%s%s\n", PKGS_TXT, ASCII_DIVIDER, pkgs);
-    printf("%s%s%s\n", SHELL_TXT, ASCII_DIVIDER, shell);
-    printf("%s%s%s\n", CPU_TXT, ASCII_DIVIDER, cpu);
-    printf("%s%s%s\n", RAM_TXT, ASCII_DIVIDER, ram);
+    printf("%s%s%s\n", LABEL_DISTRO, ASCII_DIVIDER, distro);
+    printf("%s%s%s\n", LABEL_MODEL, ASCII_DIVIDER, model);
+    printf("%s%s%s\n", LABEL_KERNEL, ASCII_DIVIDER, kernel);
+    printf("%s%s%s\n", LABEL_UPTIME, ASCII_DIVIDER, uptime);
+    printf("%s%s%s\n", LABEL_PKGS, ASCII_DIVIDER, pkgs);
+    printf("%s%s%s\n", LABEL_SHELL, ASCII_DIVIDER, shell);
+    printf("%s%s%s\n", LABEL_CPU, ASCII_DIVIDER, cpu);
+    printf("%s%s%s\n", LABEL_RAM, ASCII_DIVIDER, ram);
 
     printLine(ASCII_LINELEFTLEN, ASCII_LINE, ASCII_LINEDIVIDERBOTTOM);
 }
@@ -306,14 +308,14 @@ void printColor() {
 
     printLine(COLOR_LINELEFTLEN, COLOR_LINE, COLOR_LINEDIVIDERTOP);
 
-    printInfo(DISTRO_TXT, distro);
-    printInfo(MODEL_TXT, model);
-    printInfo(KERNEL_TXT, kernel);
-    printInfo(UPTIME_TXT, uptime);
-    printInfo(PKGS_TXT, pkgs);
-    printInfo(SHELL_TXT, shell);
-    printInfo(CPU_TXT, cpu);
-    printInfo(RAM_TXT, ram);
+    printInfo(LABEL_DISTRO, distro);
+    printInfo(LABEL_MODEL, model);
+    printInfo(LABEL_KERNEL, kernel);
+    printInfo(LABEL_UPTIME, uptime);
+    printInfo(LABEL_PKGS, pkgs);
+    printInfo(LABEL_SHELL, shell);
+    printInfo(LABEL_CPU, cpu);
+    printInfo(LABEL_RAM, ram);
 
     printLine(COLOR_LINELEFTLEN, COLOR_LINE, COLOR_LINEDIVIDERBOTTOM);
 }
