@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-06T17:13:29+0100
+ * date:       2021-01-06T18:40:57+0100
  */
 
 #include <stdio.h>
@@ -281,7 +281,7 @@ void printAscii() {
     printf("%s", getSpacer(" ", linelen - headerlen + ASCII_LINELEFTLEN + 2));
     printf("%s\n",zeit);
 
-    printLine(ASCII_LINELEFTLEN, ASCII_LINE, ASCII_LINEDIVIDER);
+    printLine(ASCII_LINELEFTLEN, ASCII_LINE, ASCII_LINEDIVIDERTOP);
 
     printf("%s%s%s\n", DISTRO_TXT, ASCII_DIVIDER, distro);
     printf("%s%s%s\n", MODEL_TXT, ASCII_DIVIDER, model);
@@ -292,7 +292,7 @@ void printAscii() {
     printf("%s%s%s\n", CPU_TXT, ASCII_DIVIDER, cpu);
     printf("%s%s%s\n", RAM_TXT, ASCII_DIVIDER, ram);
 
-    printLine(ASCII_LINELEFTLEN, ASCII_LINE, ASCII_LINEDIVIDER);
+    printLine(ASCII_LINELEFTLEN, ASCII_LINE, ASCII_LINEDIVIDERBOTTOM);
 }
 
 void printColor() {

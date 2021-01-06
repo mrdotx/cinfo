@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-06T17:24:53+0100
+ * date:       2021-01-06T18:44:23+0100
  */
 
 /* package manager */
@@ -12,7 +12,8 @@ const char *PKG_CMD = "pacman -Qq | wc -l",
 /* ascii version */
 const int ASCII_LINELEFTLEN = 8;
 const char *ASCII_LINE = "-",
-           *ASCII_LINEDIVIDER = "+",
+           *ASCII_LINEDIVIDERTOP = "-",
+           *ASCII_LINEDIVIDERBOTTOM = "-",
            *ASCII_DIVIDER = " | ";
 
 /* color version */
