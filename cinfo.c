@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-06T20:47:49+0100
+ * date:       2021-01-07T14:32:37+0100
  */
 
 #include <stdio.h>
@@ -14,8 +14,7 @@
 #include "config.h"
 
 int linelen,
-    headerlen,
-    colorcode = 30;
+    headerlen;
 
 char user[50],
      host[50],
@@ -83,7 +82,7 @@ void *getTime() {
 }
 
 void *getDistro() {
-    FILE *file = popen("grep 'PRETTY_NAME=' /etc/os-release \
+    FILE *file = popen("grep -m 1 '^PRETTY_NAME=' /etc/os-release \
             | cut -d '\"' -f2", "r");
     fscanf(file, "%[^\n]s", distro);
     pclose(file);
@@ -201,8 +200,8 @@ void *getCPU() {
     float cputemp;
 
     FILE *file;
-    file = popen("grep -m 1 'model name	:' /proc/cpuinfo \
-            | sed 's/model name	: //'", "r");
+    file = popen("grep -m 1 '^model name.*:' /proc/cpuinfo \
+            | sed 's/^model name.*: //'", "r");
     fscanf(file, "%[^\n]s", cpumodel);
     pclose(file);
 
@@ -229,12 +228,12 @@ void *getRAM() {
     float mempercent;
 
     FILE *file;
-    file = popen("grep 'MemTotal:' /proc/meminfo \
-            | sed 's/MemTotal://'", "r");
+    file = popen("grep -m 1 '^MemTotal:' /proc/meminfo \
+            | sed 's/^MemTotal://'", "r");
     fscanf(file, "%d", &memtotal);
 
-    file = popen("grep 'MemAvailable:' /proc/meminfo \
-            | sed 's/MemAvailable://'", "r");
+    file = popen("grep -m 1 '^MemAvailable:' /proc/meminfo \
+            | sed 's/^MemAvailable://'", "r");
     fscanf(file, "%d", &memavailable);
     pclose(file);
 
@@ -262,10 +261,11 @@ void printLine(const int lineleftlen, const char *line, const char *linedivider)
 }
 
 void printInfo(const char *label, const char *info) {
-    if (colorcode >= 30 && colorcode <= 37) {
-        printf(" \033[0;%dm%s", colorcode, COLOR_SYMBOL);
-        printf("\033[1;%dm%s", colorcode, COLOR_SYMBOL);
-        colorcode++;
+    static int i = 30;
+    if (i <= 37) {
+        printf(" \033[0;%dm%s", i, COLOR_SYMBOL);
+        printf("\033[1;%dm%s", i, COLOR_SYMBOL);
+        i++;
     } else {
         printf("     ");
     }
@@ -325,17 +325,17 @@ int main(int argc, char *argv[]) {
     pthread_t threads[THREADS_NUM];
     int i;
 
-    pthread_create(&threads[0], NULL, getUser, NULL);
-    pthread_create(&threads[1], NULL, getHost, NULL);
-    pthread_create(&threads[2], NULL, getTime, NULL);
-    pthread_create(&threads[3], NULL, getDistro, NULL);
-    pthread_create(&threads[4], NULL, getModel, NULL);
-    pthread_create(&threads[5], NULL, getKernel, NULL);
-    pthread_create(&threads[6], NULL, getUptime, NULL);
-    pthread_create(&threads[7], NULL, getPackages, NULL);
-    pthread_create(&threads[8], NULL, getShell, NULL);
-    pthread_create(&threads[9], NULL, getCPU, NULL);
-    pthread_create(&threads[10], NULL, getRAM, NULL);
+    pthread_create(&threads[i++], NULL, getUser, NULL);
+    pthread_create(&threads[i++], NULL, getHost, NULL);
+    pthread_create(&threads[i++], NULL, getTime, NULL);
+    pthread_create(&threads[i++], NULL, getDistro, NULL);
+    pthread_create(&threads[i++], NULL, getModel, NULL);
+    pthread_create(&threads[i++], NULL, getKernel, NULL);
+    pthread_create(&threads[i++], NULL, getUptime, NULL);
+    pthread_create(&threads[i++], NULL, getPackages, NULL);
+    pthread_create(&threads[i++], NULL, getShell, NULL);
+    pthread_create(&threads[i++], NULL, getCPU, NULL);
+    pthread_create(&threads[i++], NULL, getRAM, NULL);
 
     for (i = 0; i < THREADS_NUM; i++) {
         pthread_join(threads[i], NULL);
