@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-07T14:32:37+0100
+ * date:       2021-01-07T20:42:59+0100
  */
 
 #include <stdio.h>
@@ -250,17 +250,61 @@ void *getRAM() {
     return NULL;
 }
 
-void printUsage() {
-    printf("usage: cinfo [-a]\n");
+void getInfos(void *print()) {
+    const void *multiThreads[] = {
+        getUser,
+        getHost,
+        getTime,
+        getDistro,
+        getModel,
+        getKernel,
+        getUptime,
+        getPackages,
+        getShell,
+        getCPU,
+        getRAM
+    };
+
+    const int THREADS_NUM = (int)(sizeof(multiThreads)/sizeof(multiThreads[0]));
+    pthread_t threads[THREADS_NUM];
+    int i;
+
+    for (i = 0; i < THREADS_NUM; i++) {
+        pthread_create(&threads[i], NULL, multiThreads[i], NULL);
+    }
+
+    for (i = 0; i < THREADS_NUM; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    print();
+
+    pthread_exit(NULL);
 }
 
-void printLine(const int lineleftlen, const char *line, const char *linedivider) {
-    printf("%s", getSpacer(line, lineleftlen));
-    printf("%s", linedivider);
+void printHeader(const int leftlen,
+                 const char *color_primary,
+                 const char *color_secondary,
+                 const char *color_table) {
+    if (linelen < headerlen - leftlen) {
+        linelen = headerlen - leftlen - 1;
+    }
+
+    printf("%s%s@%s%s", color_primary, user, host, color_secondary);
+    printf("%s", getSpacer(" ", linelen - headerlen + leftlen + 2));
+    printf("%s%s\n", zeit, color_table);
+}
+
+void printLine(const int leftlen,
+               const char *line,
+               const char *divider) {
+    printf("%s", getSpacer(line, leftlen));
+    printf("%s", divider);
     printf("%s\n", getSpacer(line, linelen + 2));
 }
 
-void printInfo(const char *label, const char *info) {
+void printInfo(const char *label,
+               const char *info) {
     static int i = 30;
     if (i <= 37) {
         printf(" \033[0;%dm%s", i, COLOR_SYMBOL);
@@ -274,14 +318,8 @@ void printInfo(const char *label, const char *info) {
     printf("%s%s%s\n", COLOR_SECONDARY, info, COLOR_TABLE);
 }
 
-void printAscii() {
-    if (linelen < headerlen - ASCII_LINELEFTLEN) {
-        linelen = headerlen - ASCII_LINELEFTLEN - 1;
-    }
-
-    printf("%s@%s", user, host);
-    printf("%s", getSpacer(" ", linelen - headerlen + ASCII_LINELEFTLEN + 2));
-    printf("%s\n",zeit);
+void *printAscii() {
+    printHeader(ASCII_LINELEFTLEN, "", "", "");
 
     printLine(ASCII_LINELEFTLEN, ASCII_LINE, ASCII_LINEDIVIDERTOP);
 
@@ -295,16 +333,12 @@ void printAscii() {
     printf("%s%s%s\n", LABEL_RAM, ASCII_DIVIDER, ram);
 
     printLine(ASCII_LINELEFTLEN, ASCII_LINE, ASCII_LINEDIVIDERBOTTOM);
+
+    return NULL;
 }
 
-void printColor() {
-    if (linelen < headerlen - COLOR_LINELEFTLEN) {
-        linelen = headerlen - COLOR_LINELEFTLEN - 1;
-    }
-
-    printf("%s%s@%s%s", COLOR_PRIMARY, user, host, COLOR_SECONDARY);
-    printf("%s", getSpacer(" ", linelen - headerlen + COLOR_LINELEFTLEN + 2));
-    printf("%s%s\n", zeit, COLOR_TABLE);
+void *printColor() {
+    printHeader(COLOR_LINELEFTLEN, COLOR_PRIMARY, COLOR_SECONDARY, COLOR_TABLE);
 
     printLine(COLOR_LINELEFTLEN, COLOR_LINE, COLOR_LINEDIVIDERTOP);
 
@@ -318,38 +352,22 @@ void printColor() {
     printInfo(LABEL_RAM, ram);
 
     printLine(COLOR_LINELEFTLEN, COLOR_LINE, COLOR_LINEDIVIDERBOTTOM);
+
+    return NULL;
+}
+
+void printUsage() {
+    printf("usage: cinfo [-a]\n");
 }
 
 int main(int argc, char *argv[]) {
-    const int THREADS_NUM = 11;
-    pthread_t threads[THREADS_NUM];
-    int i;
-
-    pthread_create(&threads[i++], NULL, getUser, NULL);
-    pthread_create(&threads[i++], NULL, getHost, NULL);
-    pthread_create(&threads[i++], NULL, getTime, NULL);
-    pthread_create(&threads[i++], NULL, getDistro, NULL);
-    pthread_create(&threads[i++], NULL, getModel, NULL);
-    pthread_create(&threads[i++], NULL, getKernel, NULL);
-    pthread_create(&threads[i++], NULL, getUptime, NULL);
-    pthread_create(&threads[i++], NULL, getPackages, NULL);
-    pthread_create(&threads[i++], NULL, getShell, NULL);
-    pthread_create(&threads[i++], NULL, getCPU, NULL);
-    pthread_create(&threads[i++], NULL, getRAM, NULL);
-
-    for (i = 0; i < THREADS_NUM; i++) {
-        pthread_join(threads[i], NULL);
-    }
-
     if (argc == 1) {
-        printColor();
+        getInfos(printColor);
     } else if (strcmp(argv[1], "-a") == 0) {
-        printAscii();
+        getInfos(printAscii);
     } else {
         printUsage();
     }
-
-    pthread_exit(NULL);
 
     return 0;
 }
