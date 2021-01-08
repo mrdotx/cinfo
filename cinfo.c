@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-07T20:42:59+0100
+ * date:       2021-01-08T11:09:15+0100
  */
 
 #include <stdio.h>
@@ -13,22 +13,22 @@
 
 #include "config.h"
 
-int linelen,
-    headerlen;
+int line_len,
+    header_len;
 
 char user[50],
      host[50],
-     zeit[20],
+     datetime[17],
      distro[50],
      model[65],
      kernel[50],
-     uptime[10],
-     pkgs[15],
+     uptime[13],
+     pkgs[25],
      shell[25],
      cpu[50],
      ram[25];
 
-const char* getSpacer(const char *character, int length) {
+const char* get_spacer(const char *character, int length) {
     static char spacer[65];
     int i = 1;
 
@@ -42,33 +42,33 @@ const char* getSpacer(const char *character, int length) {
     return(spacer);
 }
 
-void *getUser() {
+void *get_user() {
     sprintf(user, "%s", getenv("USER"));
 
-    headerlen += strlen(user);
+    header_len += strlen(user);
 
     return NULL;
 }
 
-void *getHost() {
+void *get_host() {
     FILE *file;
     if ((file = fopen("/proc/sys/kernel/hostname", "r"))) {
         fscanf(file, "%s", host);
         fclose(file);
     }
 
-    headerlen += strlen(host);
+    header_len += strlen(host);
 
     return NULL;
 }
 
-void *getTime() {
+void *get_datetime() {
     time_t raw;
     struct tm * part;
     time(&raw);
     part = localtime(&raw);
 
-    sprintf(zeit, "%02d.%02d.%d %02d:%02d:%02d", \
+    sprintf(datetime, "%02d.%02d.%d %02d:%02d:%02d", \
             part->tm_mday, \
             part->tm_mon + 1, \
             part->tm_year + 1900, \
@@ -76,67 +76,67 @@ void *getTime() {
             part->tm_min, \
             part->tm_sec);
 
-    headerlen += strlen(zeit);
+    header_len += strlen(datetime);
 
     return NULL;
 }
 
-void *getDistro() {
+void *get_distro() {
     FILE *file = popen("grep -m 1 '^PRETTY_NAME=' /etc/os-release \
             | cut -d '\"' -f2", "r");
     fscanf(file, "%[^\n]s", distro);
     pclose(file);
 
-    if (linelen < strlen(distro)) {
-        linelen = strlen(distro);
+    if (line_len < strlen(distro)) {
+        line_len = strlen(distro);
     }
 
     return NULL;
 }
 
-void *getModel() {
-    char modelname[50] = "",
-         modelversion[15] = "";
+void *get_model() {
+    char name[50] = "",
+         version[15] = "";
 
     FILE *file;
     if ((file = fopen("/sys/devices/virtual/dmi/id/product_name", "r"))) {
-        fscanf(file, "%[^\n]s", modelname);
+        fscanf(file, "%[^\n]s", name);
         fclose(file);
 
         file = fopen("/sys/devices/virtual/dmi/id/product_version", "r");
-        fscanf(file, "%s", modelversion);
+        fscanf(file, "%s", version);
         fclose(file);
     } else if ((file = fopen("/sys/firmware/devicetree/base/model", "r"))) {
-        fscanf(file, "%[^\n]s", modelname);
+        fscanf(file, "%[^\n]s", name);
         fclose(file);
     } else {
-        strcpy(modelname, "file not found");
+        strcpy(name, "not found");
     }
 
-    sprintf(model, "%s %s", modelname, modelversion);
+    sprintf(model, "%s %s", name, version);
 
-    if (linelen < strlen(model)) {
-        linelen = strlen(model);
+    if (line_len < strlen(model)) {
+        line_len = strlen(model);
     }
 
     return NULL;
 }
 
-void *getKernel() {
+void *get_kernel() {
     FILE *file;
     if ((file = fopen("/proc/sys/kernel/osrelease", "r"))) {
         fscanf(file, "%[^\n]s", kernel);
         fclose(file);
 
-        if (linelen < strlen(kernel)) {
-            linelen = strlen(kernel);
+        if (line_len < strlen(kernel)) {
+            line_len = strlen(kernel);
         }
     }
 
     return NULL;
 }
 
-void *getUptime() {
+void *get_uptime() {
     int sec,
         day,
         hour,
@@ -160,117 +160,116 @@ void *getUptime() {
         } else {
             sprintf(uptime, "%dd %dh %dm", day, hour, min);
         }
-
-        if (linelen < strlen(uptime)) {
-            linelen = strlen(uptime);
+        if (line_len < strlen(uptime)) {
+            line_len = strlen(uptime);
         }
     }
 
     return NULL;
 }
 
-void *getPackages() {
-    int pkgcount;
+void *get_pkgs() {
+    int pkgs_count;
 
-    FILE *file = popen(PKG_CMD, "r");
-    fscanf(file, "%d", &pkgcount);
+    FILE *file = popen(PKGS_CMD, "r");
+    fscanf(file, "%d", &pkgs_count);
     pclose(file);
 
-    sprintf(pkgs, "%d%s", pkgcount, PKG_DESC);
+    sprintf(pkgs, "%d%s", pkgs_count, PKGS_DESC);
 
-    if (linelen < strlen(pkgs)) {
-        linelen = strlen(pkgs);
+    if (line_len < strlen(pkgs)) {
+        line_len = strlen(pkgs);
     }
 
     return NULL;
 }
 
-void *getShell() {
+void *get_shell() {
     sprintf(shell, "%s", getenv("SHELL"));
 
-    if (linelen < strlen(shell)) {
-        linelen = strlen(shell);
+    if (line_len < strlen(shell)) {
+        line_len = strlen(shell);
     }
 
     return NULL;
 }
 
-void *getCPU() {
-    char cpumodel[45];
-    float cputemp;
+void *get_cpu() {
+    char model[45];
+    float temp;
 
     FILE *file;
     file = popen("grep -m 1 '^model name.*:' /proc/cpuinfo \
             | sed 's/^model name.*: //'", "r");
-    fscanf(file, "%[^\n]s", cpumodel);
+    fscanf(file, "%[^\n]s", model);
     pclose(file);
 
     if ((file = fopen("/sys/class/thermal/thermal_zone0/temp", "r"))) {
-        fscanf(file, "%f", &cputemp);
+        fscanf(file, "%f", &temp);
         fclose(file);
     }
 
-    cputemp /= 1000;
+    temp /= 1000;
 
-    sprintf(cpu, "%s [%.0fC]", cpumodel, cputemp);
+    sprintf(cpu, "%s [%.0fC]", model, temp);
 
-    if (linelen < strlen(cpu)) {
-        linelen = strlen(cpu);
+    if (line_len < strlen(cpu)) {
+        line_len = strlen(cpu);
     }
 
     return NULL;
 }
 
-void *getRAM() {
-    int memtotal,
-        memavailable;
+void *get_ram() {
+    int total,
+        available;
 
-    float mempercent;
+    float percent;
 
     FILE *file;
     file = popen("grep -m 1 '^MemTotal:' /proc/meminfo \
             | sed 's/^MemTotal://'", "r");
-    fscanf(file, "%d", &memtotal);
+    fscanf(file, "%d", &total);
 
     file = popen("grep -m 1 '^MemAvailable:' /proc/meminfo \
             | sed 's/^MemAvailable://'", "r");
-    fscanf(file, "%d", &memavailable);
+    fscanf(file, "%d", &available);
     pclose(file);
 
-    memavailable = (memtotal - memavailable) / 1024;
-    memtotal /= 1024;
-    mempercent = (float)memavailable / memtotal * 100;
+    available = (total - available) / 1024;
+    total /= 1024;
+    percent = (float) available / total * 100;
 
-    sprintf(ram, "%dMiB / %dMiB [%.0f%%]", memavailable, memtotal, mempercent);
+    sprintf(ram, "%dMiB / %dMiB [%.0f%%]", available, total, percent);
 
-    if (linelen < strlen(ram)) {
-        linelen = strlen(ram);
+    if (line_len < strlen(ram)) {
+        line_len = strlen(ram);
     }
 
     return NULL;
 }
 
-void getInfos(void *print()) {
-    const void *multiThreads[] = {
-        getUser,
-        getHost,
-        getTime,
-        getDistro,
-        getModel,
-        getKernel,
-        getUptime,
-        getPackages,
-        getShell,
-        getCPU,
-        getRAM
+void get_infos(void *print()) {
+    const void *multi_threads[] = {
+        get_user,
+        get_host,
+        get_datetime,
+        get_distro,
+        get_model,
+        get_kernel,
+        get_uptime,
+        get_pkgs,
+        get_shell,
+        get_cpu,
+        get_ram
     };
 
-    const int THREADS_NUM = (int)(sizeof(multiThreads)/sizeof(multiThreads[0]));
+    const int THREADS_NUM = (int) sizeof(multi_threads) / sizeof(multi_threads[0]);
     pthread_t threads[THREADS_NUM];
     int i;
 
     for (i = 0; i < THREADS_NUM; i++) {
-        pthread_create(&threads[i], NULL, multiThreads[i], NULL);
+        pthread_create(&threads[i], NULL, multi_threads[i], NULL);
     }
 
     for (i = 0; i < THREADS_NUM; i++) {
@@ -282,29 +281,29 @@ void getInfos(void *print()) {
     pthread_exit(NULL);
 }
 
-void printHeader(const int leftlen,
-                 const char *color_primary,
-                 const char *color_secondary,
-                 const char *color_table) {
-    if (linelen < headerlen - leftlen) {
-        linelen = headerlen - leftlen - 1;
+void print_header(const int left_len,
+                  const char *color_primary,
+                  const char *color_secondary,
+                  const char *color_table) {
+    if (line_len < header_len - left_len) {
+        line_len = header_len - left_len - 1;
     }
 
     printf("%s%s@%s%s", color_primary, user, host, color_secondary);
-    printf("%s", getSpacer(" ", linelen - headerlen + leftlen + 2));
-    printf("%s%s\n", zeit, color_table);
+    printf("%s", get_spacer(" ", line_len - header_len + left_len + 2));
+    printf("%s%s\n", datetime, color_table);
 }
 
-void printLine(const int leftlen,
-               const char *line,
-               const char *divider) {
-    printf("%s", getSpacer(line, leftlen));
+void print_line(const int left_len,
+                const char *line,
+                const char *divider) {
+    printf("%s", get_spacer(line, left_len));
     printf("%s", divider);
-    printf("%s\n", getSpacer(line, linelen + 2));
+    printf("%s\n", get_spacer(line, line_len + 2));
 }
 
-void printInfo(const char *label,
-               const char *info) {
+void print_info(const char *label,
+                const char *info) {
     static int i = 30;
     if (i <= 37) {
         printf(" \033[0;%dm%s", i, COLOR_SYMBOL);
@@ -318,10 +317,10 @@ void printInfo(const char *label,
     printf("%s%s%s\n", COLOR_SECONDARY, info, COLOR_TABLE);
 }
 
-void *printAscii() {
-    printHeader(ASCII_LINELEFTLEN, "", "", "");
+void *print_ascii() {
+    print_header(ASCII_LINE_LEFT_LEN, "", "", "");
 
-    printLine(ASCII_LINELEFTLEN, ASCII_LINE, ASCII_LINEDIVIDERTOP);
+    print_line(ASCII_LINE_LEFT_LEN, ASCII_LINE, ASCII_LINE_DIVIDER_TOP);
 
     printf("%s%s%s\n", LABEL_DISTRO, ASCII_DIVIDER, distro);
     printf("%s%s%s\n", LABEL_MODEL, ASCII_DIVIDER, model);
@@ -332,41 +331,41 @@ void *printAscii() {
     printf("%s%s%s\n", LABEL_CPU, ASCII_DIVIDER, cpu);
     printf("%s%s%s\n", LABEL_RAM, ASCII_DIVIDER, ram);
 
-    printLine(ASCII_LINELEFTLEN, ASCII_LINE, ASCII_LINEDIVIDERBOTTOM);
+    print_line(ASCII_LINE_LEFT_LEN, ASCII_LINE, ASCII_LINE_DIVIDER_BOTTOM);
 
     return NULL;
 }
 
-void *printColor() {
-    printHeader(COLOR_LINELEFTLEN, COLOR_PRIMARY, COLOR_SECONDARY, COLOR_TABLE);
+void *print_color() {
+    print_header(COLOR_LINE_LEFT_LEN, COLOR_PRIMARY, COLOR_SECONDARY, COLOR_TABLE);
 
-    printLine(COLOR_LINELEFTLEN, COLOR_LINE, COLOR_LINEDIVIDERTOP);
+    print_line(COLOR_LINE_LEFT_LEN, COLOR_LINE, COLOR_LINE_DIVIDER_TOP);
 
-    printInfo(LABEL_DISTRO, distro);
-    printInfo(LABEL_MODEL, model);
-    printInfo(LABEL_KERNEL, kernel);
-    printInfo(LABEL_UPTIME, uptime);
-    printInfo(LABEL_PKGS, pkgs);
-    printInfo(LABEL_SHELL, shell);
-    printInfo(LABEL_CPU, cpu);
-    printInfo(LABEL_RAM, ram);
+    print_info(LABEL_DISTRO, distro);
+    print_info(LABEL_MODEL, model);
+    print_info(LABEL_KERNEL, kernel);
+    print_info(LABEL_UPTIME, uptime);
+    print_info(LABEL_PKGS, pkgs);
+    print_info(LABEL_SHELL, shell);
+    print_info(LABEL_CPU, cpu);
+    print_info(LABEL_RAM, ram);
 
-    printLine(COLOR_LINELEFTLEN, COLOR_LINE, COLOR_LINEDIVIDERBOTTOM);
+    print_line(COLOR_LINE_LEFT_LEN, COLOR_LINE, COLOR_LINE_DIVIDER_BOTTOM);
 
     return NULL;
 }
 
-void printUsage() {
+void print_usage() {
     printf("usage: cinfo [-a]\n");
 }
 
 int main(int argc, char *argv[]) {
     if (argc == 1) {
-        getInfos(printColor);
+        get_infos(print_color);
     } else if (strcmp(argv[1], "-a") == 0) {
-        getInfos(printAscii);
+        get_infos(print_ascii);
     } else {
-        printUsage();
+        print_usage();
     }
 
     return 0;
