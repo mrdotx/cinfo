@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-08T12:58:14+0100
+ * date:       2021-01-08T20:39:33+0100
  */
 
 #include <stdio.h>
@@ -151,11 +151,11 @@ void *get_uptime() {
         hour = sec / 60 / 60 % 24;
         min = sec / 60 % 60;
 
-        if (day == 0) {
+        if (0 == day) {
             sprintf(uptime, "%dh %dm", hour, min);
-        } else if (day == 0 && hour == 0) {
+        } else if (0 == day && 0 == hour) {
             sprintf(uptime, "%dm", min);
-        } else if (day == 0 && hour == 0 && min == 0) {
+        } else if (0 == day && 0 == hour && 0 == min) {
             sprintf(uptime, "0m");
         } else {
             sprintf(uptime, "%dd %dh %dm", day, hour, min);
@@ -250,7 +250,7 @@ void *get_ram() {
 }
 
 void get_infos(void *print()) {
-    const void *multi_threads[] = {
+    const void *routines[] = {
         get_user,
         get_host,
         get_datetime,
@@ -264,12 +264,13 @@ void get_infos(void *print()) {
         get_ram
     };
 
-    const int THREADS_NUM = (int) sizeof(multi_threads) / sizeof(multi_threads[0]);
+    const int THREADS_NUM = (int) sizeof(routines) / sizeof(routines[0]);
+
     pthread_t threads[THREADS_NUM];
     int i;
 
     for (i = 0; i < THREADS_NUM; i++) {
-        pthread_create(&threads[i], NULL, multi_threads[i], NULL);
+        pthread_create(&threads[i], NULL, routines[i], NULL);
     }
 
     for (i = 0; i < THREADS_NUM; i++) {
@@ -305,22 +306,22 @@ void print_line(const int left_len,
 void print_info(const char *label,
                 const char *info) {
     static int color_code = 30;
-    if (color_code <= 37) {
+
+    if (37 >= color_code) {
         printf(" \033[0;%dm%s", color_code, COLOR_SYMBOL);
         printf("\033[1;%dm%s", color_code, COLOR_SYMBOL);
         color_code++;
-    } else {
-        printf("     ");
     }
+
     printf("%s%s%s", COLOR_PRIMARY, label, COLOR_TABLE);
     printf("%s", COLOR_DIVIDER);
     printf("%s%s%s\n", COLOR_SECONDARY, info, COLOR_TABLE);
 }
 
 void *print_ascii() {
-    print_header(ASCII_LINE_LEFT_LEN, "", "", "");
+    print_header(ASCII_LEFT_LEN, "", "", "");
 
-    print_line(ASCII_LINE_LEFT_LEN, ASCII_LINE, ASCII_LINE_DIVIDER_TOP);
+    print_line(ASCII_LEFT_LEN, ASCII_LINE, ASCII_DIVIDER_TOP);
 
     printf("%s%s%s\n", LABEL_DISTRO, ASCII_DIVIDER, distro);
     printf("%s%s%s\n", LABEL_MODEL, ASCII_DIVIDER, model);
@@ -331,15 +332,15 @@ void *print_ascii() {
     printf("%s%s%s\n", LABEL_CPU, ASCII_DIVIDER, cpu);
     printf("%s%s%s\n", LABEL_RAM, ASCII_DIVIDER, ram);
 
-    print_line(ASCII_LINE_LEFT_LEN, ASCII_LINE, ASCII_LINE_DIVIDER_BOTTOM);
+    print_line(ASCII_LEFT_LEN, ASCII_LINE, ASCII_DIVIDER_BOTTOM);
 
     return NULL;
 }
 
 void *print_color() {
-    print_header(COLOR_LINE_LEFT_LEN, COLOR_PRIMARY, COLOR_SECONDARY, COLOR_TABLE);
+    print_header(COLOR_LEFT_LEN, COLOR_PRIMARY, COLOR_SECONDARY, COLOR_TABLE);
 
-    print_line(COLOR_LINE_LEFT_LEN, COLOR_LINE, COLOR_LINE_DIVIDER_TOP);
+    print_line(COLOR_LEFT_LEN, COLOR_LINE, COLOR_DIVIDER_TOP);
 
     print_info(LABEL_DISTRO, distro);
     print_info(LABEL_MODEL, model);
@@ -350,7 +351,7 @@ void *print_color() {
     print_info(LABEL_CPU, cpu);
     print_info(LABEL_RAM, ram);
 
-    print_line(COLOR_LINE_LEFT_LEN, COLOR_LINE, COLOR_LINE_DIVIDER_BOTTOM);
+    print_line(COLOR_LEFT_LEN, COLOR_LINE, COLOR_DIVIDER_BOTTOM);
 
     return NULL;
 }
@@ -360,9 +361,9 @@ void print_usage() {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc == 1) {
+    if (1 == argc) {
         get_infos(print_color);
-    } else if (strcmp(argv[1], "-a") == 0) {
+    } else if (0 == strcmp(argv[1], "-a")) {
         get_infos(print_ascii);
     } else {
         print_usage();

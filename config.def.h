@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-08T10:19:57+0100
+ * date:       2021-01-08T20:48:57+0100
  */
 
 /* package manager */
@@ -10,22 +10,24 @@ const char *PKGS_CMD = "pacman -Qq | wc -l",
            *PKGS_DESC = " [pacman]";
 
 /* ascii version */
-const int ASCII_LINE_LEFT_LEN = 8;
+const int ASCII_LEFT_LEN = 8;
+
 const char *ASCII_LINE = "-",
-           *ASCII_LINE_DIVIDER_TOP = "-",
-           *ASCII_LINE_DIVIDER_BOTTOM = "-",
-           *ASCII_DIVIDER = " | ";
+           *ASCII_DIVIDER_TOP = "-",
+           *ASCII_DIVIDER = " | ",
+           *ASCII_DIVIDER_BOTTOM = "-";
 
 /* color version */
-const int COLOR_LINE_LEFT_LEN = 13;
-const char *COLOR_PRIMARY = "\033[1;37m",
-           *COLOR_SECONDARY = "\033[0;37m",
-           *COLOR_TABLE = "\033[1;34m",
-           *COLOR_LINE = "─",
-           *COLOR_LINE_DIVIDER_TOP = "┬",
-           *COLOR_LINE_DIVIDER_BOTTOM = "┴",
+const int COLOR_LEFT_LEN = 13;
+
+const char *COLOR_LINE = "─",
+           *COLOR_DIVIDER_TOP = "┬",
            *COLOR_DIVIDER = " │ ",
-           *COLOR_SYMBOL = "██";
+           *COLOR_DIVIDER_BOTTOM = "┴",
+           *COLOR_SYMBOL = "██",
+           *COLOR_PRIMARY = "\033[1;37m",
+           *COLOR_SECONDARY = "\033[0;37m",
+           *COLOR_TABLE = "\033[1;34m";
 
 /* label */
 const char *LABEL_DISTRO = " distro",
