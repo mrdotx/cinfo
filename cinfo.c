@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-08T11:09:15+0100
+ * date:       2021-01-08T12:58:14+0100
  */
 
 #include <stdio.h>
@@ -18,7 +18,7 @@ int line_len,
 
 char user[50],
      host[50],
-     datetime[17],
+     datetime[20],
      distro[50],
      model[65],
      kernel[50],
@@ -26,7 +26,7 @@ char user[50],
      pkgs[25],
      shell[25],
      cpu[50],
-     ram[25];
+     ram[30];
 
 const char* get_spacer(const char *character, int length) {
     static char spacer[65];
@@ -304,11 +304,11 @@ void print_line(const int left_len,
 
 void print_info(const char *label,
                 const char *info) {
-    static int i = 30;
-    if (i <= 37) {
-        printf(" \033[0;%dm%s", i, COLOR_SYMBOL);
-        printf("\033[1;%dm%s", i, COLOR_SYMBOL);
-        i++;
+    static int color_code = 30;
+    if (color_code <= 37) {
+        printf(" \033[0;%dm%s", color_code, COLOR_SYMBOL);
+        printf("\033[1;%dm%s", color_code, COLOR_SYMBOL);
+        color_code++;
     } else {
         printf("     ");
     }
