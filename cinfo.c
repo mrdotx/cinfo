@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-08T20:39:33+0100
+ * date:       2021-01-09T09:13:34+0100
  */
 
 #include <stdio.h>
@@ -151,12 +151,12 @@ void *get_uptime() {
         hour = sec / 60 / 60 % 24;
         min = sec / 60 % 60;
 
-        if (0 == day) {
-            sprintf(uptime, "%dh %dm", hour, min);
+        if (0 == day && 0 == hour && 0 == min) {
+            sprintf(uptime, "0m");
         } else if (0 == day && 0 == hour) {
             sprintf(uptime, "%dm", min);
-        } else if (0 == day && 0 == hour && 0 == min) {
-            sprintf(uptime, "0m");
+        } else if (0 == day) {
+            sprintf(uptime, "%dh %dm", hour, min);
         } else {
             sprintf(uptime, "%dd %dh %dm", day, hour, min);
         }
