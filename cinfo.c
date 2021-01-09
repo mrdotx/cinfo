@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-09T09:13:34+0100
+ * date:       2021-01-09T20:47:36+0100
  */
 
 #include <stdio.h>
@@ -13,20 +13,20 @@
 
 #include "config.h"
 
-int line_len,
-    header_len;
+int g_line_len,
+    g_header_len;
 
-char user[50],
-     host[50],
-     datetime[20],
-     distro[50],
-     model[65],
-     kernel[50],
-     uptime[13],
-     pkgs[25],
-     shell[25],
-     cpu[50],
-     ram[30];
+char g_user[50],
+     g_host[50],
+     g_datetime[20],
+     g_distro[50],
+     g_model[65],
+     g_kernel[50],
+     g_uptime[13],
+     g_pkgs[25],
+     g_shell[25],
+     g_cpu[50],
+     g_ram[30];
 
 const char* get_spacer(const char *character, int length) {
     static char spacer[65];
@@ -43,9 +43,9 @@ const char* get_spacer(const char *character, int length) {
 }
 
 void *get_user() {
-    sprintf(user, "%s", getenv("USER"));
+    sprintf(g_user, "%s", getenv("USER"));
 
-    header_len += strlen(user);
+    g_header_len += strlen(g_user);
 
     return NULL;
 }
@@ -53,11 +53,11 @@ void *get_user() {
 void *get_host() {
     FILE *file;
     if ((file = fopen("/proc/sys/kernel/hostname", "r"))) {
-        fscanf(file, "%s", host);
+        fscanf(file, "%s", g_host);
         fclose(file);
     }
 
-    header_len += strlen(host);
+    g_header_len += strlen(g_host);
 
     return NULL;
 }
@@ -68,7 +68,7 @@ void *get_datetime() {
     time(&raw);
     part = localtime(&raw);
 
-    sprintf(datetime, "%02d.%02d.%d %02d:%02d:%02d", \
+    sprintf(g_datetime, "%02d.%02d.%d %02d:%02d:%02d", \
             part->tm_mday, \
             part->tm_mon + 1, \
             part->tm_year + 1900, \
@@ -76,7 +76,7 @@ void *get_datetime() {
             part->tm_min, \
             part->tm_sec);
 
-    header_len += strlen(datetime);
+    g_header_len += strlen(g_datetime);
 
     return NULL;
 }
@@ -84,11 +84,11 @@ void *get_datetime() {
 void *get_distro() {
     FILE *file = popen("grep -m 1 '^PRETTY_NAME=' /etc/os-release \
             | cut -d '\"' -f2", "r");
-    fscanf(file, "%[^\n]s", distro);
+    fscanf(file, "%[^\n]s", g_distro);
     pclose(file);
 
-    if (line_len < strlen(distro)) {
-        line_len = strlen(distro);
+    if (g_line_len < strlen(g_distro)) {
+        g_line_len = strlen(g_distro);
     }
 
     return NULL;
@@ -113,10 +113,10 @@ void *get_model() {
         strcpy(name, "not found");
     }
 
-    sprintf(model, "%s %s", name, version);
+    sprintf(g_model, "%s %s", name, version);
 
-    if (line_len < strlen(model)) {
-        line_len = strlen(model);
+    if (g_line_len < strlen(g_model)) {
+        g_line_len = strlen(g_model);
     }
 
     return NULL;
@@ -125,11 +125,11 @@ void *get_model() {
 void *get_kernel() {
     FILE *file;
     if ((file = fopen("/proc/sys/kernel/osrelease", "r"))) {
-        fscanf(file, "%[^\n]s", kernel);
+        fscanf(file, "%[^\n]s", g_kernel);
         fclose(file);
 
-        if (line_len < strlen(kernel)) {
-            line_len = strlen(kernel);
+        if (g_line_len < strlen(g_kernel)) {
+            g_line_len = strlen(g_kernel);
         }
     }
 
@@ -152,16 +152,16 @@ void *get_uptime() {
         min = sec / 60 % 60;
 
         if (0 == day && 0 == hour && 0 == min) {
-            sprintf(uptime, "0m");
+            sprintf(g_uptime, "0m");
         } else if (0 == day && 0 == hour) {
-            sprintf(uptime, "%dm", min);
+            sprintf(g_uptime, "%dm", min);
         } else if (0 == day) {
-            sprintf(uptime, "%dh %dm", hour, min);
+            sprintf(g_uptime, "%dh %dm", hour, min);
         } else {
-            sprintf(uptime, "%dd %dh %dm", day, hour, min);
+            sprintf(g_uptime, "%dd %dh %dm", day, hour, min);
         }
-        if (line_len < strlen(uptime)) {
-            line_len = strlen(uptime);
+        if (g_line_len < strlen(g_uptime)) {
+            g_line_len = strlen(g_uptime);
         }
     }
 
@@ -175,20 +175,20 @@ void *get_pkgs() {
     fscanf(file, "%d", &pkgs_count);
     pclose(file);
 
-    sprintf(pkgs, "%d%s", pkgs_count, PKGS_DESC);
+    sprintf(g_pkgs, "%d%s", pkgs_count, PKGS_DESC);
 
-    if (line_len < strlen(pkgs)) {
-        line_len = strlen(pkgs);
+    if (g_line_len < strlen(g_pkgs)) {
+        g_line_len = strlen(g_pkgs);
     }
 
     return NULL;
 }
 
 void *get_shell() {
-    sprintf(shell, "%s", getenv("SHELL"));
+    sprintf(g_shell, "%s", getenv("SHELL"));
 
-    if (line_len < strlen(shell)) {
-        line_len = strlen(shell);
+    if (g_line_len < strlen(g_shell)) {
+        g_line_len = strlen(g_shell);
     }
 
     return NULL;
@@ -211,10 +211,10 @@ void *get_cpu() {
 
     temp /= 1000;
 
-    sprintf(cpu, "%s [%.0fC]", model, temp);
+    sprintf(g_cpu, "%s [%.0fC]", model, temp);
 
-    if (line_len < strlen(cpu)) {
-        line_len = strlen(cpu);
+    if (g_line_len < strlen(g_cpu)) {
+        g_line_len = strlen(g_cpu);
     }
 
     return NULL;
@@ -240,10 +240,10 @@ void *get_ram() {
     total /= 1024;
     percent = (float) available / total * 100;
 
-    sprintf(ram, "%dMiB / %dMiB [%.0f%%]", available, total, percent);
+    sprintf(g_ram, "%dMiB / %dMiB [%.0f%%]", available, total, percent);
 
-    if (line_len < strlen(ram)) {
-        line_len = strlen(ram);
+    if (g_line_len < strlen(g_ram)) {
+        g_line_len = strlen(g_ram);
     }
 
     return NULL;
@@ -286,13 +286,13 @@ void print_header(const int left_len,
                   const char *color_primary,
                   const char *color_secondary,
                   const char *color_table) {
-    if (line_len < header_len - left_len) {
-        line_len = header_len - left_len - 1;
+    if (g_line_len < g_header_len - left_len) {
+        g_line_len = g_header_len - left_len - 1;
     }
 
-    printf("%s%s@%s%s", color_primary, user, host, color_secondary);
-    printf("%s", get_spacer(" ", line_len - header_len + left_len + 2));
-    printf("%s%s\n", datetime, color_table);
+    printf("%s%s@%s%s", color_primary, g_user, g_host, color_secondary);
+    printf("%s", get_spacer(" ", g_line_len - g_header_len + left_len + 2));
+    printf("%s%s\n", g_datetime, color_table);
 }
 
 void print_line(const int left_len,
@@ -300,7 +300,7 @@ void print_line(const int left_len,
                 const char *divider) {
     printf("%s", get_spacer(line, left_len));
     printf("%s", divider);
-    printf("%s\n", get_spacer(line, line_len + 2));
+    printf("%s\n", get_spacer(line, g_line_len + 2));
 }
 
 void print_info(const char *label,
@@ -323,14 +323,14 @@ void *print_ascii() {
 
     print_line(ASCII_LEFT_LEN, ASCII_LINE, ASCII_DIVIDER_TOP);
 
-    printf("%s%s%s\n", LABEL_DISTRO, ASCII_DIVIDER, distro);
-    printf("%s%s%s\n", LABEL_MODEL, ASCII_DIVIDER, model);
-    printf("%s%s%s\n", LABEL_KERNEL, ASCII_DIVIDER, kernel);
-    printf("%s%s%s\n", LABEL_UPTIME, ASCII_DIVIDER, uptime);
-    printf("%s%s%s\n", LABEL_PKGS, ASCII_DIVIDER, pkgs);
-    printf("%s%s%s\n", LABEL_SHELL, ASCII_DIVIDER, shell);
-    printf("%s%s%s\n", LABEL_CPU, ASCII_DIVIDER, cpu);
-    printf("%s%s%s\n", LABEL_RAM, ASCII_DIVIDER, ram);
+    printf("%s%s%s\n", LABEL_DISTRO, ASCII_DIVIDER, g_distro);
+    printf("%s%s%s\n", LABEL_MODEL, ASCII_DIVIDER, g_model);
+    printf("%s%s%s\n", LABEL_KERNEL, ASCII_DIVIDER, g_kernel);
+    printf("%s%s%s\n", LABEL_UPTIME, ASCII_DIVIDER, g_uptime);
+    printf("%s%s%s\n", LABEL_PKGS, ASCII_DIVIDER, g_pkgs);
+    printf("%s%s%s\n", LABEL_SHELL, ASCII_DIVIDER, g_shell);
+    printf("%s%s%s\n", LABEL_CPU, ASCII_DIVIDER, g_cpu);
+    printf("%s%s%s\n", LABEL_RAM, ASCII_DIVIDER, g_ram);
 
     print_line(ASCII_LEFT_LEN, ASCII_LINE, ASCII_DIVIDER_BOTTOM);
 
@@ -342,14 +342,14 @@ void *print_color() {
 
     print_line(COLOR_LEFT_LEN, COLOR_LINE, COLOR_DIVIDER_TOP);
 
-    print_info(LABEL_DISTRO, distro);
-    print_info(LABEL_MODEL, model);
-    print_info(LABEL_KERNEL, kernel);
-    print_info(LABEL_UPTIME, uptime);
-    print_info(LABEL_PKGS, pkgs);
-    print_info(LABEL_SHELL, shell);
-    print_info(LABEL_CPU, cpu);
-    print_info(LABEL_RAM, ram);
+    print_info(LABEL_DISTRO, g_distro);
+    print_info(LABEL_MODEL, g_model);
+    print_info(LABEL_KERNEL, g_kernel);
+    print_info(LABEL_UPTIME, g_uptime);
+    print_info(LABEL_PKGS, g_pkgs);
+    print_info(LABEL_SHELL, g_shell);
+    print_info(LABEL_CPU, g_cpu);
+    print_info(LABEL_RAM, g_ram);
 
     print_line(COLOR_LEFT_LEN, COLOR_LINE, COLOR_DIVIDER_BOTTOM);
 
