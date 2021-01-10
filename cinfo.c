@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-09T20:47:36+0100
+ * date:       2021-01-10T10:18:03+0100
  */
 
 #include <stdio.h>
@@ -30,16 +30,15 @@ char g_user[50],
 
 const char* get_spacer(const char *character, int length) {
     static char spacer[65];
-    int i = 1;
+    int i;
 
-    strcpy(spacer, "");
+    spacer[0] = '\0';
 
-    while (i <= length) {
+    for (i = 0; i < length; i++) {
         strcat(spacer, character);
-        i++;
     }
 
-    return(spacer);
+    return spacer;
 }
 
 void *get_user() {
