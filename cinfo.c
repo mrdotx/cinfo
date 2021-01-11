@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-10T10:18:03+0100
+ * date:       2021-01-11T19:46:00+0100
  */
 
 #include <stdio.h>
@@ -28,7 +28,7 @@ char g_user[50],
      g_cpu[50],
      g_ram[30];
 
-const char* get_spacer(const char *character, int length) {
+const char *set_spacer(const char *character, int length) {
     static char spacer[65];
     int i;
 
@@ -39,6 +39,20 @@ const char* get_spacer(const char *character, int length) {
     }
 
     return spacer;
+}
+
+const char *remove_char(char *str, const char *remove){
+    int i = 0, j;
+
+    while(i < strlen(str)) {
+        if (str[i] == *remove) {
+            for (j = i; j < strlen(str); j++)
+                str[j] = str[j + 1];
+        }
+        else i++;
+    }
+
+    return str;
 }
 
 void *get_user() {
@@ -81,10 +95,19 @@ void *get_datetime() {
 }
 
 void *get_distro() {
-    FILE *file = popen("grep -m 1 '^PRETTY_NAME=' /etc/os-release \
-            | cut -d '\"' -f2", "r");
-    fscanf(file, "%[^\n]s", g_distro);
-    pclose(file);
+    char name[128],
+         value[128];
+
+    FILE *file;
+    if ((file = fopen("/etc/os-release", "r"))) {
+        while (fscanf(file, " %[^=]=%[^\n]", name, value) == 2) {
+            if (0 == strcmp(name, "PRETTY_NAME")) {
+                strcpy(g_distro, remove_char(value, "\""));
+                break;
+            }
+        }
+        fclose(file);
+    }
 
     if (g_line_len < strlen(g_distro)) {
         g_line_len = strlen(g_distro);
@@ -126,10 +149,10 @@ void *get_kernel() {
     if ((file = fopen("/proc/sys/kernel/osrelease", "r"))) {
         fscanf(file, "%[^\n]s", g_kernel);
         fclose(file);
+    }
 
-        if (g_line_len < strlen(g_kernel)) {
-            g_line_len = strlen(g_kernel);
-        }
+    if (g_line_len < strlen(g_kernel)) {
+        g_line_len = strlen(g_kernel);
     }
 
     return NULL;
@@ -159,9 +182,10 @@ void *get_uptime() {
         } else {
             sprintf(g_uptime, "%dd %dh %dm", day, hour, min);
         }
-        if (g_line_len < strlen(g_uptime)) {
-            g_line_len = strlen(g_uptime);
-        }
+    }
+
+    if (g_line_len < strlen(g_uptime)) {
+        g_line_len = strlen(g_uptime);
     }
 
     return NULL;
@@ -194,14 +218,22 @@ void *get_shell() {
 }
 
 void *get_cpu() {
-    char model[45];
+    char name[20],
+         value[45],
+         model[45];
+
     float temp;
 
     FILE *file;
-    file = popen("grep -m 1 '^model name.*:' /proc/cpuinfo \
-            | sed 's/^model name.*: //'", "r");
-    fscanf(file, "%[^\n]s", model);
-    pclose(file);
+    if ((file = fopen("/proc/cpuinfo", "r"))) {
+        while (fscanf(file, " %19[^:]: %44[^\n]", name, value) == 2) {
+            if (0 == strcmp(name, "model name	")) {
+                strcpy(model, value);
+                break;
+            }
+        }
+        fclose(file);
+    }
 
     if ((file = fopen("/sys/class/thermal/thermal_zone0/temp", "r"))) {
         fscanf(file, "%f", &temp);
@@ -220,26 +252,32 @@ void *get_cpu() {
 }
 
 void *get_ram() {
-    int total,
+    char name[20];
+
+    int value,
+        total,
         available;
 
     float percent;
 
     FILE *file;
-    file = popen("grep -m 1 '^MemTotal:' /proc/meminfo \
-            | sed 's/^MemTotal://'", "r");
-    fscanf(file, "%d", &total);
+    if ((file = fopen("/proc/meminfo", "r"))) {
+        while (fscanf(file, "%19s %d %*s", name, &value) == 2) {
+            if (0 == strcmp(name, "MemTotal:")) {
+                total = value;
+            } else if (0 == strcmp(name, "MemAvailable:")) {
+                available = value;
+                break;
+            }
+        }
+        fclose(file);
 
-    file = popen("grep -m 1 '^MemAvailable:' /proc/meminfo \
-            | sed 's/^MemAvailable://'", "r");
-    fscanf(file, "%d", &available);
-    pclose(file);
+        available = (total - available) / 1024;
+        total /= 1024;
+        percent = (float) available / total * 100;
 
-    available = (total - available) / 1024;
-    total /= 1024;
-    percent = (float) available / total * 100;
-
-    sprintf(g_ram, "%dMiB / %dMiB [%.0f%%]", available, total, percent);
+        sprintf(g_ram, "%dMiB / %dMiB [%.0f%%]", available, total, percent);
+    }
 
     if (g_line_len < strlen(g_ram)) {
         g_line_len = strlen(g_ram);
@@ -290,16 +328,16 @@ void print_header(const int left_len,
     }
 
     printf("%s%s@%s%s", color_primary, g_user, g_host, color_secondary);
-    printf("%s", get_spacer(" ", g_line_len - g_header_len + left_len + 2));
+    printf("%s", set_spacer(" ", g_line_len - g_header_len + left_len + 2));
     printf("%s%s\n", g_datetime, color_table);
 }
 
 void print_line(const int left_len,
                 const char *line,
                 const char *divider) {
-    printf("%s", get_spacer(line, left_len));
+    printf("%s", set_spacer(line, left_len));
     printf("%s", divider);
-    printf("%s\n", get_spacer(line, g_line_len + 2));
+    printf("%s\n", set_spacer(line, g_line_len + 2));
 }
 
 void print_info(const char *label,
