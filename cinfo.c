@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-11T19:46:00+0100
+ * date:       2021-01-11T20:23:37+0100
  */
 
 #include <stdio.h>
@@ -25,21 +25,8 @@ char g_user[50],
      g_uptime[13],
      g_pkgs[25],
      g_shell[25],
-     g_cpu[50],
+     g_cpu[65],
      g_ram[30];
-
-const char *set_spacer(const char *character, int length) {
-    static char spacer[65];
-    int i;
-
-    spacer[0] = '\0';
-
-    for (i = 0; i < length; i++) {
-        strcat(spacer, character);
-    }
-
-    return spacer;
-}
 
 const char *remove_char(char *str, const char *remove){
     int i = 0, j;
@@ -53,6 +40,19 @@ const char *remove_char(char *str, const char *remove){
     }
 
     return str;
+}
+
+const char *set_spacer(const char *character, int length) {
+    static char spacer[65];
+    int i;
+
+    spacer[0] = '\0';
+
+    for (i = 0; i < length; i++) {
+        strcat(spacer, character);
+    }
+
+    return spacer;
 }
 
 void *get_user() {
@@ -95,12 +95,12 @@ void *get_datetime() {
 }
 
 void *get_distro() {
-    char name[128],
-         value[128];
+    char name[15],
+         value[65];
 
     FILE *file;
     if ((file = fopen("/etc/os-release", "r"))) {
-        while (fscanf(file, " %[^=]=%[^\n]", name, value) == 2) {
+        while (fscanf(file, " %14[^=]=%64[^\n]", name, value) == 2) {
             if (0 == strcmp(name, "PRETTY_NAME")) {
                 strcpy(g_distro, remove_char(value, "\""));
                 break;
@@ -219,14 +219,14 @@ void *get_shell() {
 
 void *get_cpu() {
     char name[20],
-         value[45],
-         model[45];
+         value[58],
+         model[58];
 
     float temp;
 
     FILE *file;
     if ((file = fopen("/proc/cpuinfo", "r"))) {
-        while (fscanf(file, " %19[^:]: %44[^\n]", name, value) == 2) {
+        while (fscanf(file, " %19[^:]: %57[^\n]", name, value) == 2) {
             if (0 == strcmp(name, "model name	")) {
                 strcpy(model, value);
                 break;
