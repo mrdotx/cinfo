@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-11T20:23:37+0100
+ * date:       2021-01-11T21:59:41+0100
  */
 
 #include <stdio.h>
@@ -28,22 +28,23 @@ char g_user[50],
      g_cpu[65],
      g_ram[30];
 
-const char *remove_char(char *str, const char *remove){
+const char *remove_char(char *string, const char *remove){
     int i = 0, j;
 
-    while(i < strlen(str)) {
-        if (str[i] == *remove) {
-            for (j = i; j < strlen(str); j++)
-                str[j] = str[j + 1];
+    while(i < strlen(string)) {
+        if (string[i] == *remove) {
+            for (j = i; j < strlen(string); j++)
+                string[j] = string[j + 1];
         }
         else i++;
     }
 
-    return str;
+    return string;
 }
 
 const char *set_spacer(const char *character, int length) {
     static char spacer[65];
+
     int i;
 
     spacer[0] = '\0';
