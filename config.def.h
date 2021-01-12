@@ -2,8 +2,11 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-08T20:48:57+0100
+ * date:       2021-01-12T20:31:38+0100
  */
+
+/* shell path */
+const char *SHELL_PATH = "/bin/sh";
 
 /* package manager */
 const char *PKGS_CMD = "pacman -Qq | wc -l",
@@ -37,4 +40,4 @@ const char *LABEL_DISTRO = " distro",
            *LABEL_PKGS   = "   pkgs",
            *LABEL_SHELL  = "  shell",
            *LABEL_CPU    = "    cpu",
-           *LABEL_RAM    = "    ram";
+           *LABEL_MEM    = " memory";

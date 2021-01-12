@@ -2,13 +2,14 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-12T14:15:40+0100
+ * date:       2021-01-12T21:14:51+0100
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 #include <pthread.h>
 
 #include "config.h"
@@ -24,9 +25,9 @@ char g_user[50],
      g_kernel[50],
      g_uptime[13],
      g_pkgs[25],
-     g_shell[25],
+     g_shell[65],
      g_cpu[65],
-     g_ram[30];
+     g_mem[65];
 
 const char *remove_char(char *string, const char *remove){
     int i = 0, j;
@@ -69,9 +70,9 @@ void *get_host() {
     if ((file = fopen("/proc/sys/kernel/hostname", "r"))) {
         fscanf(file, "%s", g_host);
         fclose(file);
-    }
 
-    g_header_len += strlen(g_host);
+        g_header_len += strlen(g_host);
+    }
 
     return NULL;
 }
@@ -108,10 +109,10 @@ void *get_distro() {
             }
         }
         fclose(file);
-    }
 
-    if (g_line_len < strlen(g_distro)) {
-        g_line_len = strlen(g_distro);
+        if (g_line_len < strlen(g_distro)) {
+            g_line_len = strlen(g_distro);
+        }
     }
 
     return NULL;
@@ -150,10 +151,10 @@ void *get_kernel() {
     if ((file = fopen("/proc/sys/kernel/osrelease", "r"))) {
         fscanf(file, "%[^\n]s", g_kernel);
         fclose(file);
-    }
 
-    if (g_line_len < strlen(g_kernel)) {
-        g_line_len = strlen(g_kernel);
+        if (g_line_len < strlen(g_kernel)) {
+            g_line_len = strlen(g_kernel);
+        }
     }
 
     return NULL;
@@ -183,10 +184,10 @@ void *get_uptime() {
         } else {
             sprintf(g_uptime, "%dd %dh %dm", day, hour, min);
         }
-    }
 
-    if (g_line_len < strlen(g_uptime)) {
-        g_line_len = strlen(g_uptime);
+        if (g_line_len < strlen(g_uptime)) {
+            g_line_len = strlen(g_uptime);
+        }
     }
 
     return NULL;
@@ -209,7 +210,11 @@ void *get_pkgs() {
 }
 
 void *get_shell() {
-    sprintf(g_shell, "%s", getenv("SHELL"));
+    char shell[20];
+
+    readlink(SHELL_PATH, shell, sizeof(shell)-1);
+
+    sprintf(g_shell, "%s -> %s | %s", SHELL_PATH, shell, getenv("SHELL"));
 
     if (g_line_len < strlen(g_shell)) {
         g_line_len = strlen(g_shell);
@@ -252,36 +257,55 @@ void *get_cpu() {
     return NULL;
 }
 
-void *get_ram() {
+void *get_mem() {
     char name[20];
 
     int value,
-        total,
-        available;
+        mem_total,
+        mem_available,
+        swap_total,
+        swap_free,
+        swap_available;
 
-    float percent;
+    float mem_percent,
+          swap_percent;
 
     FILE *file;
     if ((file = fopen("/proc/meminfo", "r"))) {
         while (fscanf(file, "%19s %d %*s", name, &value) == 2) {
             if (0 == strcmp(name, "MemTotal:")) {
-                total = value;
+                mem_total = value;
             } else if (0 == strcmp(name, "MemAvailable:")) {
-                available = value;
+                mem_available = value;
+            } else if (0 == strcmp(name, "SwapTotal:")) {
+                swap_total = value;
+            } else if (0 == strcmp(name, "SwapFree:")) {
+                swap_free = value;
                 break;
             }
         }
         fclose(file);
 
-        available = (total - available) / 1024;
-        total /= 1024;
-        percent = (float) available / total * 100;
+        mem_available = (mem_total - mem_available) / 1024;
+        mem_total /= 1024;
+        mem_percent = (float) mem_available / mem_total * 100;
 
-        sprintf(g_ram, "%dMiB / %dMiB [%.0f%%]", available, total, percent);
-    }
+        if (swap_total == 0) {
+            sprintf(g_mem, "%dMiB / %dMiB [%.0f%%]", \
+                    mem_available, mem_total, mem_percent);
+        } else {
+            swap_available = (swap_total - swap_free) / 1024;
+            swap_total /= 1024;
+            swap_percent = (float) swap_available / swap_total * 100;
 
-    if (g_line_len < strlen(g_ram)) {
-        g_line_len = strlen(g_ram);
+            sprintf(g_mem, "%dMiB / %dMiB [%.0f%%] | %dMiB / %dMiB [%.0f%%]", \
+                    mem_available, mem_total, mem_percent, \
+                    swap_available, swap_total, swap_percent);
+        }
+
+        if (g_line_len < strlen(g_mem)) {
+            g_line_len = strlen(g_mem);
+        }
     }
 
     return NULL;
@@ -299,7 +323,7 @@ void get_infos(void *print()) {
         get_pkgs,
         get_shell,
         get_cpu,
-        get_ram
+        get_mem
     };
 
     const int THREADS_NUM = (int) sizeof(routines) / sizeof(routines[0]);
@@ -349,6 +373,8 @@ void print_info(const char *label,
         printf(" \033[0;%dm%s", color_code, COLOR_SYMBOL);
         printf("\033[1;%dm%s", color_code, COLOR_SYMBOL);
         color_code++;
+    } else {
+        printf("%s", set_spacer(" ", COLOR_LEFT_LEN - strlen(LABEL_DISTRO) - 1));
     }
 
     printf("%s%s%s", COLOR_PRIMARY, label, COLOR_TABLE);
@@ -368,7 +394,7 @@ void *print_ascii() {
     printf("%s%s%s\n", LABEL_PKGS, ASCII_DIVIDER, g_pkgs);
     printf("%s%s%s\n", LABEL_SHELL, ASCII_DIVIDER, g_shell);
     printf("%s%s%s\n", LABEL_CPU, ASCII_DIVIDER, g_cpu);
-    printf("%s%s%s\n", LABEL_RAM, ASCII_DIVIDER, g_ram);
+    printf("%s%s%s\n", LABEL_MEM, ASCII_DIVIDER, g_mem);
 
     print_line(ASCII_LEFT_LEN, ASCII_LINE, ASCII_DIVIDER_BOTTOM);
 
@@ -387,7 +413,7 @@ void *print_color() {
     print_info(LABEL_PKGS, g_pkgs);
     print_info(LABEL_SHELL, g_shell);
     print_info(LABEL_CPU, g_cpu);
-    print_info(LABEL_RAM, g_ram);
+    print_info(LABEL_MEM, g_mem);
 
     print_line(COLOR_LEFT_LEN, COLOR_LINE, COLOR_DIVIDER_BOTTOM);
 
