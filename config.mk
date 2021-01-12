@@ -1,5 +1,5 @@
 # cinfo version
-VERSION = 0.2
+VERSION = 0.3
 
 # paths
 PREFIX	= /usr/local
