@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-11T21:59:41+0100
+ * date:       2021-01-12T14:15:40+0100
  */
 
 #include <stdio.h>
@@ -31,7 +31,7 @@ char g_user[50],
 const char *remove_char(char *string, const char *remove){
     int i = 0, j;
 
-    while(i < strlen(string)) {
+    while (i < strlen(string)) {
         if (string[i] == *remove) {
             for (j = i; j < strlen(string); j++)
                 string[j] = string[j + 1];

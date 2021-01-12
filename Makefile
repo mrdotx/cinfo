@@ -2,14 +2,20 @@
 
 include config.mk
 
-all: cinfo
+all: options cinfo
+
+options:
+	@echo cinfo build options:
+	@echo "CFLAGS   = $(CFLAGS)"
+	@echo "LDFLAGS  = $(LDFLAGS)"
+	@echo "CC       = $(CC)"
 
 config.h:
-	cp config.def.h config.h
+	cp config.def.h $@
 
 cinfo: cinfo.c config.h
 
-install: cinfo
+install: all
 	mkdir -p $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)/man1
 	cp -f cinfo $(DESTDIR)$(BINDIR)
 	sed "s/VERSION/$(VERSION)/g" < cinfo.1 > $(DESTDIR)$(MANDIR)/man1/cinfo.1
@@ -31,4 +37,4 @@ dist: clean
 .c:
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ $< -lutil
 
-.PHONY: all dist clean install uninstall
+.PHONY: all options clean dist install uninstall
