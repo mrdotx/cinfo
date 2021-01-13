@@ -1,6 +1,6 @@
 # cinfo
 
-a minimal system information tool for linux-based operating systems
+a fast and minimal system information tool for linux-based operating systems
 
 ![screenshot](screenshot.png)
 
