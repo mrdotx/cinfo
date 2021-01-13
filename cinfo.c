@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-12T21:14:51+0100
+ * date:       2021-01-13T09:30:21+0100
  */
 
 #include <stdio.h>
@@ -214,7 +214,8 @@ void *get_shell() {
 
     readlink(SHELL_PATH, shell, sizeof(shell)-1);
 
-    sprintf(g_shell, "%s -> %s | %s", SHELL_PATH, shell, getenv("SHELL"));
+    sprintf(g_shell, "%s%s%s%s%s", \
+            SHELL_PATH, SHELL_DIVIDER, shell, INFO_DIVIDER, getenv("SHELL"));
 
     if (g_line_len < strlen(g_shell)) {
         g_line_len = strlen(g_shell);
@@ -298,8 +299,8 @@ void *get_mem() {
             swap_total /= 1024;
             swap_percent = (float) swap_available / swap_total * 100;
 
-            sprintf(g_mem, "%dMiB / %dMiB [%.0f%%] | %dMiB / %dMiB [%.0f%%]", \
-                    mem_available, mem_total, mem_percent, \
+            sprintf(g_mem, "%dMiB / %dMiB [%.0f%%]%s%dMiB / %dMiB [%.0f%%]", \
+                    mem_available, mem_total, mem_percent, INFO_DIVIDER, \
                     swap_available, swap_total, swap_percent);
         }
 
