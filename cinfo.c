@@ -2,7 +2,7 @@
  * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author:     klassiker [mrdotx]
  * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-13T09:30:21+0100
+ * date:       2021-01-14T12:17:05+0100
  */
 
 #include <stdio.h>
@@ -23,7 +23,7 @@ char g_user[50],
      g_distro[50],
      g_model[65],
      g_kernel[50],
-     g_uptime[13],
+     g_uptime[15],
      g_pkgs[25],
      g_shell[65],
      g_cpu[65],
@@ -249,7 +249,7 @@ void *get_cpu() {
 
     temp /= 1000;
 
-    sprintf(g_cpu, "%s [%.0fC]", model, temp);
+    sprintf(g_cpu, "%s [%.1fC]", model, temp);
 
     if (g_line_len < strlen(g_cpu)) {
         g_line_len = strlen(g_cpu);
@@ -292,16 +292,17 @@ void *get_mem() {
         mem_percent = (float) mem_available / mem_total * 100;
 
         if (swap_total == 0) {
-            sprintf(g_mem, "%dMiB / %dMiB [%.0f%%]", \
-                    mem_available, mem_total, mem_percent);
+            sprintf(g_mem, "%dMiB/%s%dMiB [%.1f%%]", \
+                    mem_available, MEMORY_DIVIDER, mem_total, mem_percent);
         } else {
             swap_available = (swap_total - swap_free) / 1024;
             swap_total /= 1024;
             swap_percent = (float) swap_available / swap_total * 100;
 
-            sprintf(g_mem, "%dMiB / %dMiB [%.0f%%]%s%dMiB / %dMiB [%.0f%%]", \
-                    mem_available, mem_total, mem_percent, INFO_DIVIDER, \
-                    swap_available, swap_total, swap_percent);
+            sprintf(g_mem, "%dMiB%s%dMiB [%.1f%%]%s%dMiB%s%dMiB [%.1f%%]", \
+                    mem_available, MEMORY_DIVIDER, mem_total, mem_percent, \
+                    INFO_DIVIDER, \
+                    swap_available, MEMORY_DIVIDER, swap_total, swap_percent);
         }
 
         if (g_line_len < strlen(g_mem)) {
@@ -422,7 +423,7 @@ void *print_color() {
 }
 
 void print_usage() {
-    printf("usage: cinfo [-a]\n");
+    puts("usage: cinfo [-a] [-v]");
 }
 
 int main(int argc, char *argv[]) {
@@ -430,6 +431,8 @@ int main(int argc, char *argv[]) {
         get_infos(print_color);
     } else if (0 == strcmp(argv[1], "-a")) {
         get_infos(print_ascii);
+    } else if (0 == strcmp(argv[1], "-v")) {
+        puts("cinfo-"VERSION);
     } else {
         print_usage();
     }
