@@ -5,6 +5,7 @@ cinfo \- system information utility
 .SH SYNOPSIS
 .B cinfo
 .RB [ \-a ]
+.RB [ \-v ]
 .SH DESCRIPTION
 .B cinfo
 is a fast and minimal system information tool for linux-based operating systems
@@ -13,28 +14,34 @@ without given setting, start colored version
 .TP
 .B \-a
 start plain ascii version
+.TP
+.B \-v
+prints version information
 .SH CUSTOMIZATION
 .B cinfo
 can be customized by creating a custom config.h and (re)compiling the source
 code.
 .TP
-.B LABEL*
-values to configure labels for ascii and color table
+.B PKGS*
+values to configure package manager counting
 .TP
 .B INFO*
 values to configure information in general
 .TP
-.B ASCII*
-values to configure ascii table
+.B SHELL*
+values to configure shell information
+.TP
+.B MEMORY*
+values to configure memory information
 .TP
 .B COLOR*
 values to configure color table
 .TP
-.B PKGS*
-values to configure package manager counting
+.B ASCII*
+values to configure ascii table
 .TP
-.B SHELL*
-value to configure shell information
+.B LABEL*
+values to configure labels for ascii and color table
 .SH EXAMPLES
 .B cinfo
 .PD 0
@@ -42,6 +49,11 @@ value to configure shell information
 .PD
 .B cinfo
 .RB \-a
+.PD 0
+.P
+.PD
+.B cinfo
+.RB \-v
 .SH AUTHORS
 .B cinfo
 was written by mrdotx
