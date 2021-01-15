@@ -1,8 +1,8 @@
 /*
- * path:       /home/klassiker/.local/share/repos/cinfo/cinfo.c
- * author:     klassiker [mrdotx]
- * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-14T12:17:05+0100
+ * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
+ * author: klassiker [mrdotx]
+ * github: https://github.com/mrdotx/cinfo
+ * date:   2021-01-15T13:29:41+0100
  */
 
 #include <stdio.h>

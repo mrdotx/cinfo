@@ -1,7 +1,7 @@
-# path:       /home/klassiker/.local/share/repos/cinfo/.gitignore
-# author:     klassiker [mrdotx]
-# github:     https://github.com/mrdotx/cinfo
-# date:       2021-01-03T13:23:25+0100
+# path:   /home/klassiker/.local/share/repos/cinfo/.gitignore
+# author: klassiker [mrdotx]
+# github: https://github.com/mrdotx/cinfo
+# date:   2021-01-15T13:29:29+0100
 
 /config.h
 /cinfo

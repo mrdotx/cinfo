@@ -1,8 +1,8 @@
 /*
- * path:       /home/klassiker/.local/share/repos/cinfo/config.def.h
- * author:     klassiker [mrdotx]
- * github:     https://github.com/mrdotx/cinfo
- * date:       2021-01-14T12:09:41+0100
+ * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
+ * author: klassiker [mrdotx]
+ * github: https://github.com/mrdotx/cinfo
+ * date:   2021-01-15T13:29:53+0100
  */
 
 /* package manager */
