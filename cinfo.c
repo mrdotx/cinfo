@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2021-01-15T13:29:41+0100
+ * date:   2021-01-16T20:21:45+0100
  */
 
 #include <stdio.h>
@@ -19,12 +19,12 @@ int g_line_len,
 
 char g_user[50],
      g_host[50],
-     g_datetime[20],
-     g_distro[50],
+     g_datetime[] = "01.01.1900 00:00:00",
+     g_distro[65],
      g_model[65],
-     g_kernel[50],
-     g_uptime[15],
-     g_pkgs[25],
+     g_kernel[65],
+     g_uptime[] = "000d 00h 00m",
+     g_pkgs[] = "000000 [portage]",
      g_shell[65],
      g_cpu[65],
      g_mem[65];
@@ -437,5 +437,6 @@ int main(int argc, char *argv[]) {
         print_usage();
     }
 
+    printf("\033[0m");
     return 0;
 }
