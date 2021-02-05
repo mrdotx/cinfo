@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2021-01-16T20:21:45+0100
+ * date:   2021-02-05T21:13:11+0100
  */
 
 #include <stdio.h>
@@ -263,7 +263,12 @@ void *get_mem() {
 
     int value,
         mem_total,
+        mem_free,
         mem_available,
+        mem_buffers,
+        mem_cached,
+        mem_shared,
+        mem_reclaimable,
         swap_total,
         swap_free,
         swap_available;
@@ -273,25 +278,39 @@ void *get_mem() {
 
     FILE *file;
     if ((file = fopen("/proc/meminfo", "r"))) {
-        while (fscanf(file, "%19s %d %*s", name, &value) == 2) {
+        while (fscanf(file, "%15s  %d %*s", name, &value) == 2) {
             if (0 == strcmp(name, "MemTotal:")) {
                 mem_total = value;
+            } else if (0 == strcmp(name, "MemFree:")) {
+                mem_free = value;
             } else if (0 == strcmp(name, "MemAvailable:")) {
                 mem_available = value;
+            } else if (0 == strcmp(name, "Buffers:")) {
+                mem_buffers = value;
+            } else if (0 == strcmp(name, "Cached:")) {
+                mem_cached = value;
             } else if (0 == strcmp(name, "SwapTotal:")) {
                 swap_total = value;
             } else if (0 == strcmp(name, "SwapFree:")) {
                 swap_free = value;
+            } else if (0 == strcmp(name, "Shmem:")) {
+                mem_shared = value;
+            } else if (0 == strcmp(name, "SReclaimable:")) {
+                mem_reclaimable = value;
                 break;
             }
         }
         fclose(file);
 
-        mem_available = (mem_total - mem_available) / 1024;
+        if (1 == MEMORY_HTOP_METHOD) {
+            mem_available = (mem_total + mem_shared - mem_free - mem_buffers - mem_cached - mem_reclaimable) / 1024;
+        } else {
+            mem_available = (mem_total - mem_available) / 1024;
+        }
         mem_total /= 1024;
         mem_percent = (float) mem_available / mem_total * 100;
 
-        if (swap_total == 0) {
+        if (0 == swap_total) {
             sprintf(g_mem, "%dMiB/%s%dMiB [%.1f%%]", \
                     mem_available, MEMORY_DIVIDER, mem_total, mem_percent);
         } else {
