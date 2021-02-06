@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2021-02-05T21:13:11+0100
+ * date:   2021-02-06T09:47:45+0100
  */
 
 #include <stdio.h>
@@ -303,7 +303,8 @@ void *get_mem() {
         fclose(file);
 
         if (1 == MEMORY_HTOP_METHOD) {
-            mem_available = (mem_total + mem_shared - mem_free - mem_buffers - mem_cached - mem_reclaimable) / 1024;
+            mem_available = (mem_total + mem_shared - mem_free - mem_buffers \
+                    - mem_cached - mem_reclaimable) / 1024;
         } else {
             mem_available = (mem_total - mem_available) / 1024;
         }
@@ -395,7 +396,8 @@ void print_info(const char *label,
         printf("\033[1;%dm%s", color_code, COLOR_SYMBOL);
         color_code++;
     } else {
-        printf("%s", set_spacer(" ", COLOR_LEFT_LEN - strlen(LABEL_DISTRO) - 1));
+        printf("%s", set_spacer(" ", COLOR_LEFT_LEN \
+                    - strlen(LABEL_DISTRO) - 1));
     }
 
     printf("%s%s%s", COLOR_PRIMARY, label, COLOR_TABLE);
