@@ -1,3 +1,8 @@
+# path:   /home/klassiker/.local/share/repos/cinfo/Makefile
+# author: klassiker [mrdotx]
+# github: https://github.com/mrdotx/cinfo
+# date:   2021-02-26T19:42:10+0100
+
 .POSIX:
 
 include config.mk
