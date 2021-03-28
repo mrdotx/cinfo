@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2021-02-05T21:13:55+0100
+ * date:   2021-03-28T09:18:44+0200
  */
 
 /* package manager */
@@ -17,7 +17,7 @@ const char *SHELL_PATH = "/bin/sh",
            *SHELL_DIVIDER = " -> ";
 
 /* memory */
-const int MEMORY_HTOP_METHOD = 0;
+const int MEMORY_HTOP_METHOD = 1;
 
 const char *MEMORY_DIVIDER = "/";
 
