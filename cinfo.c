@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2021-03-28T09:17:15+0200
+ * date:   2021-03-28T09:38:20+0200
  */
 
 #include <stdio.h>
@@ -316,7 +316,7 @@ void *get_mem() {
         mem_percent = (float) mem_available / mem_total * 100;
 
         if (0 == swap_total) {
-            sprintf(g_mem, "%dMiB/%s%dMiB [%.1f%%]", \
+            sprintf(g_mem, "%dMiB%s%dMiB [%.1f%%]", \
                     mem_available, MEMORY_DIVIDER, mem_total, mem_percent);
         } else {
             swap_available = (swap_total - swap_free) / 1024;
