@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2021-02-06T09:47:45+0100
+ * date:   2021-03-28T09:17:15+0200
  */
 
 #include <stdio.h>
@@ -249,7 +249,11 @@ void *get_cpu() {
 
     temp /= 1000;
 
-    sprintf(g_cpu, "%s [%.1fC]", model, temp);
+    if (temp > 0) {
+        sprintf(g_cpu, "%s [%.1fC]", model, temp);
+    } else {
+        sprintf(g_cpu, "%s", model);
+    }
 
     if (g_line_len < strlen(g_cpu)) {
         g_line_len = strlen(g_cpu);
