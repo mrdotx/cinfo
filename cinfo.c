@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2021-05-04T16:45:34+0200
+ * date:   2021-05-04T17:05:31+0200
  */
 
 #include <stdio.h>
@@ -250,7 +250,7 @@ void *get_cpu() {
     temp /= 1000;
 
     if (temp != 0) {
-        sprintf(g_cpu, "%s [%.1f°C]", model, temp);
+        sprintf(g_cpu, "%s [%.1fC]", model, temp);
     } else {
         sprintf(g_cpu, "%s", model);
     }
