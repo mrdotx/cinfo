@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2021-05-20T10:14:41+0200
+ * date:   2021-05-22T12:55:04+0200
  */
 
 #include <stdio.h>
@@ -214,9 +214,16 @@ void *get_shell() {
 
     readlink(SHELL_PATH, shell, sizeof(shell)-1);
 
-    sprintf(g_shell, "%s%s%s%s%s [%s]", \
-            SHELL_PATH, SHELL_DIVIDER, shell, \
-            INFO_DIVIDER, getenv("SHELL"), getenv("TERM"));
+    if (0 == getenv("TERM")) {
+        sprintf(g_shell, "%s%s%s%s%s", \
+                SHELL_PATH, SHELL_DIVIDER, shell, \
+                INFO_DIVIDER, getenv("SHELL"));
+    } else {
+        sprintf(g_shell, "%s%s%s%s%s [%s]", \
+                SHELL_PATH, SHELL_DIVIDER, shell, \
+                INFO_DIVIDER, getenv("SHELL"), getenv("TERM"));
+    }
+
 
     if (g_line_len < strlen(g_shell)) {
         g_line_len = strlen(g_shell);
@@ -251,7 +258,7 @@ void *get_cpu() {
     temp /= 1000;
 
     if (0 != temp) {
-        sprintf(g_cpu, "%s [%.1fC]", model, temp);
+        sprintf(g_cpu, "%s [%.1f%s]", model, temp, CPU_TEMPERATURE);
     } else {
         sprintf(g_cpu, "%s", model);
     }
