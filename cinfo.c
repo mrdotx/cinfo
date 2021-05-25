@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2021-05-22T12:55:04+0200
+ * date:   2021-05-25T15:28:17+0200
  */
 
 #include <stdio.h>
@@ -212,7 +212,11 @@ void *get_pkgs() {
 void *get_shell() {
     char shell[20];
 
-    readlink(SHELL_PATH, shell, sizeof(shell)-1);
+    ssize_t len = readlink(SHELL_PATH, shell, sizeof(shell)-1);
+
+    if (len == -1) {
+        sprintf(shell, "LINK ERR");
+    }
 
     if (0 == getenv("TERM")) {
         sprintf(g_shell, "%s%s%s%s%s", \
