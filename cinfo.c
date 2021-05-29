@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2021-05-25T15:28:17+0200
+ * date:   2021-05-29T13:39:04+0200
  */
 
 #include <stdio.h>
@@ -218,16 +218,13 @@ void *get_shell() {
         sprintf(shell, "LINK ERR");
     }
 
-    if (0 == getenv("TERM")) {
-        sprintf(g_shell, "%s%s%s%s%s", \
-                SHELL_PATH, SHELL_DIVIDER, shell, \
-                INFO_DIVIDER, getenv("SHELL"));
-    } else {
-        sprintf(g_shell, "%s%s%s%s%s [%s]", \
-                SHELL_PATH, SHELL_DIVIDER, shell, \
-                INFO_DIVIDER, getenv("SHELL"), getenv("TERM"));
-    }
+    sprintf(g_shell, "%s%s%s%s%s", \
+            SHELL_PATH, SHELL_DIVIDER, shell, \
+            INFO_DIVIDER, getenv("SHELL"));
 
+    if (0 != getenv("TERM")) {
+        sprintf(g_shell, "%s [%s]", g_shell, getenv("TERM"));
+    }
 
     if (g_line_len < strlen(g_shell)) {
         g_line_len = strlen(g_shell);
@@ -261,10 +258,10 @@ void *get_cpu() {
 
     temp /= 1000;
 
+    sprintf(g_cpu, "%s", model);
+
     if (0 != temp) {
-        sprintf(g_cpu, "%s [%.1f%s]", model, temp, CPU_TEMPERATURE);
-    } else {
-        sprintf(g_cpu, "%s", model);
+        sprintf(g_cpu, "%s [%.1f%s]", g_cpu, temp, CPU_TEMPERATURE);
     }
 
     if (g_line_len < strlen(g_cpu)) {
