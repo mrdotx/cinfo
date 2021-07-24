@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2021-05-29T13:39:04+0200
+ * date:   2021-07-24T11:53:15+0200
  */
 
 #include <stdio.h>
@@ -387,7 +387,9 @@ void print_header(const int left_len,
         g_line_len = g_header_len - left_len - 1;
     }
 
-    printf("%s%s@%s%s", color_primary, g_user, g_host, color_secondary);
+    printf("%s%s%s@%s%s%s", \
+            color_primary, g_user, color_secondary, \
+            color_primary, g_host, color_secondary);
     printf("%s", set_spacer(" ", g_line_len - g_header_len + left_len + 2));
     printf("%s%s\n", g_datetime, color_table);
 }
