@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2021-09-25T13:29:48+0200
+ * date:   2021-10-16T10:07:50+0200
  */
 
 #include <stdio.h>
@@ -315,7 +315,10 @@ void *get_mem() {
         }
         fclose(file);
 
-        if (1 == MEMORY_OLD_HTOP_METHOD) {
+        if (2 == MEMORY_METHOD) {
+            mem_available = (mem_total - mem_free - mem_buffers - mem_cached \
+                    - mem_reclaimable) / 1024;
+        } else if (1 == MEMORY_METHOD) {
             mem_available = (mem_total + mem_shared - mem_free - mem_buffers \
                     - mem_cached - mem_reclaimable) / 1024;
         } else {
