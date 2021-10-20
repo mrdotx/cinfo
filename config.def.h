@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2021-10-16T10:12:11+0200
+ * date:   2021-10-20T13:36:20+0200
  */
 
 /* package manager */
@@ -22,9 +22,9 @@ static const char *CPU_TEMPERATURE      = "C";
 /* memory */
 /*
  * memory method
- * 0 = total - available                        (like polybar, btop)
- * 1 = total + shared - free - buffer - cached  (like neofetch, htop old)
- * 2 = total - free - buffer - cached           (like free, htop new)
+ * 0 = total - available                        (like htop = 3.1.0, btop, polybar)
+ * 1 = total + shared - free - buffer - cached  (like htop < 3.1.0, neofetch)
+ * 2 = total - free - buffer - cached           (like htop > 3.1.0, free)
  */
 static const int MEMORY_METHOD          = 2;
 
