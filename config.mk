@@ -1,7 +1,7 @@
 # path:   /home/klassiker/.local/share/repos/cinfo/config.mk
 # author: klassiker [mrdotx]
 # github: https://github.com/mrdotx/cinfo
-# date:   2021-10-16T09:46:40+0200
+# date:   2021-11-05T13:01:37+0100
 
 # cinfo version
 VERSION = 0.3.8
@@ -18,3 +18,11 @@ LDFLAGS = -s
 
 # compiler and linker
 # CC = c99
+
+# markdown to man with pandoc
+PANDOC ?= pandoc
+PANDOCFLAGS ?= --standalone
+MANSECTION ?= 1
+MANPAGE.md = $(PANDOC) $(PANDOCFLAGS) --to man
+%.$(MANSECTION): %.$(MANSECTION).md
+	$(MANPAGE.md) $< -o $@
