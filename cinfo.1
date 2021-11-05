@@ -1,62 +1,63 @@
-.\" cinfo
-.TH CINFO 1 cinfo\-VERSION
+.TH "CINFO" "1" "" "Version-VERSION" "General Commands Manual"
+.hy
 .SH NAME
-cinfo \- system information utility
+.PP
+cinfo - system information utility
 .SH SYNOPSIS
-.B cinfo
-.RB [ \-a ]
-.RB [ \-v ]
+.PP
+\f[B]cinfo\f[R] [\f[B]-a\f[R]] [\f[B]-v\f[R]]
 .SH DESCRIPTION
-.B cinfo
-is a fast and minimal system information tool for linux-based operating systems
+.PP
+\f[B]cinfo\f[R] is a fast and minimal system information tool for
+linux-based operating systems
 .SH OPTIONS
-without given setting, start colored version
+.PP
+without given setting, start colored verion
 .TP
-.B \-a
+\f[B]-a\f[R]
 start plain ascii version
 .TP
-.B \-v
+\f[B]-v\f[R]
 prints version information
 .SH CUSTOMIZATION
-.B cinfo
-can be customized by creating a custom config.h and (re)compiling the source
-code.
+.PP
+\f[B]cinfo\f[R] can be customized by creating a custom config.h and
+(re)compiling the sourc code.
 .TP
-.B PKGS*
+\f[B]PKGS*\f[R]
 values to configure package manager counting
 .TP
-.B INFO*
+\f[B]INFO*\f[R]
 values to configure information in general
 .TP
-.B SHELL*
+\f[B]SHELL*\f[R]
 values to configure shell information
 .TP
-.B MEMORY*
+\f[B]MEMORY*\f[R]
 values to configure memory information
 .TP
-.B COLOR*
+\f[B]COLOR*\f[R]
 values to configure color table
 .TP
-.B ASCII*
+\f[B]ASCII*\f[R]
 values to configure ascii table
 .TP
-.B LABEL*
+\f[B]LABEL*\f[R]
 values to configure labels for ascii and color table
 .SH EXAMPLES
-.B cinfo
+.PP
+\f[B]cinfo\f[R]
 .PD 0
 .P
 .PD
-.B cinfo
-.RB \-a
+\f[B]cinfo\f[R] -a
 .PD 0
 .P
 .PD
-.B cinfo
-.RB \-v
+\f[B]cinfo\f[R] -v
 .SH AUTHORS
-.B cinfo
-was written by mrdotx
-.RI < klassiker@gmx.de >
+.PP
+\f[B]cinfo\f[R] was written by mrdotx <\f[I]klassiker\[at]gmx.de\f[R]>
 .SH LICENSE
+.PP
 See the LICENSE.md file for the terms of redistribution.
