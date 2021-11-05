@@ -24,7 +24,7 @@ without given setting, start colored verion
 
 # CUSTOMIZATION
 
-**cinfo** can be customized by creating a custom config.h and (re)compiling  the  sourc code.
+**cinfo** can be customized by creating a custom config.h and (re)compiling the source code.
 
 **PKGS\***
 : values to configure package manager counting
@@ -52,6 +52,10 @@ without given setting, start colored verion
 | **cinfo**
 | **cinfo** -a
 | **cinfo** -v
+
+# BUGS
+
+See GitHub Issues: *https://github.com/mrdotx/cinfo/issues*
 
 # AUTHORS
 
