@@ -24,5 +24,5 @@ cinfo
 
 ## manual
 
-you can view the manual by running `man cinfo.1`, or `man afetch`
+you can view the manual by running `man cinfo`, or `man cinfo.1`
 if you've already ran `make clean install`.
