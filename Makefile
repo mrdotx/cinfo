@@ -1,7 +1,7 @@
 # path:   /home/klassiker/.local/share/repos/cinfo/Makefile
 # author: klassiker [mrdotx]
 # github: https://github.com/mrdotx/cinfo
-# date:   2021-11-05T14:05:47+0100
+# date:   2021-11-05T15:31:46+0100
 
 .POSIX:
 
@@ -31,7 +31,7 @@ uninstall:
 clean:
 	rm -f cinfo cinfo-$(VERSION).tar.gz
 
-pandoc: cinfo.1
+man: cinfo.1
 	rm -f cinfo.1
 	pandoc -s --to man cinfo.1.md -o cinfo.1
 	sed -i '1,2d' cinfo.1
@@ -47,4 +47,4 @@ dist: clean
 .c:
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ $< -lutil
 
-.PHONY: all options clean pandoc dist install uninstall
+.PHONY: all options clean man dist install uninstall
