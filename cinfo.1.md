@@ -1,4 +1,4 @@
-% CINFO(1) Version\-VERSION | General Commands Manual
+% CINFO(1) Version\-VERSION | cinfo Manual
 
 # NAME
 
