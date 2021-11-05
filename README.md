@@ -4,25 +4,25 @@ a fast and minimal system information tool for linux-based operating systems
 
 ![screenshot](screenshot.png)
 
-## installation
+## Installation
 
-edit config.mk to match your local setup (cinfo is installed into
+Edit config.mk to match your local setup (cinfo is installed into
 the /usr/local namespace by default)
 
-afterwards enter the following command to build and install cinfo (if
+Afterwards enter the following command to build and install cinfo (if
 necessary as root):
 
 ```bash
 make clean install
 ```
 
-## run
+## Run
 
 ```bash
 cinfo
 ```
 
-## manual
+## Manual
 
-you can view the manual by running `man cinfo`, or `man cinfo.1`
-if you've already ran `make clean install`.
+You can view the manual by running `man cinfo`, or `man cinfo.1`.
+If you've already ran `make clean install`.
