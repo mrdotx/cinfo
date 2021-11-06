@@ -14,38 +14,46 @@ cinfo - system information utility
 
 # OPTIONS
 
-without given setting, start colored verion
+Without given setting, start colored verion.
 
 **-a**
-: start plain ascii version
+: Start plain ascii version.
 
 **-v**
-: prints version information
+: Prints version information.
 
 # CUSTOMIZATION
 
-**cinfo** can be customized by creating a custom config.h and (re)compiling the source code.
+**cinfo** can be customized by creating/editing a custom config.h and (re-)compiling the source code.
 
-**PKGS\***
-: values to configure package manager counting
+***PKGS\****
+: Values to configure package manager counting.
 
-**INFO\***
-: values to configure information in general
+***INFO\****
+: Values to configure information in general.
 
-**SHELL\***
-: values to configure shell information
+***SHELL\****
+: Values to configure shell information.
 
-**MEMORY\***
-: values to configure memory information
+***MEMORY\****
+: Values to configure memory information.
 
-**COLOR\***
-: values to configure color table
+**MEMORY_METHOD**
 
-**ASCII\***
-: values to configure ascii table
+| Value | Calculation                             | Comparable                  |
+| :---: | :-------------------------------------- | :-------------------------- |
+| 0     | total - available                       | htop = 3.1.0, btop, polybar |
+| 1     | total + shared - free - buffer - cached | htop < 3.1.0, neofetch      |
+| 2     | total - free - buffer - cached          | htop > 3.1.0, free          |
 
-**LABEL\***
-: values to configure labels for ascii and color table
+***COLOR\****
+: Values to configure color table.
+
+***ASCII\****
+: Values to configure ascii table.
+
+***LABEL\****
+: Values to configure labels for ascii and color table.
 
 # EXAMPLES
 
@@ -61,6 +69,10 @@ See GitHub Issues: *https://github.com/mrdotx/cinfo/issues*
 
 **cinfo** was written by mrdotx <*klassiker@gmx.de*>
 
+# SEE ALSO
+
+**htop**(1), **free**(1), **neofetch**(1), **polybar**(1)
+
 # LICENSE
 
-See the LICENSE.md file for the terms of redistribution.
+See the *LICENSE.md* file for the terms of redistribution.

@@ -1,3 +1,4 @@
+.\"
 .TH "CINFO" "1" "" "Version-VERSION" "cinfo Manual"
 .hy
 .SH NAME
@@ -12,38 +13,74 @@ cinfo - system information utility
 linux-based operating systems
 .SH OPTIONS
 .PP
-without given setting, start colored verion
+Without given setting, start colored verion.
 .TP
 \f[B]-a\f[R]
-start plain ascii version
+Start plain ascii version.
 .TP
 \f[B]-v\f[R]
-prints version information
+Prints version information.
 .SH CUSTOMIZATION
 .PP
-\f[B]cinfo\f[R] can be customized by creating a custom config.h and
-(re)compiling the source code.
+\f[B]cinfo\f[R] can be customized by creating/editing a custom config.h
+and (re-)compiling the source code.
 .TP
-\f[B]PKGS*\f[R]
-values to configure package manager counting
+\f[B]\f[BI]PKGS*\f[B]\f[R]
+Values to configure package manager counting.
 .TP
-\f[B]INFO*\f[R]
-values to configure information in general
+\f[B]\f[BI]INFO*\f[B]\f[R]
+Values to configure information in general.
 .TP
-\f[B]SHELL*\f[R]
-values to configure shell information
+\f[B]\f[BI]SHELL*\f[B]\f[R]
+Values to configure shell information.
 .TP
-\f[B]MEMORY*\f[R]
-values to configure memory information
+\f[B]\f[BI]MEMORY*\f[B]\f[R]
+Values to configure memory information.
+.PP
+\f[B]MEMORY_METHOD\f[R]
+.PP
+.TS
+tab(@);
+c l l.
+T{
+Value
+T}@T{
+Calculation
+T}@T{
+Comparable
+T}
+_
+T{
+0
+T}@T{
+total - available
+T}@T{
+htop = 3.1.0, btop, polybar
+T}
+T{
+1
+T}@T{
+total + shared - free - buffer - cached
+T}@T{
+htop < 3.1.0, neofetch
+T}
+T{
+2
+T}@T{
+total - free - buffer - cached
+T}@T{
+htop > 3.1.0, free
+T}
+.TE
 .TP
-\f[B]COLOR*\f[R]
-values to configure color table
+\f[B]\f[BI]COLOR*\f[B]\f[R]
+Values to configure color table.
 .TP
-\f[B]ASCII*\f[R]
-values to configure ascii table
+\f[B]\f[BI]ASCII*\f[B]\f[R]
+Values to configure ascii table.
 .TP
-\f[B]LABEL*\f[R]
-values to configure labels for ascii and color table
+\f[B]\f[BI]LABEL*\f[B]\f[R]
+Values to configure labels for ascii and color table.
 .SH EXAMPLES
 .PP
 \f[B]cinfo\f[R]
@@ -61,6 +98,10 @@ See GitHub Issues: \f[I]https://github.com/mrdotx/cinfo/issues\f[R]
 .SH AUTHORS
 .PP
 \f[B]cinfo\f[R] was written by mrdotx <\f[I]klassiker\[at]gmx.de\f[R]>
+.SH SEE ALSO
+.PP
+\f[B]htop\f[R](1), \f[B]free\f[R](1), \f[B]neofetch\f[R](1),
+\f[B]polybar\f[R](1)
 .SH LICENSE
 .PP
-See the LICENSE.md file for the terms of redistribution.
+See the \f[I]LICENSE.md\f[R] file for the terms of redistribution.
