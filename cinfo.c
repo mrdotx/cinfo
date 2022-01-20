@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2021-10-16T10:07:50+0200
+ * date:   2022-01-20T11:50:46+0100
  */
 
 #include <stdio.h>
@@ -242,8 +242,8 @@ void *get_cpu() {
 
     FILE *file;
     if ((file = fopen("/proc/cpuinfo", "r"))) {
-        while (fscanf(file, " %19[^:]: %57[^\n]", name, value) == 2) {
-            if (0 == strcmp(name, "model name	")) {
+        while (fscanf(file, " %19[^	] : %57[^\n]", name, value) == 2) {
+            if (0 == strcmp(name, "model name")) {
                 strcpy(model, value);
                 break;
             }
