@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-01-20T11:50:46+0100
+ * date:   2022-01-20T19:01:14+0100
  */
 
 #include <stdio.h>
@@ -235,8 +235,7 @@ void *get_shell() {
 
 void *get_cpu() {
     char name[20],
-         value[58],
-         model[58];
+         value[58];
 
     float temp;
 
@@ -244,7 +243,7 @@ void *get_cpu() {
     if ((file = fopen("/proc/cpuinfo", "r"))) {
         while (fscanf(file, " %19[^	] : %57[^\n]", name, value) == 2) {
             if (0 == strcmp(name, "model name")) {
-                strcpy(model, value);
+                strcpy(g_cpu, value);
                 break;
             }
         }
@@ -253,15 +252,11 @@ void *get_cpu() {
 
     if ((file = fopen("/sys/class/thermal/thermal_zone0/temp", "r"))) {
         fscanf(file, "%f", &temp);
+        temp /= 1000;
+        if (0 != temp) {
+            sprintf(g_cpu, "%s [%.1f%s]", g_cpu, temp, CPU_TEMPERATURE);
+        }
         fclose(file);
-    }
-
-    temp /= 1000;
-
-    sprintf(g_cpu, "%s", model);
-
-    if (0 != temp) {
-        sprintf(g_cpu, "%s [%.1f%s]", g_cpu, temp, CPU_TEMPERATURE);
     }
 
     if (g_line_len < strlen(g_cpu)) {
