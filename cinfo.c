@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-01-21T09:22:44+0100
+ * date:   2022-01-24T17:35:44+0100
  */
 
 #include <stdio.h>
@@ -218,8 +218,8 @@ void *get_shell() {
         sprintf(shell, "LINK ERR");
     }
 
-    sprintf(g_shell, "%s%s%s%s%s", \
-            SHELL_PATH, SHELL_DIVIDER, shell, \
+    sprintf(g_shell, "%s [%s]%s%s", \
+            SHELL_PATH, shell, \
             INFO_DIVIDER, getenv("SHELL"));
 
     if (0 != getenv("TERM")) {
