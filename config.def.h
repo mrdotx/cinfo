@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-01-20T09:21:32+0100
+ * date:   2022-01-24T17:35:55+0100
  */
 
 /* package manager */
@@ -13,8 +13,7 @@ static const char *PKGS_CMD             = "ls -p /var/lib/pacman/local | grep -c
 static const char *INFO_DIVIDER         = " | ";
 
 /* shell */
-static const char *SHELL_PATH           = "/bin/sh",
-                  *SHELL_DIVIDER        = " -> ";
+static const char *SHELL_PATH           = "/bin/sh";
 
 /* cpu */
 static const char *CPU_TEMPERATURE      = "C";
