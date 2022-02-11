@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-01-24T17:35:44+0100
+ * date:   2022-02-11T09:11:49+0100
  */
 
 #include <stdio.h>
@@ -250,7 +250,7 @@ void *get_cpu() {
         fclose(file);
     }
 
-    if ((file = fopen("/sys/class/thermal/thermal_zone0/temp", "r"))) {
+    if ((file = fopen(CPU_TEMPERATURE_PATH, "r"))) {
         fscanf(file, "%f", &temp);
         temp /= 1000;
         if (0 != temp) {

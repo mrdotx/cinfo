@@ -35,6 +35,9 @@ Without given setting, start colored verion.
 ***SHELL\****
 : Values to configure shell information.
 
+***CPU\****
+: Values to configure cpu information.
+
 ***MEMORY\****
 : Values to configure memory information.
 
