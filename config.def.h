@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-02-26T19:30:45+0100
+ * date:   2022-02-26T20:00:45+0100
  */
 
 /* packages */
@@ -17,7 +17,7 @@ static const char *SHELL_PATH           = "/bin/sh";
 
 /* cpu */
 static const char *CPU_TEMPERATURE_PATH = "/sys/class/hwmon/hwmon1/temp1_input",
-                  *CPU_TEMPERATURE      = "C";
+                  *CPU_TEMPERATURE      = "'C";
 
 /* memory */
 static const int MEMORY_METHOD          = 2;
