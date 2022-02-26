@@ -2,11 +2,11 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-02-11T09:11:16+0100
+ * date:   2022-02-26T19:30:45+0100
  */
 
-/* package manager */
-static const char *PKGS_CMD             = "ls -p /var/lib/pacman/local | grep -c /",
+/* packages */
+static const char *PKGS_PATH            = "/var/lib/pacman/local",
                   *PKGS_DESC            = " [pacman]";
 
 /* general */

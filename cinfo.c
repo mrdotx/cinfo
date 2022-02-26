@@ -2,13 +2,14 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-02-11T09:11:49+0100
+ * date:   2022-02-26T19:40:49+0100
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <dirent.h>
 #include <unistd.h>
 #include <pthread.h>
 
@@ -194,11 +195,21 @@ void *get_uptime() {
 }
 
 void *get_pkgs() {
-    int pkgs_count;
+    int pkgs_count = 0;
 
-    FILE *file = popen(PKGS_CMD, "r");
-    fscanf(file, "%d", &pkgs_count);
-    pclose(file);
+    DIR *dir;
+
+    struct dirent *entry;
+
+    if ((dir = opendir(PKGS_PATH)) == NULL) return 0;
+    while ((entry = readdir(dir)) != NULL) {
+        if (0 == strcmp(entry->d_name,".") ||
+            0 == strcmp(entry->d_name,"..")) continue;
+        if (entry->d_type == DT_DIR) {
+            pkgs_count++;
+        }
+    }
+    closedir(dir);
 
     sprintf(g_pkgs, "%d%s", pkgs_count, PKGS_DESC);
 
