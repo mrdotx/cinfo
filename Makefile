@@ -1,50 +1,77 @@
 # path:   /home/klassiker/.local/share/repos/cinfo/Makefile
 # author: klassiker [mrdotx]
 # github: https://github.com/mrdotx/cinfo
-# date:   2021-11-05T15:31:46+0100
+# date:   2022-02-26T08:45:53+0100
 
 .POSIX:
 
 include config.mk
 
-all: options cinfo cinfo.1
+all: options $(NAME)
+
+$(NAME): config.h $(NAME).c $(NAME).1
 
 options:
-	@echo cinfo build options:
-	@echo "CFLAGS   = $(CFLAGS)"
-	@echo "LDFLAGS  = $(LDFLAGS)"
-	@echo "CC       = $(CC)"
+	@printf "build options:\n"
+	@printf "  CPPFLAGS = $(CPPFLAGS)\n"
+	@printf "  CFLAGS   = $(CFLAGS)\n"
+	@printf "  LDFLAGS  = $(LDFLAGS)\n"
+	@printf "  CC       = $(CC)\n"
+	@printf "build:\n"
 
 config.h:
-	cp config.def.h $@
+	@printf "  $@\n"
+	@cp config.def.h $@
 
-cinfo: cinfo.c config.h
-
-install: all
-	mkdir -p $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)/man1
-	cp -f cinfo $(DESTDIR)$(BINDIR)
-	sed "s/VERSION/$(VERSION)/g" < cinfo.1 > $(DESTDIR)$(MANDIR)/man1/cinfo.1
-
-uninstall:
-	rm -f $(DESTDIR)$(BINDIR)/cinfo $(DESTDIR)$(MANDIR)/man1/cinfo.1
-
-clean:
-	rm -f cinfo cinfo-$(VERSION).tar.gz
-
-man: cinfo.1
-	rm -f cinfo.1
-	pandoc -s --to man cinfo.1.md -o cinfo.1
-	sed -i '1,2d' cinfo.1
-
-dist: clean
-	mkdir -p cinfo-$(VERSION)
-	cp -R README.md LICENSE.md cinfo.1 Makefile config.mk config.h \
-		cinfo.c \
-		cinfo-$(VERSION)
-	tar -cf - cinfo-$(VERSION) | gzip > cinfo-$(VERSION).tar.gz
-	rm -rf cinfo-$(VERSION)
+$(NAME).1:
+	@printf "  $@\n"
+	@pandoc -s --to man $@.md -o $@
+	@sed -i '1,2d' $@
 
 .c:
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ $< -lutil
+	@printf "  $@\n"
+	@$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ $< -lutil
 
-.PHONY: all options clean man dist install uninstall
+dist: clean man all
+	@printf "  $(NAME)-$(VERSION).tar.gz\n"
+	@mkdir -p $(NAME)-$(VERSION)
+	@cp -R \
+		$(NAME).1 \
+		$(NAME).c \
+		config.h \
+		config.mk \
+		LICENSE.md \
+		Makefile \
+		README.md \
+		$(NAME)-$(VERSION)
+	@tar -cf - $(NAME)-$(VERSION) | gzip > $(NAME)-$(VERSION).tar.gz
+	@rm -rf $(NAME)-$(VERSION)
+
+install: all
+	@printf "install:\n"
+	@printf "  $(DESTDIR)$(BINDIR)/man1/$(NAME).1\n"
+	@mkdir -p $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)/man1
+	@sed "s/VERSION/$(VERSION)/g" < $(NAME).1 > $(DESTDIR)$(MANDIR)/man1/$(NAME).1
+	@printf "  $(DESTDIR)$(BINDIR)/$(NAME)\n"
+	@cp -f $(NAME) $(DESTDIR)$(BINDIR)
+
+uninstall:
+	@printf "uninstall:\n"
+	@printf "  $(DESTDIR)$(BINDIR)/$(NAME)\n"
+	@rm -f $(DESTDIR)$(BINDIR)/$(NAME)
+	@printf "  $(DESTDIR)$(MANDIR)/man1/$(NAME).1\n"
+	@rm -f $(DESTDIR)$(MANDIR)/man1/$(NAME).1
+
+clean:
+	@printf "remove:\n"
+	@printf "  $(NAME)-$(VERSION).tar.gz\n"
+	@rm -f $(NAME)-$(VERSION).tar.gz
+	@printf "  $(NAME)\n"
+	@rm -f $(NAME)
+
+man:
+	@printf "  $(NAME).1\n"
+	@rm -f $(NAME).1
+
+.PHONY: all
+	install uninstall dist clean man
