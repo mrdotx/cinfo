@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-02-26T19:40:49+0100
+ * date:   2022-02-27T11:28:39+0100
  */
 
 #include <stdio.h>
@@ -384,8 +384,6 @@ void get_infos(void *print()) {
     }
 
     print();
-
-    pthread_exit(NULL);
 }
 
 void print_header(const int left_len,
@@ -464,6 +462,7 @@ void *print_color() {
 
     print_line(COLOR_LEFT_LEN, COLOR_LINE, COLOR_DIVIDER_BOTTOM);
 
+    printf("\x1b[0m");
     return NULL;
 }
 
@@ -482,6 +481,6 @@ int main(int argc, char *argv[]) {
         print_usage();
     }
 
-    printf("\x1b[0m");
+    pthread_exit(NULL);
     return 0;
 }
