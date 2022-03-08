@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-02-27T11:28:39+0100
+ * date:   2022-03-08T13:23:46+0100
  */
 
 #include <stdio.h>
@@ -30,7 +30,17 @@ char g_user[50],
      g_cpu[65],
      g_mem[65];
 
-const char *remove_char(char *string, const char *remove){
+const char *remove_file(const char *file) {
+    if (0 == remove(file)) {
+        printf("File \"%s\" is deleted succsessfully.\n", file);
+    } else {
+        printf("File \"%s\" not found.\n", file);
+    }
+
+    return file;
+}
+
+const char *remove_char(char *string, const char *remove) {
     int i = 0, j;
 
     while (i < strlen(string)) {
@@ -102,10 +112,16 @@ void *get_distro() {
          value[65];
 
     FILE *file;
-    if ((file = fopen("/etc/os-release", "r"))) {
+    if ((file = fopen(CACHE_DISTRO_PATH, "r"))) {
+        fscanf(file, "%[^\n]s", g_distro);
+        fclose(file);
+    } else if ((file = fopen("/etc/os-release", "r"))) {
         while (fscanf(file, " %14[^=]=%64[^\n]", name, value) == 2) {
             if (0 == strcmp(name, "PRETTY_NAME")) {
-                strcpy(g_distro, remove_char(value, "\""));
+                file = fopen(CACHE_DISTRO_PATH, "w");
+                remove_char(value, "\"");
+                fprintf(file, "%s", value);
+                strcpy(g_distro, value);
                 break;
             }
         }
@@ -124,7 +140,10 @@ void *get_model() {
          version[15] = "";
 
     FILE *file;
-    if ((file = fopen("/sys/devices/virtual/dmi/id/product_name", "r"))) {
+    if ((file = fopen(CACHE_MODEL_PATH, "r"))) {
+        fscanf(file, "%[^\n]s", g_model);
+        fclose(file);
+    } else if ((file = fopen("/sys/devices/virtual/dmi/id/product_name", "r"))) {
         fscanf(file, "%[^\n]s", name);
         fclose(file);
 
@@ -138,7 +157,12 @@ void *get_model() {
         strcpy(name, "not found");
     }
 
-    sprintf(g_model, "%s %s", name, version);
+    if ((file != fopen(CACHE_MODEL_PATH, "r"))) {
+        file = fopen(CACHE_MODEL_PATH, "w");
+        fprintf(file, "%s %s", name, version);
+        sprintf(g_model, "%s %s", name, version);
+        fclose(file);
+    }
 
     if (g_line_len < strlen(g_model)) {
         g_line_len = strlen(g_model);
@@ -251,9 +275,14 @@ void *get_cpu() {
     float temp;
 
     FILE *file;
-    if ((file = fopen("/proc/cpuinfo", "r"))) {
+    if ((file = fopen(CACHE_CPU_PATH, "r"))) {
+        fscanf(file, "%[^\n]s", g_cpu);
+        fclose(file);
+    } else if ((file = fopen("/proc/cpuinfo", "r"))) {
         while (fscanf(file, " %19[^:]: %57[^\n]", name, value) == 2) {
             if (0 == strcmp(name, "model name	")) {
+                file = fopen(CACHE_CPU_PATH, "w");
+                fprintf(file, "%s", value);
                 strcpy(g_cpu, value);
                 break;
             }
@@ -358,16 +387,16 @@ void *get_mem() {
 void get_infos(void *print()) {
     const void *routines[] = {
         get_cpu,
+        get_distro,
+        get_model,
         get_pkgs,
         get_user,
         get_host,
         get_datetime,
         get_uptime,
         get_mem,
-        get_shell,
-        get_model,
-        get_distro,
-        get_kernel
+        get_kernel,
+        get_shell
     };
 
     const int THREADS_NUM = (int) sizeof(routines) / sizeof(routines[0]);
@@ -467,7 +496,7 @@ void *print_color() {
 }
 
 void print_usage() {
-    puts("usage: cinfo [-a] [-v]");
+    puts("usage: cinfo [-a] [-c] [-v]");
 }
 
 int main(int argc, char *argv[]) {
@@ -475,6 +504,10 @@ int main(int argc, char *argv[]) {
         get_infos(print_color);
     } else if (0 == strcmp(argv[1], "-a")) {
         get_infos(print_ascii);
+    } else if (0 == strcmp(argv[1], "-r")) {
+        remove_file(CACHE_DISTRO_PATH);
+        remove_file(CACHE_MODEL_PATH);
+        remove_file(CACHE_CPU_PATH);
     } else if (0 == strcmp(argv[1], "-v")) {
         puts("cinfo-"VERSION);
     } else {
