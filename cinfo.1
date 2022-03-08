@@ -20,7 +20,7 @@
 cinfo - system information utility
 .SH SYNOPSIS
 .PP
-\f[B]cinfo\f[R] [\f[B]-a\f[R]] [\f[B]-v\f[R]]
+\f[B]cinfo\f[R] [\f[B]-a\f[R]] [\f[B]-r\f[R]] [\f[B]-v\f[R]]
 .SH DESCRIPTION
 .PP
 \f[B]cinfo\f[R] is a fast and minimal system information tool for
@@ -31,6 +31,9 @@ Without given setting, start colored verion.
 .TP
 \f[B]-a\f[R]
 Start plain ascii version.
+.TP
+\f[B]-r\f[R]
+Remove cache files.
 .TP
 \f[B]-v\f[R]
 Prints version information.
@@ -98,6 +101,9 @@ Values to configure ascii table.
 .TP
 \f[B]\f[BI]LABEL*\f[B]\f[R]
 Values to configure labels for ascii and color table.
+.TP
+\f[B]\f[BI]CACHE*\f[B]\f[R]
+Values to configure the cache paths.
 .SH EXAMPLES
 .PP
 \f[B]cinfo\f[R]
@@ -105,6 +111,10 @@ Values to configure labels for ascii and color table.
 .P
 .PD
 \f[B]cinfo\f[R] -a
+.PD 0
+.P
+.PD
+\f[B]cinfo\f[R] -r
 .PD 0
 .P
 .PD
