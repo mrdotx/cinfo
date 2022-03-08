@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-02-26T20:00:45+0100
+ * date:   2022-03-08T12:49:43+0100
  */
 
 /* packages */
@@ -53,3 +53,8 @@ static const char *LABEL_DISTRO         = " distro",
                   *LABEL_SHELL          = "  shell",
                   *LABEL_CPU            = "    cpu",
                   *LABEL_MEM            = " memory";
+
+/* cache */
+static const char *CACHE_DISTRO_PATH    = "/tmp/distro.cinfo",
+                  *CACHE_MODEL_PATH     = "/tmp/model.cinfo",
+                  *CACHE_CPU_PATH       = "/tmp/cpu.cinfo";
