@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-03-08T13:23:46+0100
+ * date:   2022-03-08T17:39:37+0100
  */
 
 #include <stdio.h>
@@ -32,7 +32,7 @@ char g_user[50],
 
 const char *remove_file(const char *file) {
     if (0 == remove(file)) {
-        printf("File \"%s\" is deleted succsessfully.\n", file);
+        printf("File \"%s\" deleted succsessfully.\n", file);
     } else {
         printf("File \"%s\" not found.\n", file);
     }
@@ -504,7 +504,7 @@ int main(int argc, char *argv[]) {
         get_infos(print_color);
     } else if (0 == strcmp(argv[1], "-a")) {
         get_infos(print_ascii);
-    } else if (0 == strcmp(argv[1], "-r")) {
+    } else if (0 == strcmp(argv[1], "-c")) {
         remove_file(CACHE_DISTRO_PATH);
         remove_file(CACHE_MODEL_PATH);
         remove_file(CACHE_CPU_PATH);

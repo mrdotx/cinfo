@@ -6,7 +6,7 @@ cinfo - system information utility
 
 # SYNOPSIS
 
-**cinfo** [**-a**] [**-r**] [**-v**]
+**cinfo** [**-a**] [**-c**] [**-v**]
 
 # DESCRIPTION
 
@@ -19,8 +19,8 @@ Without given setting, start colored verion.
 **-a**
 : Start plain ascii version.
 
-**-r**
-: Remove cache files.
+**-c**
+: Clear cache files.
 
 **-v**
 : Prints version information.
@@ -68,7 +68,7 @@ Without given setting, start colored verion.
 
 | **cinfo**
 | **cinfo** -a
-| **cinfo** -r
+| **cinfo** -c
 | **cinfo** -v
 
 # BUGS
