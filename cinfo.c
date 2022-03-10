@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-03-10T19:10:36+0100
+ * date:   2022-03-10T19:26:10+0100
  */
 
 #include <stdio.h>
@@ -68,14 +68,6 @@ const char *set_spacer(const char *character, int length) {
     return spacer;
 }
 
-const int set_line_len(const char *line) {
-    if (g_line_len < strlen(line)) {
-        g_line_len = strlen(line);
-    }
-
-    return g_line_len;
-}
-
 void *get_user() {
     sprintf(g_user, "%s", getenv("USER"));
 
@@ -136,7 +128,9 @@ void *get_distro() {
         fclose(file);
     }
 
-    set_line_len(g_distro);
+    if (g_line_len < strlen(g_distro)) {
+        g_line_len = strlen(g_distro);
+    }
 
     return NULL;
 }
@@ -170,7 +164,9 @@ void *get_model() {
         fclose(file);
     }
 
-    set_line_len(g_model);
+    if (g_line_len < strlen(g_model)) {
+        g_line_len = strlen(g_model);
+    }
 
     return NULL;
 }
@@ -182,7 +178,9 @@ void *get_kernel() {
         fclose(file);
     }
 
-    set_line_len(g_kernel);
+    if (g_line_len < strlen(g_kernel)) {
+        g_line_len = strlen(g_kernel);
+    }
 
     return NULL;
 }
@@ -213,7 +211,9 @@ void *get_uptime() {
         }
     }
 
-    set_line_len(g_uptime);
+    if (g_line_len < strlen(g_uptime)) {
+        g_line_len = strlen(g_uptime);
+    }
 
     return NULL;
 }
@@ -238,7 +238,9 @@ void *get_pkgs() {
 
     sprintf(g_pkgs, "%d%s", pkgs_count, PKGS_DESC);
 
-    set_line_len(g_pkgs);
+    if (g_line_len < strlen(g_pkgs)) {
+        g_line_len = strlen(g_pkgs);
+    }
 
     return NULL;
 }
@@ -260,7 +262,9 @@ void *get_shell() {
         sprintf(g_shell, "%s [%s]", g_shell, getenv("TERM"));
     }
 
-    set_line_len(g_shell);
+    if (g_line_len < strlen(g_shell)) {
+        g_line_len = strlen(g_shell);
+    }
 
     return NULL;
 }
@@ -296,7 +300,9 @@ void *get_cpu() {
         fclose(file);
     }
 
-    set_line_len(g_cpu);
+    if (g_line_len < strlen(g_cpu)) {
+        g_line_len = strlen(g_cpu);
+    }
 
     return NULL;
 }
@@ -372,7 +378,9 @@ void *get_mem() {
         }
     }
 
-    set_line_len(g_mem);
+    if (g_line_len < strlen(g_mem)) {
+        g_line_len = strlen(g_mem);
+    }
 
     return NULL;
 }
