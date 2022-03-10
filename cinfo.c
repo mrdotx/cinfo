@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-03-10T19:26:10+0100
+ * date:   2022-03-10T20:06:26+0100
  */
 
 #include <stdio.h>
@@ -15,8 +15,8 @@
 
 #include "config.h"
 
-int g_line_len,
-    g_header_len;
+int g_header_len,
+    g_line_len;
 
 char g_user[50],
      g_host[50],
@@ -52,6 +52,14 @@ const char *remove_char(char *string, const char *remove) {
     }
 
     return string;
+}
+
+const int set_line_len(const char *line) {
+    if (g_line_len < strlen(line)) {
+        g_line_len = strlen(line);
+    }
+
+    return g_line_len;
 }
 
 const char *set_spacer(const char *character, int length) {
@@ -128,9 +136,7 @@ void *get_distro() {
         fclose(file);
     }
 
-    if (g_line_len < strlen(g_distro)) {
-        g_line_len = strlen(g_distro);
-    }
+    set_line_len(g_distro);
 
     return NULL;
 }
@@ -164,9 +170,7 @@ void *get_model() {
         fclose(file);
     }
 
-    if (g_line_len < strlen(g_model)) {
-        g_line_len = strlen(g_model);
-    }
+    set_line_len(g_model);
 
     return NULL;
 }
@@ -178,9 +182,7 @@ void *get_kernel() {
         fclose(file);
     }
 
-    if (g_line_len < strlen(g_kernel)) {
-        g_line_len = strlen(g_kernel);
-    }
+    set_line_len(g_kernel);
 
     return NULL;
 }
@@ -211,9 +213,7 @@ void *get_uptime() {
         }
     }
 
-    if (g_line_len < strlen(g_uptime)) {
-        g_line_len = strlen(g_uptime);
-    }
+    set_line_len(g_uptime);
 
     return NULL;
 }
@@ -238,9 +238,7 @@ void *get_pkgs() {
 
     sprintf(g_pkgs, "%d%s", pkgs_count, PKGS_DESC);
 
-    if (g_line_len < strlen(g_pkgs)) {
-        g_line_len = strlen(g_pkgs);
-    }
+    set_line_len(g_pkgs);
 
     return NULL;
 }
@@ -262,9 +260,7 @@ void *get_shell() {
         sprintf(g_shell, "%s [%s]", g_shell, getenv("TERM"));
     }
 
-    if (g_line_len < strlen(g_shell)) {
-        g_line_len = strlen(g_shell);
-    }
+    set_line_len(g_shell);
 
     return NULL;
 }
@@ -300,9 +296,7 @@ void *get_cpu() {
         fclose(file);
     }
 
-    if (g_line_len < strlen(g_cpu)) {
-        g_line_len = strlen(g_cpu);
-    }
+    set_line_len(g_cpu);
 
     return NULL;
 }
@@ -378,9 +372,7 @@ void *get_mem() {
         }
     }
 
-    if (g_line_len < strlen(g_mem)) {
-        g_line_len = strlen(g_mem);
-    }
+    set_line_len(g_mem);
 
     return NULL;
 }
