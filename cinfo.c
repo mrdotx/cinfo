@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-03-29T20:30:31+0200
+ * date:   2022-03-30T09:51:29+0200
  */
 
 #include <stdio.h>
@@ -55,7 +55,9 @@ const char *remove_char(char *string, const char *remove) {
 }
 
 const int set_line_len(const char *line) {
-    if (g_line_len < strlen(line)) {
+    if (line == NULL) {
+        g_line_len = 0;
+    } else if (g_line_len < strlen(line)) {
         g_line_len = strlen(line);
     }
 
@@ -74,6 +76,23 @@ const char *set_spacer(const char *character, int length) {
     }
 
     return spacer;
+}
+
+const double get_execution_time(void *print()) {
+    #define BILLION 1000000000.0
+
+    struct timespec start, end;
+
+    clock_gettime(CLOCK_REALTIME, &start);
+
+    print();
+
+    clock_gettime(CLOCK_REALTIME, &end);
+
+    double time_spend = (end.tv_sec - start.tv_sec) +
+                        (end.tv_nsec - start.tv_nsec) / BILLION;
+
+    return time_spend;
 }
 
 void *get_user() {
@@ -379,17 +398,17 @@ void *get_mem() {
 
 void get_infos(void *print()) {
     const void *routines[] = {
+        get_pkgs,
         get_cpu,
+        get_mem,
+        get_datetime,
+        get_host,
+        get_uptime,
         get_distro,
         get_model,
-        get_pkgs,
-        get_user,
-        get_host,
-        get_datetime,
-        get_uptime,
-        get_mem,
         get_kernel,
-        get_shell
+        get_shell,
+        get_user
     };
 
     const int THREADS_NUM = (int) sizeof(routines) / sizeof(routines[0]);
@@ -490,8 +509,32 @@ void *print_color() {
     return NULL;
 }
 
+void get_execution_times() {
+    int line_len = 24;
+
+    puts("execution times in sec");
+
+    print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
+
+    printf(" get_user     %s %f\n", ASCII_DIVIDER, get_execution_time(get_user));
+    printf(" get_host     %s %f\n", ASCII_DIVIDER, get_execution_time(get_host));
+    printf(" get_datetime %s %f\n", ASCII_DIVIDER, get_execution_time(get_datetime));
+
+    printf(" get_distro   %s %f\n", ASCII_DIVIDER, get_execution_time(get_distro));
+    printf(" get_model    %s %f\n", ASCII_DIVIDER, get_execution_time(get_model));
+    printf(" get_kernel   %s %f\n", ASCII_DIVIDER, get_execution_time(get_kernel));
+    printf(" get_uptime   %s %f\n", ASCII_DIVIDER, get_execution_time(get_uptime));
+    printf(" get_pkgs     %s %f\n", ASCII_DIVIDER, get_execution_time(get_pkgs));
+    printf(" get_shell    %s %f\n", ASCII_DIVIDER, get_execution_time(get_shell));
+    printf(" get_cpu      %s %f\n", ASCII_DIVIDER, get_execution_time(get_cpu));
+    printf(" get_mem      %s %f\n", ASCII_DIVIDER, get_execution_time(get_mem));
+
+    set_line_len(NULL);
+    print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
+}
+
 void print_usage() {
-    puts("usage: cinfo [-a] [-c] [-v]");
+    puts("usage: cinfo [-a] [-c] [-t] [-v]");
 }
 
 int main(int argc, char *argv[]) {
@@ -503,6 +546,8 @@ int main(int argc, char *argv[]) {
         remove_file(CACHE_DISTRO_PATH);
         remove_file(CACHE_MODEL_PATH);
         remove_file(CACHE_CPU_PATH);
+    } else if (0 == strcmp(argv[1], "-t")) {
+        get_execution_times();
     } else if (0 == strcmp(argv[1], "-v")) {
         puts("cinfo-"VERSION);
     } else {
