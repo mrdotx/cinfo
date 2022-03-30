@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-03-30T09:51:29+0200
+ * date:   2022-03-30T11:59:56+0200
  */
 
 #include <stdio.h>
@@ -240,11 +240,17 @@ void *get_uptime() {
 void *get_pkgs() {
     int pkgs_count = 0;
 
+    FILE *file;
     DIR *dir;
 
     struct dirent *entry;
 
-    if ((dir = opendir(PKGS_PATH)) == NULL) return 0; {
+    if ((file = fopen(CACHE_PKGS_PATH, "r"))) {
+        fscanf(file, "%d", &pkgs_count);
+        fclose(file);
+    } else {
+        if ((dir = opendir(PKGS_PATH)) == NULL) return 0;
+
         while ((entry = readdir(dir)) != NULL) {
             if (0 == strcmp(entry->d_name,".") ||
                 0 == strcmp(entry->d_name,"..")) continue;
@@ -252,6 +258,9 @@ void *get_pkgs() {
                 pkgs_count++;
             }
         }
+        file = fopen(CACHE_PKGS_PATH, "w");
+        fprintf(file, "%d", pkgs_count);
+        fclose(file);
         closedir(dir);
     }
 
@@ -398,13 +407,13 @@ void *get_mem() {
 
 void get_infos(void *print()) {
     const void *routines[] = {
-        get_pkgs,
         get_cpu,
         get_mem,
         get_datetime,
         get_host,
         get_uptime,
         get_distro,
+        get_pkgs,
         get_model,
         get_kernel,
         get_shell,
@@ -512,7 +521,7 @@ void *print_color() {
 void get_execution_times() {
     int line_len = 24;
 
-    puts("execution times in sec");
+    puts("execution times in seconds");
 
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
 
@@ -546,6 +555,7 @@ int main(int argc, char *argv[]) {
         remove_file(CACHE_DISTRO_PATH);
         remove_file(CACHE_MODEL_PATH);
         remove_file(CACHE_CPU_PATH);
+        remove_file(CACHE_PKGS_PATH);
     } else if (0 == strcmp(argv[1], "-t")) {
         get_execution_times();
     } else if (0 == strcmp(argv[1], "-v")) {
