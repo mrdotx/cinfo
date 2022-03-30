@@ -20,8 +20,7 @@
 cinfo - system information utility
 .SH SYNOPSIS
 .PP
-\f[B]cinfo\f[R] [\f[B]-a\f[R]] [\f[B]-c\f[R]] [\f[B]-t\f[R]]
-[\f[B]-v\f[R]]
+\f[B]cinfo\f[R] [\f[B]-a\f[R]] [\f[B]-c\f[R]] [\f[B]-i\f[R]]
 .SH DESCRIPTION
 .PP
 \f[B]cinfo\f[R] is a fast and minimal system information tool for
@@ -36,11 +35,9 @@ Start plain ascii version.
 \f[B]-c\f[R]
 Clear cached files.
 .TP
-\f[B]-t\f[R]
-Shows execution times of the individual functions for optimization.
-.TP
-\f[B]-v\f[R]
-Shows version information.
+\f[B]-i\f[R]
+Shows informations about execution times of the individual functions for
+optimization and the version
 .SH CUSTOMIZATION
 .PP
 \f[B]cinfo\f[R] can be customized by creating/editing a custom config.h
@@ -122,11 +119,7 @@ Values to configure the cache paths.
 .PD 0
 .P
 .PD
-\f[B]cinfo\f[R] -t
-.PD 0
-.P
-.PD
-\f[B]cinfo\f[R] -v
+\f[B]cinfo\f[R] -i
 .SH BUGS
 .PP
 See GitHub Issues: \f[I]https://github.com/mrdotx/cinfo/issues\f[R]

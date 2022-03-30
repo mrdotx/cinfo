@@ -6,7 +6,7 @@ cinfo - system information utility
 
 # SYNOPSIS
 
-**cinfo** [**-a**] [**-c**] [**-t**] [**-v**]
+**cinfo** [**-a**] [**-c**] [**-i**]
 
 # DESCRIPTION
 
@@ -22,11 +22,8 @@ Without given setting, start colored verion.
 **-c**
 : Clear cached files.
 
-**-t**
-: Shows execution times of the individual functions for optimization.
-
-**-v**
-: Shows version information.
+**-i**
+: Shows informations about execution times of the individual functions for optimization and the version
 
 # CUSTOMIZATION
 
@@ -72,8 +69,7 @@ Without given setting, start colored verion.
 | **cinfo**
 | **cinfo** -a
 | **cinfo** -c
-| **cinfo** -t
-| **cinfo** -v
+| **cinfo** -i
 
 # BUGS
 

@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-03-30T11:59:56+0200
+ * date:   2022-03-30T18:42:35+0200
  */
 
 #include <stdio.h>
@@ -29,16 +29,6 @@ char g_user[50],
      g_shell[65],
      g_cpu[65],
      g_mem[65];
-
-const char *remove_file(const char *file) {
-    if (0 == remove(file)) {
-        printf("File \"%s\" deleted succsessfully.\n", file);
-    } else {
-        printf("File \"%s\" not found.\n", file);
-    }
-
-    return file;
-}
 
 const char *remove_char(char *string, const char *remove) {
     int i = 0, j;
@@ -93,6 +83,18 @@ const double get_execution_time(void *print()) {
                         (end.tv_nsec - start.tv_nsec) / BILLION;
 
     return time_spend;
+}
+
+const char *remove_file(const char *file) {
+    static char string[77];
+
+    if (0 == remove(file)) {
+        sprintf(string, "x");
+    } else {
+        sprintf(string, "?");
+    }
+
+    return string;
 }
 
 void *get_user() {
@@ -525,25 +527,40 @@ void get_execution_times() {
 
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
 
-    printf(" get_user     %s %f\n", ASCII_DIVIDER, get_execution_time(get_user));
-    printf(" get_host     %s %f\n", ASCII_DIVIDER, get_execution_time(get_host));
-    printf(" get_datetime %s %f\n", ASCII_DIVIDER, get_execution_time(get_datetime));
+    printf(" get_user    %s%f\n", ASCII_DIVIDER, get_execution_time(get_user));
+    printf(" get_host    %s%f\n", ASCII_DIVIDER, get_execution_time(get_host));
+    printf(" get_datetime%s%f\n", ASCII_DIVIDER, get_execution_time(get_datetime));
 
-    printf(" get_distro   %s %f\n", ASCII_DIVIDER, get_execution_time(get_distro));
-    printf(" get_model    %s %f\n", ASCII_DIVIDER, get_execution_time(get_model));
-    printf(" get_kernel   %s %f\n", ASCII_DIVIDER, get_execution_time(get_kernel));
-    printf(" get_uptime   %s %f\n", ASCII_DIVIDER, get_execution_time(get_uptime));
-    printf(" get_pkgs     %s %f\n", ASCII_DIVIDER, get_execution_time(get_pkgs));
-    printf(" get_shell    %s %f\n", ASCII_DIVIDER, get_execution_time(get_shell));
-    printf(" get_cpu      %s %f\n", ASCII_DIVIDER, get_execution_time(get_cpu));
-    printf(" get_mem      %s %f\n", ASCII_DIVIDER, get_execution_time(get_mem));
+    printf(" get_distro  %s%f\n", ASCII_DIVIDER, get_execution_time(get_distro));
+    printf(" get_model   %s%f\n", ASCII_DIVIDER, get_execution_time(get_model));
+    printf(" get_kernel  %s%f\n", ASCII_DIVIDER, get_execution_time(get_kernel));
+    printf(" get_uptime  %s%f\n", ASCII_DIVIDER, get_execution_time(get_uptime));
+    printf(" get_pkgs    %s%f\n", ASCII_DIVIDER, get_execution_time(get_pkgs));
+    printf(" get_shell   %s%f\n", ASCII_DIVIDER, get_execution_time(get_shell));
+    printf(" get_cpu     %s%f\n", ASCII_DIVIDER, get_execution_time(get_cpu));
+    printf(" get_mem     %s%f\n", ASCII_DIVIDER, get_execution_time(get_mem));
 
     set_line_len(NULL);
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
 }
 
+void clear_files() {
+    int line_len = 44;
+
+    puts("cached files to clear (x=deleted, ?=not found)");
+
+    print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
+
+    printf(" [%s] - %s\n", remove_file(CACHE_DISTRO_PATH), CACHE_DISTRO_PATH);
+    printf(" [%s] - %s\n", remove_file(CACHE_MODEL_PATH), CACHE_MODEL_PATH);
+    printf(" [%s] - %s\n", remove_file(CACHE_CPU_PATH), CACHE_CPU_PATH);
+    printf(" [%s] - %s\n", remove_file(CACHE_PKGS_PATH), CACHE_PKGS_PATH);
+
+    print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
+}
+
 void print_usage() {
-    puts("usage: cinfo [-a] [-c] [-t] [-v]");
+    puts("usage: cinfo [-a] [-c] [-i]");
 }
 
 int main(int argc, char *argv[]) {
@@ -552,13 +569,9 @@ int main(int argc, char *argv[]) {
     } else if (0 == strcmp(argv[1], "-a")) {
         get_infos(print_ascii);
     } else if (0 == strcmp(argv[1], "-c")) {
-        remove_file(CACHE_DISTRO_PATH);
-        remove_file(CACHE_MODEL_PATH);
-        remove_file(CACHE_CPU_PATH);
-        remove_file(CACHE_PKGS_PATH);
-    } else if (0 == strcmp(argv[1], "-t")) {
+        clear_files();
+    } else if (0 == strcmp(argv[1], "-i")) {
         get_execution_times();
-    } else if (0 == strcmp(argv[1], "-v")) {
         puts("cinfo-"VERSION);
     } else {
         print_usage();
