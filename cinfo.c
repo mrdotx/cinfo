@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-03-30T18:42:35+0200
+ * date:   2022-04-02T12:04:03+0200
  */
 
 #include <stdio.h>
@@ -44,7 +44,7 @@ const char *remove_char(char *string, const char *remove) {
     return string;
 }
 
-const int set_line_len(const char *line) {
+const int update_line_len(const char *line) {
     if (line == NULL) {
         g_line_len = 0;
     } else if (g_line_len < strlen(line)) {
@@ -55,9 +55,9 @@ const int set_line_len(const char *line) {
 }
 
 const char *set_spacer(const char *character, int length) {
-    static char spacer[65];
-
     int i;
+
+    static char spacer[65];
 
     spacer[0] = '\0';
 
@@ -69,8 +69,6 @@ const char *set_spacer(const char *character, int length) {
 }
 
 const double get_execution_time(void *print()) {
-    #define BILLION 1000000000.0
-
     struct timespec start, end;
 
     clock_gettime(CLOCK_REALTIME, &start);
@@ -80,13 +78,13 @@ const double get_execution_time(void *print()) {
     clock_gettime(CLOCK_REALTIME, &end);
 
     double time_spend = (end.tv_sec - start.tv_sec) +
-                        (end.tv_nsec - start.tv_nsec) / BILLION;
+                        (end.tv_nsec - start.tv_nsec) / 1000000000.0;
 
     return time_spend;
 }
 
 const char *remove_file(const char *file) {
-    static char string[77];
+    static char string[2];
 
     if (0 == remove(file)) {
         sprintf(string, "x");
@@ -107,6 +105,7 @@ void *get_user() {
 
 void *get_host() {
     FILE *file;
+
     if ((file = fopen("/proc/sys/kernel/hostname", "r"))) {
         fscanf(file, "%s", g_host);
         fclose(file);
@@ -141,6 +140,7 @@ void *get_distro() {
          value[65];
 
     FILE *file;
+
     if ((file = fopen(CACHE_DISTRO_PATH, "r"))) {
         fscanf(file, "%[^\n]s", g_distro);
         fclose(file);
@@ -157,7 +157,7 @@ void *get_distro() {
         fclose(file);
     }
 
-    set_line_len(g_distro);
+    update_line_len(g_distro);
 
     return NULL;
 }
@@ -167,6 +167,7 @@ void *get_model() {
          version[15] = "";
 
     FILE *file;
+
     if ((file = fopen(CACHE_MODEL_PATH, "r"))) {
         fscanf(file, "%[^\n]s", g_model);
         fclose(file);
@@ -191,19 +192,20 @@ void *get_model() {
         fclose(file);
     }
 
-    set_line_len(g_model);
+    update_line_len(g_model);
 
     return NULL;
 }
 
 void *get_kernel() {
     FILE *file;
+
     if ((file = fopen("/proc/sys/kernel/osrelease", "r"))) {
         fscanf(file, "%[^\n]s", g_kernel);
         fclose(file);
     }
 
-    set_line_len(g_kernel);
+    update_line_len(g_kernel);
 
     return NULL;
 }
@@ -215,6 +217,7 @@ void *get_uptime() {
         min;
 
     FILE *file;
+
     if ((file = fopen("/proc/uptime", "r"))) {
         fscanf(file, "%d", &sec);
         fclose(file);
@@ -234,7 +237,7 @@ void *get_uptime() {
         }
     }
 
-    set_line_len(g_uptime);
+    update_line_len(g_uptime);
 
     return NULL;
 }
@@ -268,7 +271,7 @@ void *get_pkgs() {
 
     sprintf(g_pkgs, "%d%s", pkgs_count, PKGS_DESC);
 
-    set_line_len(g_pkgs);
+    update_line_len(g_pkgs);
 
     return NULL;
 }
@@ -290,18 +293,19 @@ void *get_shell() {
         sprintf(g_shell, "%s [%s]", g_shell, getenv("TERM"));
     }
 
-    set_line_len(g_shell);
+    update_line_len(g_shell);
 
     return NULL;
 }
 
 void *get_cpu() {
+    float temp;
+
     char name[20],
          value[58];
 
-    float temp;
-
     FILE *file;
+
     if ((file = fopen(CACHE_CPU_PATH, "r"))) {
         fscanf(file, "%[^\n]s", g_cpu);
         fclose(file);
@@ -326,14 +330,12 @@ void *get_cpu() {
         fclose(file);
     }
 
-    set_line_len(g_cpu);
+    update_line_len(g_cpu);
 
     return NULL;
 }
 
 void *get_mem() {
-    char name[20];
-
     int value,
         mem_total,
         mem_free,
@@ -349,7 +351,10 @@ void *get_mem() {
     float mem_percent,
           swap_percent;
 
+    char name[20];
+
     FILE *file;
+
     if ((file = fopen("/proc/meminfo", "r"))) {
         while (fscanf(file, "%15s  %d %*s", name, &value) == 2) {
             if (0 == strcmp(name, "MemTotal:")) {
@@ -402,7 +407,7 @@ void *get_mem() {
         }
     }
 
-    set_line_len(g_mem);
+    update_line_len(g_mem);
 
     return NULL;
 }
@@ -540,7 +545,7 @@ void get_execution_times() {
     printf(" get_cpu     %s%f\n", ASCII_DIVIDER, get_execution_time(get_cpu));
     printf(" get_mem     %s%f\n", ASCII_DIVIDER, get_execution_time(get_mem));
 
-    set_line_len(NULL);
+    update_line_len(NULL);
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
 }
 
