@@ -52,6 +52,15 @@ Without given setting, start colored verion.
 | 1     | total + shared - free - buffer - cached | htop < 3.1.0, neofetch      |
 | 2     | total - free - buffer - cached          | htop > 3.1.0, free          |
 
+**MEMORY_UNIT**
+
+| Value | Condition         | Description              |
+| :---- | :---------------- | :----------------------- |
+| auto  | total => 1024 MiB | Shows result in Gibibyte |
+|       | total < 1024 MiB  | Shows result in Mebibyte |
+| GiB   |                   | Shows result in Gibibyte |
+| MiB   |                   | Shows result in Mebibyte |
+
 ***COLOR\****
 : Values to configure color table.
 
