@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-04-03T20:29:07+0200
+ * date:   2022-04-09T11:21:56+0200
  */
 
 /* packages */
@@ -22,7 +22,8 @@ static const char *CPU_TEMPERATURE_PATH = "/sys/class/hwmon/hwmon1/temp1_input",
 /* memory */
 static const int MEMORY_METHOD          = 0;
 
-static const char *MEMORY_DIVIDER       = "/";
+static const char *MEMORY_UNIT          = "auto",
+                  *MEMORY_DIVIDER       = "/";
 
 /* color version */
 static const int COLOR_LEFT_LEN         = 13;
