@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-04-09T12:43:13+0200
+ * date:   2022-04-14T12:13:31+0200
  */
 
 #include <stdio.h>
@@ -163,8 +163,8 @@ void *get_distro() {
 }
 
 void *get_model() {
-    char name[50] = "",
-         version[15] = "";
+    char name[130] = "",
+         version[65] = "";
 
     FILE *file;
 
@@ -176,7 +176,7 @@ void *get_model() {
         fclose(file);
 
         file = fopen("/sys/devices/virtual/dmi/id/product_version", "r");
-        fscanf(file, "%s", version);
+        fscanf(file, "%[^\n]s", version);
         fclose(file);
     } else if ((file = fopen("/sys/firmware/devicetree/base/model", "r"))) {
         fscanf(file, "%[^\n]s", name);
@@ -187,8 +187,9 @@ void *get_model() {
 
     if ((file != fopen(CACHE_MODEL_PATH, "r"))) {
         file = fopen(CACHE_MODEL_PATH, "w");
-        fprintf(file, "%s %s", name, version);
-        sprintf(g_model, "%s %s", name, version);
+        sprintf(name, "%.64s %.64s", name, version);
+        fprintf(file, "%.64s", name);
+        sprintf(g_model, "%.64s", name);
         fclose(file);
     }
 
