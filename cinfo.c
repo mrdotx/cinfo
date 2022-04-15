@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-04-15T14:14:57+0200
+ * date:   2022-04-15T15:12:23+0200
  */
 
 #include <stdio.h>
@@ -24,7 +24,7 @@ char g_user[50],
      g_distro[65],
      g_model[65],
      g_kernel[65],
-     g_uptime[] = "000d 00h 00m",
+     g_uptime[] = "000d 00h 00m 00s",
      g_pkgs[] = "000000 [portage]",
      g_shell[65],
      g_cpu[65],
