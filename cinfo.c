@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-04-15T15:12:23+0200
+ * date:   2022-04-16T09:31:15+0200
  */
 
 #include <stdio.h>
@@ -20,15 +20,25 @@ int g_header_len,
 
 char g_user[50],
      g_host[50],
-     g_datetime[] = "01.01.1900 00:00:00",
+     g_datetime[65],
      g_distro[65],
      g_model[65],
      g_kernel[65],
-     g_uptime[] = "000d 00h 00m 00s",
-     g_pkgs[] = "000000 [portage]",
+     g_uptime[65],
+     g_pkgs[65],
      g_shell[65],
      g_cpu[65],
      g_mem[65];
+
+void split_string(char* input, char** output, char* delimiter) {
+    char *temp;
+    temp = strtok(input, delimiter);
+
+    for (int i = 0; temp != NULL; i++) {
+        output[i] = temp;
+        temp = strtok(NULL, " ");
+    }
+}
 
 const char *remove_char(char *string, const char *remove) {
     int i = 0, j;
@@ -136,7 +146,7 @@ void *get_datetime() {
 }
 
 void *get_distro() {
-    char name[15],
+    char filter[15],
          value[65];
 
     FILE *file;
@@ -145,8 +155,8 @@ void *get_distro() {
         fscanf(file, "%[^\n]s", g_distro);
         fclose(file);
     } else if ((file = fopen("/etc/os-release", "r"))) {
-        while (fscanf(file, " %14[^=]=%64[^\n]", name, value) == 2) {
-            if (0 == strcmp(name, "PRETTY_NAME")) {
+        while (fscanf(file, " %14[^=]=%64[^\n]", filter, value) == 2) {
+            if (0 == strcmp(filter, "PRETTY_NAME")) {
                 file = fopen(CACHE_DISTRO_PATH, "w");
                 remove_char(value, "\"");
                 fprintf(file, "%s", value);
@@ -163,8 +173,9 @@ void *get_distro() {
 }
 
 void *get_model() {
-    char name[130] = "",
-         version[65] = "";
+    char name[65] = "",
+         version[65] = "",
+         model[130] = "";
 
     FILE *file;
 
@@ -187,9 +198,9 @@ void *get_model() {
 
     if ((file != fopen(CACHE_MODEL_PATH, "r"))) {
         file = fopen(CACHE_MODEL_PATH, "w");
-        sprintf(name, "%.64s %.64s", name, version);
-        fprintf(file, "%.64s", name);
-        sprintf(g_model, "%.64s", name);
+        sprintf(model, "%.64s %.64s", name, version);
+        fprintf(file, "%.64s", model);
+        sprintf(g_model, "%.64s", model);
         fclose(file);
     }
 
@@ -217,6 +228,9 @@ void *get_uptime() {
         hour,
         min;
 
+    char loadavg[35],
+         *loadavg_split[35];
+
     FILE *file;
 
     if ((file = fopen("/proc/uptime", "r"))) {
@@ -229,14 +243,41 @@ void *get_uptime() {
         sec = sec % 60;
 
         if (0 == day && 0 == hour && 0 == min) {
-            sprintf(g_uptime, "%ds", sec);
-        } else if (0 == day && 0 == hour) {
-            sprintf(g_uptime, "%dm %ds", min, sec);
-        } else if (0 == day) {
-            sprintf(g_uptime, "%dh %dm %ds", hour, min, sec);
+            sprintf(g_uptime, "%d second%s", \
+                    sec, \
+                    sec == 1 ? "" : "s");
         } else {
-            sprintf(g_uptime, "%dd %dh %dm %ds", day, hour, min, sec);
+            if (0 < day) {
+                sprintf(g_uptime, "%d day%s, ", \
+                        day, \
+                        day == 1 ? "" : "s");
+            }
+            if (0 < hour) {
+                sprintf(g_uptime, "%s%d hour%s, ", \
+                        g_uptime, \
+                        hour, \
+                        hour == 1 ? "" : "s");
+            }
+            if (0 < min) {
+                sprintf(g_uptime, "%s%d minute%s", \
+                        g_uptime, \
+                        min, \
+                        min == 1 ? "" : "s");
+            }
         }
+    }
+
+    if ((file = fopen("/proc/loadavg", "r"))) {
+        fscanf(file, "%[^\n]s", loadavg);
+        split_string(loadavg, loadavg_split, " ");
+        fclose(file);
+
+        sprintf(g_uptime, "%s%s%s, %s, %s", \
+                g_uptime, \
+                INFO_DIVIDER, \
+                loadavg_split[0], \
+                loadavg_split[1], \
+                loadavg_split[2]);
     }
 
     update_line_len(g_uptime);
@@ -303,7 +344,7 @@ void *get_shell() {
 void *get_cpu() {
     float temp;
 
-    char name[20],
+    char filter[20],
          value[58];
 
     FILE *file;
@@ -312,8 +353,8 @@ void *get_cpu() {
         fscanf(file, "%[^\n]s", g_cpu);
         fclose(file);
     } else if ((file = fopen("/proc/cpuinfo", "r"))) {
-        while (fscanf(file, " %19[^:]: %57[^\n]", name, value) == 2) {
-            if (0 == strcmp(name, "model name	")) {
+        while (fscanf(file, " %19[^:]: %57[^\n]", filter, value) == 2) {
+            if (0 == strcmp(filter, "model name	")) {
                 file = fopen(CACHE_CPU_PATH, "w");
                 fprintf(file, "%s", value);
                 strcpy(g_cpu, value);
@@ -353,29 +394,29 @@ void *get_mem() {
     float mem_percent,
           swap_percent;
 
-    char name[20];
+    char filter[20];
 
     FILE *file;
 
     if ((file = fopen("/proc/meminfo", "r"))) {
-        while (fscanf(file, "%15s  %d %*s", name, &value) == 2) {
-            if (0 == strcmp(name, "MemTotal:")) {
+        while (fscanf(file, "%15s  %d %*s", filter, &value) == 2) {
+            if (0 == strcmp(filter, "MemTotal:")) {
                 mem_total = value;
-            } else if (0 == strcmp(name, "MemFree:")) {
+            } else if (0 == strcmp(filter, "MemFree:")) {
                 mem_free = value;
-            } else if (0 == strcmp(name, "MemAvailable:")) {
+            } else if (0 == strcmp(filter, "MemAvailable:")) {
                 mem_available = value;
-            } else if (0 == strcmp(name, "Buffers:")) {
+            } else if (0 == strcmp(filter, "Buffers:")) {
                 mem_buffers = value;
-            } else if (0 == strcmp(name, "Cached:")) {
+            } else if (0 == strcmp(filter, "Cached:")) {
                 mem_cached = value;
-            } else if (0 == strcmp(name, "SwapTotal:")) {
+            } else if (0 == strcmp(filter, "SwapTotal:")) {
                 swap_total = value;
-            } else if (0 == strcmp(name, "SwapFree:")) {
+            } else if (0 == strcmp(filter, "SwapFree:")) {
                 swap_free = value;
-            } else if (0 == strcmp(name, "Shmem:")) {
+            } else if (0 == strcmp(filter, "Shmem:")) {
                 mem_shared = value;
-            } else if (0 == strcmp(name, "SReclaimable:")) {
+            } else if (0 == strcmp(filter, "SReclaimable:")) {
                 mem_reclaimable = value;
                 break;
             }
@@ -451,16 +492,16 @@ void *get_mem() {
 
 void get_infos(void *print()) {
     const void *routines[] = {
-        get_cpu,
+        get_uptime,
         get_mem,
+        get_cpu,
         get_datetime,
         get_host,
-        get_uptime,
         get_distro,
-        get_pkgs,
-        get_model,
         get_kernel,
         get_shell,
+        get_pkgs,
+        get_model,
         get_user
     };
 
@@ -529,13 +570,13 @@ void *print_ascii() {
     print_line(ASCII_LEFT_LEN, ASCII_LINE, ASCII_DIVIDER_TOP);
 
     printf("%s%s%s\n", LABEL_DISTRO, ASCII_DIVIDER, g_distro);
-    printf("%s%s%s\n", LABEL_MODEL, ASCII_DIVIDER, g_model);
     printf("%s%s%s\n", LABEL_KERNEL, ASCII_DIVIDER, g_kernel);
-    printf("%s%s%s\n", LABEL_UPTIME, ASCII_DIVIDER, g_uptime);
     printf("%s%s%s\n", LABEL_PKGS, ASCII_DIVIDER, g_pkgs);
-    printf("%s%s%s\n", LABEL_SHELL, ASCII_DIVIDER, g_shell);
+    printf("%s%s%s\n", LABEL_MODEL, ASCII_DIVIDER, g_model);
     printf("%s%s%s\n", LABEL_CPU, ASCII_DIVIDER, g_cpu);
     printf("%s%s%s\n", LABEL_MEM, ASCII_DIVIDER, g_mem);
+    printf("%s%s%s\n", LABEL_UPTIME, ASCII_DIVIDER, g_uptime);
+    printf("%s%s%s\n", LABEL_SHELL, ASCII_DIVIDER, g_shell);
 
     print_line(ASCII_LEFT_LEN, ASCII_LINE, ASCII_DIVIDER_BOTTOM);
 
@@ -548,13 +589,13 @@ void *print_color() {
     print_line(COLOR_LEFT_LEN, COLOR_LINE, COLOR_DIVIDER_TOP);
 
     print_info(LABEL_DISTRO, g_distro);
-    print_info(LABEL_MODEL, g_model);
     print_info(LABEL_KERNEL, g_kernel);
-    print_info(LABEL_UPTIME, g_uptime);
     print_info(LABEL_PKGS, g_pkgs);
-    print_info(LABEL_SHELL, g_shell);
+    print_info(LABEL_MODEL, g_model);
     print_info(LABEL_CPU, g_cpu);
     print_info(LABEL_MEM, g_mem);
+    print_info(LABEL_UPTIME, g_uptime);
+    print_info(LABEL_SHELL, g_shell);
 
     print_line(COLOR_LEFT_LEN, COLOR_LINE, COLOR_DIVIDER_BOTTOM);
 
@@ -574,13 +615,13 @@ void get_execution_times() {
     printf(" get_datetime%s%f\n", ASCII_DIVIDER, get_execution_time(get_datetime));
 
     printf(" get_distro  %s%f\n", ASCII_DIVIDER, get_execution_time(get_distro));
-    printf(" get_model   %s%f\n", ASCII_DIVIDER, get_execution_time(get_model));
     printf(" get_kernel  %s%f\n", ASCII_DIVIDER, get_execution_time(get_kernel));
-    printf(" get_uptime  %s%f\n", ASCII_DIVIDER, get_execution_time(get_uptime));
     printf(" get_pkgs    %s%f\n", ASCII_DIVIDER, get_execution_time(get_pkgs));
-    printf(" get_shell   %s%f\n", ASCII_DIVIDER, get_execution_time(get_shell));
+    printf(" get_model   %s%f\n", ASCII_DIVIDER, get_execution_time(get_model));
     printf(" get_cpu     %s%f\n", ASCII_DIVIDER, get_execution_time(get_cpu));
     printf(" get_mem     %s%f\n", ASCII_DIVIDER, get_execution_time(get_mem));
+    printf(" get_uptime  %s%f\n", ASCII_DIVIDER, get_execution_time(get_uptime));
+    printf(" get_shell   %s%f\n", ASCII_DIVIDER, get_execution_time(get_shell));
 
     update_line_len(NULL);
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
