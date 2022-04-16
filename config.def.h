@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-04-16T08:01:30+0200
+ * date:   2022-04-16T19:07:50+0200
  */
 
 /* packages */
@@ -57,6 +57,6 @@ static const char *ASCII_LINE           = "-",
 
 /* cache */
 static const char *CACHE_DISTRO_PATH    = "/tmp/distro.cinfo",
-                  *CACHE_MODEL_PATH     = "/tmp/model.cinfo",
                   *CACHE_PKGS_PATH      = "/tmp/pkgs.cinfo",
+                  *CACHE_MODEL_PATH     = "/tmp/model.cinfo",
                   *CACHE_CPU_PATH       = "/tmp/cpu.cinfo";

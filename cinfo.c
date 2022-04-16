@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-04-16T09:31:15+0200
+ * date:   2022-04-16T19:16:34+0200
  */
 
 #include <stdio.h>
@@ -22,13 +22,13 @@ char g_user[50],
      g_host[50],
      g_datetime[65],
      g_distro[65],
-     g_model[65],
      g_kernel[65],
-     g_uptime[65],
      g_pkgs[65],
-     g_shell[65],
+     g_model[65],
      g_cpu[65],
-     g_mem[65];
+     g_mem[65],
+     g_uptime[65],
+     g_shell[65];
 
 void split_string(char* input, char** output, char* delimiter) {
     char *temp;
@@ -172,43 +172,6 @@ void *get_distro() {
     return NULL;
 }
 
-void *get_model() {
-    char name[65] = "",
-         version[65] = "",
-         model[130] = "";
-
-    FILE *file;
-
-    if ((file = fopen(CACHE_MODEL_PATH, "r"))) {
-        fscanf(file, "%[^\n]s", g_model);
-        fclose(file);
-    } else if ((file = fopen("/sys/devices/virtual/dmi/id/product_name", "r"))) {
-        fscanf(file, "%[^\n]s", name);
-        fclose(file);
-
-        file = fopen("/sys/devices/virtual/dmi/id/product_version", "r");
-        fscanf(file, "%[^\n]s", version);
-        fclose(file);
-    } else if ((file = fopen("/sys/firmware/devicetree/base/model", "r"))) {
-        fscanf(file, "%[^\n]s", name);
-        fclose(file);
-    } else {
-        strcpy(name, "not found");
-    }
-
-    if ((file != fopen(CACHE_MODEL_PATH, "r"))) {
-        file = fopen(CACHE_MODEL_PATH, "w");
-        sprintf(model, "%.64s %.64s", name, version);
-        fprintf(file, "%.64s", model);
-        sprintf(g_model, "%.64s", model);
-        fclose(file);
-    }
-
-    update_line_len(g_model);
-
-    return NULL;
-}
-
 void *get_kernel() {
     FILE *file;
 
@@ -218,69 +181,6 @@ void *get_kernel() {
     }
 
     update_line_len(g_kernel);
-
-    return NULL;
-}
-
-void *get_uptime() {
-    int sec,
-        day,
-        hour,
-        min;
-
-    char loadavg[35],
-         *loadavg_split[35];
-
-    FILE *file;
-
-    if ((file = fopen("/proc/uptime", "r"))) {
-        fscanf(file, "%d", &sec);
-        fclose(file);
-
-        day = sec / 60 / 60 / 24;
-        hour = sec / 60 / 60 % 24;
-        min = sec / 60 % 60;
-        sec = sec % 60;
-
-        if (0 == day && 0 == hour && 0 == min) {
-            sprintf(g_uptime, "%d second%s", \
-                    sec, \
-                    sec == 1 ? "" : "s");
-        } else {
-            if (0 < day) {
-                sprintf(g_uptime, "%d day%s, ", \
-                        day, \
-                        day == 1 ? "" : "s");
-            }
-            if (0 < hour) {
-                sprintf(g_uptime, "%s%d hour%s, ", \
-                        g_uptime, \
-                        hour, \
-                        hour == 1 ? "" : "s");
-            }
-            if (0 < min) {
-                sprintf(g_uptime, "%s%d minute%s", \
-                        g_uptime, \
-                        min, \
-                        min == 1 ? "" : "s");
-            }
-        }
-    }
-
-    if ((file = fopen("/proc/loadavg", "r"))) {
-        fscanf(file, "%[^\n]s", loadavg);
-        split_string(loadavg, loadavg_split, " ");
-        fclose(file);
-
-        sprintf(g_uptime, "%s%s%s, %s, %s", \
-                g_uptime, \
-                INFO_DIVIDER, \
-                loadavg_split[0], \
-                loadavg_split[1], \
-                loadavg_split[2]);
-    }
-
-    update_line_len(g_uptime);
 
     return NULL;
 }
@@ -319,24 +219,39 @@ void *get_pkgs() {
     return NULL;
 }
 
-void *get_shell() {
-    char shell[20];
+void *get_model() {
+    char name[65] = "",
+         version[65] = "",
+         model[130] = "";
 
-    ssize_t len = readlink(SHELL_PATH, shell, sizeof(shell)-1);
+    FILE *file;
 
-    if (len == -1) {
-        sprintf(shell, "LINK ERR");
+    if ((file = fopen(CACHE_MODEL_PATH, "r"))) {
+        fscanf(file, "%[^\n]s", g_model);
+        fclose(file);
+    } else if ((file = fopen("/sys/devices/virtual/dmi/id/product_name", "r"))) {
+        fscanf(file, "%[^\n]s", name);
+        fclose(file);
+
+        file = fopen("/sys/devices/virtual/dmi/id/product_version", "r");
+        fscanf(file, "%[^\n]s", version);
+        fclose(file);
+    } else if ((file = fopen("/sys/firmware/devicetree/base/model", "r"))) {
+        fscanf(file, "%[^\n]s", name);
+        fclose(file);
+    } else {
+        strcpy(name, "not found");
     }
 
-    sprintf(g_shell, "%s [%s]%s%s", \
-            SHELL_PATH, shell, \
-            INFO_DIVIDER, getenv("SHELL"));
-
-    if (0 != getenv("TERM")) {
-        sprintf(g_shell, "%s [%s]", g_shell, getenv("TERM"));
+    if ((file != fopen(CACHE_MODEL_PATH, "r"))) {
+        file = fopen(CACHE_MODEL_PATH, "w");
+        sprintf(model, "%.64s %.64s", name, version);
+        fprintf(file, "%.64s", model);
+        sprintf(g_model, "%.64s", model);
+        fclose(file);
     }
 
-    update_line_len(g_shell);
+    update_line_len(g_model);
 
     return NULL;
 }
@@ -490,18 +405,103 @@ void *get_mem() {
     return NULL;
 }
 
+void *get_uptime() {
+    int sec,
+        day,
+        hour,
+        min;
+
+    char loadavg[35],
+         *loadavg_split[35];
+
+    FILE *file;
+
+    if ((file = fopen("/proc/uptime", "r"))) {
+        fscanf(file, "%d", &sec);
+        fclose(file);
+
+        day = sec / 60 / 60 / 24;
+        hour = sec / 60 / 60 % 24;
+        min = sec / 60 % 60;
+        sec = sec % 60;
+
+        if (0 == day && 0 == hour && 0 == min) {
+            sprintf(g_uptime, "%d second%s", \
+                    sec, \
+                    sec == 1 ? "" : "s");
+        } else {
+            if (0 < day) {
+                sprintf(g_uptime, "%d day%s, ", \
+                        day, \
+                        day == 1 ? "" : "s");
+            }
+            if (0 < hour) {
+                sprintf(g_uptime, "%s%d hour%s, ", \
+                        g_uptime, \
+                        hour, \
+                        hour == 1 ? "" : "s");
+            }
+            if (0 < min) {
+                sprintf(g_uptime, "%s%d minute%s", \
+                        g_uptime, \
+                        min, \
+                        min == 1 ? "" : "s");
+            }
+        }
+    }
+
+    if ((file = fopen("/proc/loadavg", "r"))) {
+        fscanf(file, "%[^\n]s", loadavg);
+        split_string(loadavg, loadavg_split, " ");
+        fclose(file);
+
+        sprintf(g_uptime, "%s%s%s, %s, %s", \
+                g_uptime, \
+                INFO_DIVIDER, \
+                loadavg_split[0], \
+                loadavg_split[1], \
+                loadavg_split[2]);
+    }
+
+    update_line_len(g_uptime);
+
+    return NULL;
+}
+
+void *get_shell() {
+    char shell[20];
+
+    ssize_t len = readlink(SHELL_PATH, shell, sizeof(shell)-1);
+
+    if (len == -1) {
+        sprintf(shell, "LINK ERR");
+    }
+
+    sprintf(g_shell, "%s [%s]%s%s", \
+            SHELL_PATH, shell, \
+            INFO_DIVIDER, getenv("SHELL"));
+
+    if (0 != getenv("TERM")) {
+        sprintf(g_shell, "%s [%s]", g_shell, getenv("TERM"));
+    }
+
+    update_line_len(g_shell);
+
+    return NULL;
+}
+
 void get_infos(void *print()) {
     const void *routines[] = {
-        get_uptime,
-        get_mem,
         get_cpu,
+        get_mem,
         get_datetime,
+        get_uptime,
         get_host,
         get_distro,
         get_kernel,
-        get_shell,
         get_pkgs,
         get_model,
+        get_shell,
         get_user
     };
 
@@ -635,9 +635,9 @@ void clear_files() {
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
 
     printf(" [%s] - %s\n", remove_file(CACHE_DISTRO_PATH), CACHE_DISTRO_PATH);
+    printf(" [%s] - %s\n", remove_file(CACHE_PKGS_PATH), CACHE_PKGS_PATH);
     printf(" [%s] - %s\n", remove_file(CACHE_MODEL_PATH), CACHE_MODEL_PATH);
     printf(" [%s] - %s\n", remove_file(CACHE_CPU_PATH), CACHE_CPU_PATH);
-    printf(" [%s] - %s\n", remove_file(CACHE_PKGS_PATH), CACHE_PKGS_PATH);
 
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
 }
