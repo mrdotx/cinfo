@@ -2,18 +2,12 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-04-09T11:21:56+0200
+ * date:   2022-04-16T08:01:30+0200
  */
 
 /* packages */
 static const char *PKGS_PATH            = "/var/lib/pacman/local",
                   *PKGS_DESC            = " [pacman]";
-
-/* general */
-static const char *INFO_DIVIDER         = " | ";
-
-/* shell */
-static const char *SHELL_PATH           = "/bin/sh";
 
 /* cpu */
 static const char *CPU_TEMPERATURE_PATH = "/sys/class/hwmon/hwmon1/temp1_input",
@@ -24,6 +18,22 @@ static const int MEMORY_METHOD          = 0;
 
 static const char *MEMORY_UNIT          = "auto",
                   *MEMORY_DIVIDER       = "/";
+
+/* shell */
+static const char *SHELL_PATH           = "/bin/sh";
+
+/* general */
+static const char *INFO_DIVIDER         = " | ";
+
+/* labels */
+static const char *LABEL_DISTRO         = " distro",
+                  *LABEL_MODEL          = "  model",
+                  *LABEL_KERNEL         = " kernel",
+                  *LABEL_UPTIME         = " uptime",
+                  *LABEL_PKGS           = "   pkgs",
+                  *LABEL_SHELL          = "  shell",
+                  *LABEL_CPU            = "    cpu",
+                  *LABEL_MEM            = " memory";
 
 /* color version */
 static const int COLOR_LEFT_LEN         = 13;
@@ -44,16 +54,6 @@ static const char *ASCII_LINE           = "-",
                   *ASCII_DIVIDER_TOP    = "-",
                   *ASCII_DIVIDER        = " | ",
                   *ASCII_DIVIDER_BOTTOM = "-";
-
-/* labels */
-static const char *LABEL_DISTRO         = " distro",
-                  *LABEL_MODEL          = "  model",
-                  *LABEL_KERNEL         = " kernel",
-                  *LABEL_UPTIME         = " uptime",
-                  *LABEL_PKGS           = "   pkgs",
-                  *LABEL_SHELL          = "  shell",
-                  *LABEL_CPU            = "    cpu",
-                  *LABEL_MEM            = " memory";
 
 /* cache */
 static const char *CACHE_DISTRO_PATH    = "/tmp/distro.cinfo",
