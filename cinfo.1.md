@@ -32,12 +32,6 @@ Without given setting, start colored verion.
 ***PKGS\****
 : Values to configure package manager counting.
 
-***INFO\****
-: Values to configure information in general.
-
-***SHELL\****
-: Values to configure shell information.
-
 ***CPU\****
 : Values to configure cpu information.
 
@@ -61,14 +55,20 @@ Without given setting, start colored verion.
 | GiB   |                   | Shows result in Gibibyte |
 | MiB   |                   | Shows result in Mebibyte |
 
+***SHELL\****
+: Values to configure shell information.
+
+***INFO\****
+: Values to configure information in general.
+
+***LABEL\****
+: Values to configure labels for ascii and color table.
+
 ***COLOR\****
 : Values to configure color table.
 
 ***ASCII\****
 : Values to configure ascii table.
-
-***LABEL\****
-: Values to configure labels for ascii and color table.
 
 ***CACHE\****
 : Values to configure the cache paths.
