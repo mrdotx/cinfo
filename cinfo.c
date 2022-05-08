@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-04-16T19:16:34+0200
+ * date:   2022-05-08T08:12:45+0200
  */
 
 #include <stdio.h>
@@ -52,6 +52,16 @@ const char *remove_char(char *string, const char *remove) {
     }
 
     return string;
+}
+
+const int update_header_len(const char *line) {
+    if (line == NULL) {
+        g_header_len = 0;
+    } else {
+        g_header_len += strlen(line);
+    }
+
+    return g_header_len;
 }
 
 const int update_line_len(const char *line) {
@@ -108,7 +118,7 @@ const char *remove_file(const char *file) {
 void *get_user() {
     sprintf(g_user, "%s", getenv("USER"));
 
-    g_header_len += strlen(g_user);
+    update_header_len(g_user);
 
     return NULL;
 }
@@ -120,7 +130,7 @@ void *get_host() {
         fscanf(file, "%s", g_host);
         fclose(file);
 
-        g_header_len += strlen(g_host);
+        update_header_len(g_host);
     }
 
     return NULL;
@@ -140,7 +150,7 @@ void *get_datetime() {
             part->tm_min, \
             part->tm_sec);
 
-    g_header_len += strlen(g_datetime);
+    update_header_len(g_datetime);
 
     return NULL;
 }
