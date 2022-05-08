@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-05-08T08:54:06+0200
+ * date:   2022-05-08T08:58:41+0200
  */
 
 #include <stdio.h>
@@ -644,10 +644,14 @@ void clear_files() {
 
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
 
-    printf(" [%s] - %s\n", remove_file(CACHE_DISTRO_PATH), CACHE_DISTRO_PATH);
-    printf(" [%s] - %s\n", remove_file(CACHE_PKGS_PATH), CACHE_PKGS_PATH);
-    printf(" [%s] - %s\n", remove_file(CACHE_MODEL_PATH), CACHE_MODEL_PATH);
-    printf(" [%s] - %s\n", remove_file(CACHE_CPU_PATH), CACHE_CPU_PATH);
+    printf(" [%s]%s%s\n", remove_file(CACHE_DISTRO_PATH), \
+            ASCII_DIVIDER, CACHE_DISTRO_PATH);
+    printf(" [%s]%s%s\n", remove_file(CACHE_PKGS_PATH), \
+            ASCII_DIVIDER, CACHE_PKGS_PATH);
+    printf(" [%s]%s%s\n", remove_file(CACHE_MODEL_PATH), \
+            ASCII_DIVIDER, CACHE_MODEL_PATH);
+    printf(" [%s]%s%s\n", remove_file(CACHE_CPU_PATH), \
+            ASCII_DIVIDER, CACHE_CPU_PATH);
 
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
 }
