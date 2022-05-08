@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-05-08T08:12:45+0200
+ * date:   2022-05-08T08:54:06+0200
  */
 
 #include <stdio.h>
@@ -614,7 +614,7 @@ void *print_color() {
 }
 
 void get_execution_times() {
-    int line_len = 24;
+    int line_len = 23;
 
     puts("execution times in seconds");
 
@@ -638,7 +638,7 @@ void get_execution_times() {
 }
 
 void clear_files() {
-    int line_len = 44;
+    int line_len = 43;
 
     puts("cached files to clear (x=deleted, ?=not found)");
 
