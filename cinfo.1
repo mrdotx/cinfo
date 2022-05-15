@@ -20,24 +20,30 @@
 cinfo - system information utility
 .SH SYNOPSIS
 .PP
-\f[B]cinfo\f[R] [\f[B]-a\f[R]] [\f[B]-c\f[R]] [\f[B]-i\f[R]]
+\f[B]cinfo\f[R] [\f[B]-a\f[R]] [\f[B]-c\f[R]] [\f[B]-d\f[R]]
+[\f[B]-i\f[R]]
 .SH DESCRIPTION
 .PP
 \f[B]cinfo\f[R] is a fast and minimal system information tool for
 linux-based operating systems
 .SH OPTIONS
 .PP
-Without given setting, start colored verion.
+Without given settings, start colored version.
+If the environment variable \f[B]NO_COLOR\f[R] is set, start plain ascii
+version.
 .TP
 \f[B]-a\f[R]
 Start plain ascii version.
 .TP
 \f[B]-c\f[R]
-Clear cached files.
+Start colored version.
+.TP
+\f[B]-d\f[R]
+Delete cached files.
 .TP
 \f[B]-i\f[R]
-Shows informations about execution times of the individual functions for
-optimization and the version
+Displays information about execution times of the individual functions
+for optimization and the version number of the tool
 .SH CUSTOMIZATION
 .PP
 \f[B]cinfo\f[R] can be customized by creating/editing a custom config.h
@@ -106,25 +112,25 @@ auto
 T}@T{
 total => 1024 MiB
 T}@T{
-Shows result in Gibibyte
+Displays result in Gibibyte
 T}
 T{
 T}@T{
 total < 1024 MiB
 T}@T{
-Shows result in Mebibyte
+Displays result in Mebibyte
 T}
 T{
 GiB
 T}@T{
 T}@T{
-Shows result in Gibibyte
+Displays result in Gibibyte
 T}
 T{
 MiB
 T}@T{
 T}@T{
-Shows result in Mebibyte
+Displays result in Mebibyte
 T}
 .TE
 .TP
@@ -156,6 +162,10 @@ Values to configure the cache paths.
 .P
 .PD
 \f[B]cinfo\f[R] -c
+.PD 0
+.P
+.PD
+\f[B]cinfo\f[R] -d
 .PD 0
 .P
 .PD

@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-05-08T08:58:41+0200
+ * date:   2022-05-15T09:26:16+0200
  */
 
 #include <stdio.h>
@@ -637,10 +637,10 @@ void get_execution_times() {
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
 }
 
-void clear_files() {
-    int line_len = 43;
+void delete_cache() {
+    int line_len = 41;
 
-    puts("cached files to clear (x=deleted, ?=not found)");
+    puts("delete cached files (x=deleted, ?=not found)");
 
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
 
@@ -657,16 +657,22 @@ void clear_files() {
 }
 
 void print_usage() {
-    puts("usage: cinfo [-a] [-c] [-i]");
+    puts("usage: cinfo [-a] [-c] [-d] [-i]");
 }
 
 int main(int argc, char *argv[]) {
     if (1 == argc) {
-        get_infos(print_color);
+        if (NULL == getenv("NO_COLOR")) {
+            get_infos(print_color);
+        } else {
+            get_infos(print_ascii);
+        };
     } else if (0 == strcmp(argv[1], "-a")) {
         get_infos(print_ascii);
     } else if (0 == strcmp(argv[1], "-c")) {
-        clear_files();
+        get_infos(print_color);
+    } else if (0 == strcmp(argv[1], "-d")) {
+        delete_cache();
     } else if (0 == strcmp(argv[1], "-i")) {
         get_execution_times();
         puts("cinfo-"VERSION);

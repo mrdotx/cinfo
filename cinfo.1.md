@@ -6,7 +6,7 @@ cinfo - system information utility
 
 # SYNOPSIS
 
-**cinfo** [**-a**] [**-c**] [**-i**]
+**cinfo** [**-a**] [**-c**] [**-d**] [**-i**]
 
 # DESCRIPTION
 
@@ -14,16 +14,19 @@ cinfo - system information utility
 
 # OPTIONS
 
-Without given setting, start colored verion.
+Without given settings, start colored version. If the environment variable **NO_COLOR** is set, start plain ascii version.
 
 **-a**
 : Start plain ascii version.
 
 **-c**
-: Clear cached files.
+: Start colored version.
+
+**-d**
+: Delete cached files.
 
 **-i**
-: Shows informations about execution times of the individual functions for optimization and the version
+: Displays information about execution times of the individual functions for optimization and the version number of the tool
 
 # CUSTOMIZATION
 
@@ -48,12 +51,12 @@ Without given setting, start colored verion.
 
 **MEMORY_UNIT**
 
-| Value | Condition         | Description              |
-| :---- | :---------------- | :----------------------- |
-| auto  | total => 1024 MiB | Shows result in Gibibyte |
-|       | total < 1024 MiB  | Shows result in Mebibyte |
-| GiB   |                   | Shows result in Gibibyte |
-| MiB   |                   | Shows result in Mebibyte |
+| Value | Condition         | Description                 |
+| :---- | :---------------- | :-------------------------- |
+| auto  | total => 1024 MiB | Displays result in Gibibyte |
+|       | total < 1024 MiB  | Displays result in Mebibyte |
+| GiB   |                   | Displays result in Gibibyte |
+| MiB   |                   | Displays result in Mebibyte |
 
 ***SHELL\****
 : Values to configure shell information.
@@ -78,6 +81,7 @@ Without given setting, start colored verion.
 | **cinfo**
 | **cinfo** -a
 | **cinfo** -c
+| **cinfo** -d
 | **cinfo** -i
 
 # BUGS
