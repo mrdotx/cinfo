@@ -23,7 +23,7 @@ Without given settings, start colored version. If the environment variable **NO_
 : Start colored version.
 
 **-d**
-: Delete cached files.
+: Delete the cached files defined in the config.
 
 **-i**
 : Displays information about execution times of the individual functions for optimization and the version number of the tool
