@@ -1,7 +1,7 @@
 # path:   /home/klassiker/.local/share/repos/cinfo/Makefile
 # author: klassiker [mrdotx]
 # github: https://github.com/mrdotx/cinfo
-# date:   2022-07-04T21:07:04+0200
+# date:   2022-07-04T21:58:48+0200
 
 .POSIX:
 
@@ -26,7 +26,7 @@ config.h:
 $(NAME).1:
 	@printf "  $@\n"
 	@pandoc -s --to man $@.md -o $@
-	@sed -i '1,2d' $@
+	@sed -i '/^.\\\"/d' $@
 
 .c:
 	@printf "  $@\n"
