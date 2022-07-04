@@ -1,7 +1,7 @@
 # path:   /home/klassiker/.local/share/repos/cinfo/Makefile
 # author: klassiker [mrdotx]
 # github: https://github.com/mrdotx/cinfo
-# date:   2022-02-26T08:45:53+0100
+# date:   2022-07-04T21:07:04+0200
 
 .POSIX:
 
@@ -30,7 +30,7 @@ $(NAME).1:
 
 .c:
 	@printf "  $@\n"
-	@$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ $< -lutil
+	@$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ $<
 
 dist: clean man all
 	@printf "  $(NAME)-$(VERSION).tar.gz\n"
