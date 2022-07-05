@@ -1,7 +1,7 @@
 # path:   /home/klassiker/.local/share/repos/cinfo/config.mk
 # author: klassiker [mrdotx]
 # github: https://github.com/mrdotx/cinfo
-# date:   2022-05-15T09:55:40+0200
+# date:   2022-07-05T10:24:57+0200
 
 # tool info
 NAME = cinfo
@@ -14,8 +14,8 @@ MANDIR = $(PREFIX)/share/man
 
 CPPFLAGS = -DVERSION=\"$(VERSION)\" -D_DEFAULT_SOURCE
 # if your system is not POSIX, add -std=c99 to CFLAGS
-CFLAGS = -Os -lpthread
-LDFLAGS = -s
+CFLAGS = -Os
+LDFLAGS = -s -lpthread
 
 # compiler and linker
 # CC = c99

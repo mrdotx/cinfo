@@ -2,16 +2,17 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-05-15T09:26:16+0200
+ * date:   2022-07-05T12:59:13+0200
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include <dirent.h>
 #include <unistd.h>
 #include <pthread.h>
+
+#include "util.h"
 
 #include "config.h"
 
@@ -30,95 +31,37 @@ char g_user[50],
      g_uptime[65],
      g_shell[65];
 
-void split_string(char* input, char** output, char* delimiter) {
-    char *temp;
-    temp = strtok(input, delimiter);
-
-    for (int i = 0; temp != NULL; i++) {
-        output[i] = temp;
-        temp = strtok(NULL, " ");
-    }
-}
-
-const char *remove_char(char *string, const char *remove) {
-    int i = 0, j;
-
-    while (i < strlen(string)) {
-        if (string[i] == *remove) {
-            for (j = i; j < strlen(string); j++)
-                string[j] = string[j + 1];
-        }
-        else i++;
-    }
-
-    return string;
-}
-
-const int update_header_len(const char *line) {
-    if (line == NULL) {
-        g_header_len = 0;
-    } else {
-        g_header_len += strlen(line);
-    }
-
-    return g_header_len;
-}
-
-const int update_line_len(const char *line) {
-    if (line == NULL) {
-        g_line_len = 0;
-    } else if (g_line_len < strlen(line)) {
-        g_line_len = strlen(line);
-    }
-
-    return g_line_len;
-}
-
-const char *set_spacer(const char *character, int length) {
-    int i;
-
-    static char spacer[65];
-
-    spacer[0] = '\0';
-
-    for (i = 0; i < length; i++) {
-        strcat(spacer, character);
-    }
-
-    return spacer;
-}
-
-const double get_execution_time(void *print()) {
-    struct timespec start, end;
-
-    clock_gettime(CLOCK_REALTIME, &start);
-
-    print();
-
-    clock_gettime(CLOCK_REALTIME, &end);
-
-    double time_spend = (end.tv_sec - start.tv_sec) +
-                        (end.tv_nsec - start.tv_nsec) / 1000000000.0;
-
-    return time_spend;
-}
-
-const char *remove_file(const char *file) {
-    static char string[2];
-
-    if (0 == remove(file)) {
-        sprintf(string, "x");
-    } else {
-        sprintf(string, "?");
-    }
-
-    return string;
-}
+void *get_user();
+void *get_host();
+void *get_datetime();
+void *get_distro();
+void *get_kernel();
+void *get_pkgs();
+void *get_model();
+void *get_cpu();
+void *get_mem();
+void *get_uptime();
+void *get_shell();
+void get_infos(void *print());
+void print_header(const int left_len,
+                  const char *color_primary,
+                  const char *color_secondary,
+                  const char *color_table);
+void print_line(const int left_len,
+                const char *line,
+                const char *divider);
+void print_info(const char *label,
+                const char *info);
+void *print_ascii();
+void *print_color();
+void get_execution_times();
+void delete_cache();
+void print_usage();
 
 void *get_user() {
     sprintf(g_user, "%s", getenv("USER"));
 
-    update_header_len(g_user);
+    g_header_len = update_header_len(g_user, g_header_len);
 
     return NULL;
 }
@@ -130,7 +73,7 @@ void *get_host() {
         fscanf(file, "%s", g_host);
         fclose(file);
 
-        update_header_len(g_host);
+        g_header_len = update_header_len(g_host, g_header_len);
     }
 
     return NULL;
@@ -150,7 +93,7 @@ void *get_datetime() {
             part->tm_min, \
             part->tm_sec);
 
-    update_header_len(g_datetime);
+    g_header_len = update_header_len(g_datetime, g_header_len);
 
     return NULL;
 }
@@ -177,7 +120,7 @@ void *get_distro() {
         fclose(file);
     }
 
-    update_line_len(g_distro);
+    g_line_len = update_line_len(g_distro, g_line_len);
 
     return NULL;
 }
@@ -190,7 +133,7 @@ void *get_kernel() {
         fclose(file);
     }
 
-    update_line_len(g_kernel);
+    g_line_len = update_line_len(g_kernel, g_line_len);
 
     return NULL;
 }
@@ -224,7 +167,7 @@ void *get_pkgs() {
 
     sprintf(g_pkgs, "%d%s", pkgs_count, PKGS_DESC);
 
-    update_line_len(g_pkgs);
+    g_line_len = update_line_len(g_pkgs, g_line_len);
 
     return NULL;
 }
@@ -261,7 +204,7 @@ void *get_model() {
         fclose(file);
     }
 
-    update_line_len(g_model);
+    g_line_len = update_line_len(g_model, g_line_len);
 
     return NULL;
 }
@@ -298,7 +241,7 @@ void *get_cpu() {
         fclose(file);
     }
 
-    update_line_len(g_cpu);
+    g_line_len = update_line_len(g_cpu, g_line_len);
 
     return NULL;
 }
@@ -410,7 +353,7 @@ void *get_mem() {
         }
     }
 
-    update_line_len(g_mem);
+    g_line_len = update_line_len(g_mem, g_line_len);
 
     return NULL;
 }
@@ -473,7 +416,7 @@ void *get_uptime() {
                 loadavg_split[2]);
     }
 
-    update_line_len(g_uptime);
+    g_line_len = update_line_len(g_uptime, g_line_len);
 
     return NULL;
 }
@@ -495,7 +438,7 @@ void *get_shell() {
         sprintf(g_shell, "%s [%s]", g_shell, getenv("TERM"));
     }
 
-    update_line_len(g_shell);
+    g_line_len = update_line_len(g_shell, g_line_len);
 
     return NULL;
 }
@@ -633,7 +576,7 @@ void get_execution_times() {
     printf(" get_uptime  %s%f\n", ASCII_DIVIDER, get_execution_time(get_uptime));
     printf(" get_shell   %s%f\n", ASCII_DIVIDER, get_execution_time(get_shell));
 
-    update_line_len(NULL);
+    g_line_len = update_line_len(NULL, 0);
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
 }
 

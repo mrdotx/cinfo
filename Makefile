@@ -1,23 +1,26 @@
 # path:   /home/klassiker/.local/share/repos/cinfo/Makefile
 # author: klassiker [mrdotx]
 # github: https://github.com/mrdotx/cinfo
-# date:   2022-07-04T21:58:48+0200
+# date:   2022-07-05T10:26:28+0200
 
 .POSIX:
 
 include config.mk
 
+SRC = $(NAME).c util.c
+OBJ = $(SRC:.c=.o)
+
 all: options $(NAME)
 
-$(NAME): config.h $(NAME).c $(NAME).1
-
 options:
-	@printf "build options:\n"
+	@printf "$(NAME) -> build options:\n"
 	@printf "  CPPFLAGS = $(CPPFLAGS)\n"
 	@printf "  CFLAGS   = $(CFLAGS)\n"
 	@printf "  LDFLAGS  = $(LDFLAGS)\n"
 	@printf "  CC       = $(CC)\n"
-	@printf "build:\n"
+	@printf "$(NAME) -> build:\n"
+
+$(OBJ): config.h $(NAME).1
 
 config.h:
 	@printf "  $@\n"
@@ -28,27 +31,32 @@ $(NAME).1:
 	@pandoc -s --to man $@.md -o $@
 	@sed -i '/^.\\\"/d' $@
 
-.c:
+.c.o:
 	@printf "  $@\n"
-	@$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ $<
+	@$(CC) -c $(CFLAGS) $(CPPFLAGS) $<
+
+$(NAME): $(OBJ)
+	@printf "  $@\n"
+	@$(CC) $(LDFLAGS) -o $@ $(OBJ)
 
 dist: clean man all
 	@printf "  $(NAME)-$(VERSION).tar.gz\n"
 	@mkdir -p $(NAME)-$(VERSION)
 	@cp -R \
-		$(NAME).1 \
-		$(NAME).c \
-		config.h \
-		config.mk \
 		LICENSE.md \
-		Makefile \
 		README.md \
+		Makefile \
+		config.mk \
+		config.def.h \
+		util.h \
+		$(SRC) \
+		$(NAME).1 \
 		$(NAME)-$(VERSION)
 	@tar -cf - $(NAME)-$(VERSION) | gzip > $(NAME)-$(VERSION).tar.gz
 	@rm -rf $(NAME)-$(VERSION)
 
 install: all
-	@printf "install:\n"
+	@printf "$(NAME) -> install:\n"
 	@printf "  $(DESTDIR)$(BINDIR)/man1/$(NAME).1\n"
 	@mkdir -p $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)/man1
 	@sed "s/VERSION/$(VERSION)/g" < $(NAME).1 > $(DESTDIR)$(MANDIR)/man1/$(NAME).1
@@ -56,18 +64,20 @@ install: all
 	@cp -f $(NAME) $(DESTDIR)$(BINDIR)
 
 uninstall:
-	@printf "uninstall:\n"
+	@printf "$(NAME) -> uninstall:\n"
 	@printf "  $(DESTDIR)$(BINDIR)/$(NAME)\n"
 	@rm -f $(DESTDIR)$(BINDIR)/$(NAME)
 	@printf "  $(DESTDIR)$(MANDIR)/man1/$(NAME).1\n"
 	@rm -f $(DESTDIR)$(MANDIR)/man1/$(NAME).1
 
 clean:
-	@printf "remove:\n"
+	@printf "$(NAME) -> clean build directory:\n"
 	@printf "  $(NAME)-$(VERSION).tar.gz\n"
 	@rm -f $(NAME)-$(VERSION).tar.gz
 	@printf "  $(NAME)\n"
 	@rm -f $(NAME)
+	@printf "  $(OBJ)\n"
+	@rm -f $(OBJ)
 
 man:
 	@printf "  $(NAME).1\n"
