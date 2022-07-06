@@ -1,8 +1,8 @@
 /*
  * path:   /home/klassiker/.local/share/repos/cinfo/util.c
  * author: klassiker [mrdotx]
- * github: https://github.com/mrdotx/xkeymou
- * date:   2022-07-05T11:23:21+0200
+ * github: https://github.com/mrdotx/cinfo
+ * date:   2022-07-06T14:32:51+0200
  */
 
 #include <stdio.h>
