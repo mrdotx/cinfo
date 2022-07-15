@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-07-05T13:36:34+0200
+ * date:   2022-07-15T11:49:44+0200
  */
 
 #include <stdio.h>
@@ -12,8 +12,8 @@
 #include <unistd.h>
 #include <pthread.h>
 
+#include "cinfo.h"
 #include "util.h"
-
 #include "config.h"
 
 int g_header_len,
@@ -30,33 +30,6 @@ char g_user[50],
      g_mem[65],
      g_uptime[65],
      g_shell[65];
-
-void *get_user();
-void *get_host();
-void *get_datetime();
-void *get_distro();
-void *get_kernel();
-void *get_pkgs();
-void *get_model();
-void *get_cpu();
-void *get_mem();
-void *get_uptime();
-void *get_shell();
-void get_infos(void *print());
-void print_header(const int left_len,
-                  const char *color_primary,
-                  const char *color_secondary,
-                  const char *color_table);
-void print_line(const int left_len,
-                const char *line,
-                const char *divider);
-void print_info(const char *label,
-                const char *info);
-void *print_ascii();
-void *print_color();
-void get_execution_times();
-void delete_cache();
-void print_usage();
 
 void *get_user() {
     sprintf(g_user, "%s", getenv("USER"));
