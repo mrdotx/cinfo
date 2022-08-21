@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-04-16T19:07:50+0200
+ * date:   2022-08-21T21:59:40+0200
  */
 
 /* packages */
@@ -10,8 +10,14 @@ static const char *PKGS_PATH            = "/var/lib/pacman/local",
                   *PKGS_DESC            = " [pacman]";
 
 /* cpu */
-static const char *CPU_TEMPERATURE_PATH = "/sys/class/hwmon/hwmon1/temp1_input",
-                  *CPU_TEMPERATURE      = "'C";
+static const char *CPU_TEMP_PATH        = "/sys/class/hwmon",
+                  *CPU_TEMP             = "'C",
+                  *CPU_TEMP_INPUT[]     = {
+    "k10temp",      // amd
+    "coretemp",     // intel
+    "cpu_thermal",  // arm
+    0               // exit point
+};
 
 /* memory */
 static const int MEMORY_METHOD          = 0;
@@ -59,4 +65,5 @@ static const char *ASCII_LINE           = "-",
 static const char *CACHE_DISTRO_PATH    = "/tmp/distro.cinfo",
                   *CACHE_PKGS_PATH      = "/tmp/pkgs.cinfo",
                   *CACHE_MODEL_PATH     = "/tmp/model.cinfo",
-                  *CACHE_CPU_PATH       = "/tmp/cpu.cinfo";
+                  *CACHE_CPU_PATH       = "/tmp/cpu.cinfo",
+                  *CACHE_CPU_TEMP_PATH  = "/tmp/cpu_temp_path.cinfo";
