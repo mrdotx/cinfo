@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-07-15T11:49:44+0200
+ * date:   2022-08-21T22:03:40+0200
  */
 
 #include <stdio.h>
@@ -186,9 +186,15 @@ void *get_cpu() {
     float temp;
 
     char filter[20],
-         value[58];
+         value[58],
+         temp_path[64],
+         temp_name_path[48],
+         temp_name[16];
 
     FILE *file;
+    DIR *dir;
+
+    struct dirent *entry;
 
     if ((file = fopen(CACHE_CPU_PATH, "r"))) {
         fscanf(file, "%[^\n]s", g_cpu);
@@ -205,13 +211,50 @@ void *get_cpu() {
         fclose(file);
     }
 
-    if ((file = fopen(CPU_TEMPERATURE_PATH, "r"))) {
-        fscanf(file, "%f", &temp);
-        temp /= 1000;
-        if (0 != temp) {
-            sprintf(g_cpu, "%s [%.1f%s]", g_cpu, temp, CPU_TEMPERATURE);
+    if ((file != fopen(CACHE_CPU_TEMP_PATH, "r"))) {
+        if ((dir = opendir(CPU_TEMP_PATH)) == NULL) return 0;
+
+        while ((entry = readdir(dir)) != NULL) {
+            if (0 == strcmp(entry->d_name,".") ||
+                0 == strcmp(entry->d_name,"..")) continue;
+            else {
+                int i = 0;
+
+                sprintf(temp_path, \
+                        "%s/%s", CPU_TEMP_PATH, entry->d_name);
+                sprintf(temp_name_path, \
+                        "%s/name", temp_path);
+
+                if ((file = fopen(temp_name_path, "r"))) {
+                    fscanf(file, "%s", temp_name);
+                    fclose(file);
+
+                    while (CPU_TEMP_INPUT[i]) {
+                        if (0 == strcmp(CPU_TEMP_INPUT[i], temp_name)) {
+                            file = fopen(CACHE_CPU_TEMP_PATH, "w");
+                            fprintf(file, "%s/temp1_input", temp_path);
+                            fclose(file);
+                            break;
+                        }
+                        i++;
+                    }
+                }
+            }
         }
+    }
+
+    if ((file = fopen(CACHE_CPU_TEMP_PATH, "r"))) {
+        fscanf(file, "%[^\n]s", temp_path);
         fclose(file);
+
+        if ((file = fopen(temp_path, "r"))) {
+            fscanf(file, "%f", &temp);
+            temp /= 1000;
+            if (0 != temp) {
+                sprintf(g_cpu, "%s [%.1f%s]", g_cpu, temp, CPU_TEMP);
+            }
+            fclose(file);
+        }
     }
 
     g_line_len = update_line_len(g_cpu, g_line_len);
@@ -570,6 +613,8 @@ void delete_cache() {
             ASCII_DIVIDER, CACHE_MODEL_PATH);
     printf(" [%s]%s%s\n", remove_file(CACHE_CPU_PATH), \
             ASCII_DIVIDER, CACHE_CPU_PATH);
+    printf(" [%s]%s%s\n", remove_file(CACHE_CPU_TEMP_PATH), \
+            ASCII_DIVIDER, CACHE_CPU_TEMP_PATH);
 
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
 }
