@@ -2,9 +2,10 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-08-21T22:03:40+0200
+ * date:   2022-08-22T12:51:44+0200
  */
 
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -183,6 +184,8 @@ void *get_model() {
 }
 
 void *get_cpu() {
+    int i;
+
     float temp;
 
     char filter[20],
@@ -218,7 +221,6 @@ void *get_cpu() {
             if (0 == strcmp(entry->d_name,".") ||
                 0 == strcmp(entry->d_name,"..")) continue;
             else {
-                int i = 0;
 
                 sprintf(temp_path, \
                         "%s/%s", CPU_TEMP_PATH, entry->d_name);
@@ -229,14 +231,22 @@ void *get_cpu() {
                     fscanf(file, "%s", temp_name);
                     fclose(file);
 
-                    while (CPU_TEMP_INPUT[i]) {
+                    size_t n = sizeof(CPU_TEMP_INPUT)/sizeof(CPU_TEMP_INPUT[0]);
+
+                    for (i = 0; i < n; i++) {
                         if (0 == strcmp(CPU_TEMP_INPUT[i], temp_name)) {
                             file = fopen(CACHE_CPU_TEMP_PATH, "w");
-                            fprintf(file, "%s/temp1_input", temp_path);
+                            fprintf(file, \
+                                    "%s/%s", temp_path, CPU_TEMP_INPUT_FILE);
                             fclose(file);
                             break;
                         }
-                        i++;
+                    }
+
+                    if ((file != fopen(CACHE_CPU_TEMP_PATH, "r"))) {
+                        file = fopen(CACHE_CPU_TEMP_PATH, "w");
+                        fprintf(file, "");
+                        fclose(file);
                     }
                 }
             }
