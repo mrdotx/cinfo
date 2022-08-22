@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-08-22T12:51:44+0200
+ * date:   2022-08-22T18:15:58+0200
  */
 
 #include <stddef.h>
@@ -221,7 +221,6 @@ void *get_cpu() {
             if (0 == strcmp(entry->d_name,".") ||
                 0 == strcmp(entry->d_name,"..")) continue;
             else {
-
                 sprintf(temp_path, \
                         "%s/%s", CPU_TEMP_PATH, entry->d_name);
                 sprintf(temp_name_path, \
