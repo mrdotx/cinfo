@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-08-22T18:33:26+0200
+ * date:   2022-08-22T19:35:51+0200
  */
 
 #include <stddef.h>
@@ -584,9 +584,9 @@ void *print_color() {
 }
 
 void get_execution_times() {
-    int line_len = 23;
+    int line_len = 22;
 
-    puts("execution times in seconds");
+    puts("execution time in seconds");
 
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
 
