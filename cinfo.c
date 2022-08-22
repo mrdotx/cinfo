@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-08-22T18:15:58+0200
+ * date:   2022-08-22T18:33:26+0200
  */
 
 #include <stddef.h>
@@ -230,7 +230,7 @@ void *get_cpu() {
                     fscanf(file, "%s", temp_name);
                     fclose(file);
 
-                    size_t n = sizeof(CPU_TEMP_INPUT)/sizeof(CPU_TEMP_INPUT[0]);
+                    size_t n = sizeof(CPU_TEMP_INPUT) / sizeof(CPU_TEMP_INPUT[0]);
 
                     for (i = 0; i < n; i++) {
                         if (0 == strcmp(CPU_TEMP_INPUT[i], temp_name)) {
@@ -474,13 +474,13 @@ void get_infos(void *print()) {
     const void *routines[] = {
         get_cpu,
         get_mem,
-        get_datetime,
         get_uptime,
+        get_datetime,
         get_host,
         get_distro,
         get_kernel,
-        get_pkgs,
         get_model,
+        get_pkgs,
         get_shell,
         get_user
     };
