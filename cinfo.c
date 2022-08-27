@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-08-22T19:35:51+0200
+ * date:   2022-08-27T10:03:12+0200
  */
 
 #include <stddef.h>
@@ -191,7 +191,7 @@ void *get_cpu() {
     char filter[20],
          value[58],
          temp_path[64],
-         temp_name_path[48],
+         temp_name_path[58],
          temp_name[16];
 
     FILE *file;
@@ -222,9 +222,9 @@ void *get_cpu() {
                 0 == strcmp(entry->d_name,"..")) continue;
             else {
                 sprintf(temp_path, \
-                        "%s/%s", CPU_TEMP_PATH, entry->d_name);
+                        "%s/%.46s", CPU_TEMP_PATH, entry->d_name);
                 sprintf(temp_name_path, \
-                        "%s/name", temp_path);
+                        "%.52s/name", temp_path);
 
                 if ((file = fopen(temp_name_path, "r"))) {
                     fscanf(file, "%s", temp_name);
@@ -260,7 +260,7 @@ void *get_cpu() {
             fscanf(file, "%f", &temp);
             temp /= 1000;
             if (0 != temp) {
-                sprintf(g_cpu, "%s [%.1f%s]", g_cpu, temp, CPU_TEMP);
+                sprintf(g_cpu, "%.56s [%.1f%s]", g_cpu, temp, CPU_TEMP);
             }
             fclose(file);
         }
@@ -327,28 +327,24 @@ void *get_mem() {
         }
 
         mem_total /= 1024;
-        mem_percent = (float) mem_available / mem_total * 100;
+        mem_percent = (float)mem_available / mem_total * 100;
 
         if (0 < swap_total) {
             swap_available = (swap_total - swap_free) / 1024;
             swap_total /= 1024;
-            swap_percent = (float) swap_available / swap_total * 100;
+            swap_percent = (float)swap_available / swap_total * 100;
         }
 
         if (0 == strcmp(MEMORY_UNIT, "MiB") \
         || (0 == strcmp(MEMORY_UNIT, "auto") && 1024 > mem_total)) {
-            if (0 == swap_total) {
-                sprintf(g_mem, "%dMiB%s%dMiB [%.1f%%]", \
-                        mem_available, \
-                        MEMORY_DIVIDER, \
-                        mem_total, \
-                        mem_percent);
-            } else {
-                sprintf(g_mem, "%dMiB%s%dMiB [%.1f%%]%s%dMiB%s%dMiB [%.1f%%]", \
-                        mem_available, \
-                        MEMORY_DIVIDER, \
-                        mem_total, \
-                        mem_percent, \
+            sprintf(g_mem, "%dMiB%s%dMiB [%.1f%%]", \
+                    mem_available, \
+                    MEMORY_DIVIDER, \
+                    mem_total, \
+                    mem_percent);
+            if (1 == swap_total) {
+                sprintf(g_mem, "%.38s%s%dMiB%s%dMiB [%.1f%%]", \
+                        g_mem, \
                         INFO_DIVIDER, \
                         swap_available, \
                         MEMORY_DIVIDER, \
@@ -359,20 +355,20 @@ void *get_mem() {
                || (0 == strcmp(MEMORY_UNIT, "auto") && 1024 <= mem_total)) {
             if (0 == swap_total) {
                 sprintf(g_mem, "%.2fGiB%s%.2fGiB [%.1f%%]", \
-                        (float) mem_available / 1024, \
+                        (float)mem_available / 1024, \
                         MEMORY_DIVIDER, \
-                        (float) mem_total / 1024, \
+                        (float)mem_total / 1024, \
                         mem_percent);
             } else {
                 sprintf(g_mem, "%.2fGiB%s%.2fGiB [%.1f%%]%s%.2fGiB%s%.2fGiB [%.1f%%]", \
-                        (float) mem_available / 1024, \
+                        (float)mem_available / 1024, \
                         MEMORY_DIVIDER, \
-                        (float) mem_total / 1024, \
+                        (float)mem_total / 1024, \
                         mem_percent, \
                         INFO_DIVIDER, \
-                        (float) swap_available / 1024, \
+                        (float)swap_available / 1024, \
                         MEMORY_DIVIDER, \
-                        (float) swap_total / 1024, \
+                        (float)swap_total / 1024, \
                         swap_percent);
             }
         }
@@ -415,14 +411,14 @@ void *get_uptime() {
                         0 < hour || 0 < min ? ", " : "");
             }
             if (0 < hour) {
-                sprintf(g_uptime, "%s%d hour%s%s", \
+                sprintf(g_uptime, "%.54s%d hour%s%s", \
                         g_uptime, \
                         hour, \
                         1 == hour ? "" : "s", \
                         0 < min ? ", " : "");
             }
             if (0 < min) {
-                sprintf(g_uptime, "%s%d minute%s", \
+                sprintf(g_uptime, "%.54s%d minute%s", \
                         g_uptime, \
                         min, \
                         1 == min ? "" : "s");
@@ -435,7 +431,7 @@ void *get_uptime() {
         split_string(loadavg, loadavg_split, " ");
         fclose(file);
 
-        sprintf(g_uptime, "%s%s%s, %s, %s", \
+        sprintf(g_uptime, "%.57s%s%s, %s, %s", \
                 g_uptime, \
                 INFO_DIVIDER, \
                 loadavg_split[0], \
@@ -462,7 +458,7 @@ void *get_shell() {
             INFO_DIVIDER, getenv("SHELL"));
 
     if (0 != getenv("TERM")) {
-        sprintf(g_shell, "%s [%s]", g_shell, getenv("TERM"));
+        sprintf(g_shell, "%.61s [%s]", g_shell, getenv("TERM"));
     }
 
     g_line_len = update_line_len(g_shell, g_line_len);
@@ -485,7 +481,7 @@ void get_infos(void *print()) {
         get_user
     };
 
-    const int THREADS_NUM = (int) sizeof(routines) / sizeof(routines[0]);
+    const int THREADS_NUM = (int)sizeof(routines) / sizeof(routines[0]);
 
     pthread_t threads[THREADS_NUM];
     int i;
