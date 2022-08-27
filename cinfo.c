@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-08-27T19:34:07+0200
+ * date:   2022-08-27T20:40:41+0200
  */
 
 #include <stddef.h>
@@ -409,7 +409,10 @@ void *get_uptime() {
 
     char loadavg[35],
          *loadavg_split[35],
-         uptime[65];
+         uptime_sec[12],
+         uptime_min[11],
+         uptime_hour[11],
+         uptime_day[13];
 
     FILE *file;
 
@@ -424,26 +427,24 @@ void *get_uptime() {
         sec = sec % 60;
 
         if (0 == day && 0 == hour && 0 == min) {
-            sprintf(uptime, "%d second%s", \
+            sprintf(uptime_sec, "%d second%s", \
                     sec, \
                     1 == sec ? "" : "s");
         } else {
             if (0 < day) {
-                sprintf(uptime, "%d day%s%s", \
+                sprintf(uptime_day, "%d day%s%s", \
                         day, \
                         1 == day ? "" : "s", \
                         0 < hour || 0 < min ? ", " : "");
             }
             if (0 < hour) {
-                sprintf(uptime, "%.54s%d hour%s%s", \
-                        uptime, \
+                sprintf(uptime_hour, "%d hour%s%s", \
                         hour, \
                         1 == hour ? "" : "s", \
                         0 < min ? ", " : "");
             }
             if (0 < min) {
-                sprintf(uptime, "%.54s%d minute%s", \
-                        uptime, \
+                sprintf(uptime_min, "%d minute%s", \
                         min, \
                         1 == min ? "" : "s");
             }
@@ -451,13 +452,16 @@ void *get_uptime() {
     }
 
     if ((file = fopen("/proc/loadavg", "r"))) {
-        if (fscanf(file, "%34[^\n]s", loadavg)) {
+        if (fscanf(file, "%24[^\n]s", loadavg)) {
             split_string(loadavg, loadavg_split, " ");
             fclose(file);
         }
 
-        sprintf(g_uptime, "%.57s%s%s, %s, %s", \
-                uptime, \
+        sprintf(g_uptime, "%s%s%s%s%s%s, %s, %s", \
+                uptime_day, \
+                uptime_hour, \
+                uptime_min, \
+                uptime_sec, \
                 INFO_DIVIDER, \
                 loadavg_split[0], \
                 loadavg_split[1], \
