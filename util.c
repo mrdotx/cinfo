@@ -2,9 +2,10 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/util.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-07-06T14:32:51+0200
+ * date:   2022-08-27T18:11:48+0200
  */
 
+#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -58,7 +59,7 @@ const int update_line_len(const char *line, int line_len) {
 const char *set_spacer(const char *character, int length) {
     int i;
 
-    static char spacer[65];
+    static char spacer[256];
 
     spacer[0] = '\0';
 
