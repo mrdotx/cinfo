@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-08-27T10:03:12+0200
+ * date:   2022-08-27T13:07:06+0200
  */
 
 #include <stddef.h>
@@ -44,8 +44,9 @@ void *get_host() {
     FILE *file;
 
     if ((file = fopen("/proc/sys/kernel/hostname", "r"))) {
-        fscanf(file, "%s", g_host);
-        fclose(file);
+        if (fscanf(file, "%s", g_host)) {
+            fclose(file);
+        }
 
         g_header_len = update_header_len(g_host, g_header_len);
     }
@@ -79,10 +80,11 @@ void *get_distro() {
     FILE *file;
 
     if ((file = fopen(CACHE_DISTRO_PATH, "r"))) {
-        fscanf(file, "%[^\n]s", g_distro);
-        fclose(file);
+        if (fscanf(file, "%[^\n]s", g_distro)) {
+            fclose(file);
+        }
     } else if ((file = fopen("/etc/os-release", "r"))) {
-        while (fscanf(file, " %14[^=]=%64[^\n]", filter, value) == 2) {
+        while (2 == fscanf(file, " %14[^=]=%64[^\n]", filter, value)) {
             if (0 == strcmp(filter, "PRETTY_NAME")) {
                 file = fopen(CACHE_DISTRO_PATH, "w");
                 remove_char(value, "\"");
@@ -103,8 +105,9 @@ void *get_kernel() {
     FILE *file;
 
     if ((file = fopen("/proc/sys/kernel/osrelease", "r"))) {
-        fscanf(file, "%[^\n]s", g_kernel);
-        fclose(file);
+        if (fscanf(file, "%[^\n]s", g_kernel)) {
+            fclose(file);
+        }
     }
 
     g_line_len = update_line_len(g_kernel, g_line_len);
@@ -121,8 +124,9 @@ void *get_pkgs() {
     struct dirent *entry;
 
     if ((file = fopen(CACHE_PKGS_PATH, "r"))) {
-        fscanf(file, "%d", &pkgs_count);
-        fclose(file);
+        if (fscanf(file, "%d", &pkgs_count)) {
+            fclose(file);
+        }
     } else {
         if ((dir = opendir(PKGS_PATH)) == NULL) return 0;
 
@@ -154,18 +158,22 @@ void *get_model() {
     FILE *file;
 
     if ((file = fopen(CACHE_MODEL_PATH, "r"))) {
-        fscanf(file, "%[^\n]s", g_model);
-        fclose(file);
+        if (fscanf(file, "%[^\n]s", g_model)) {
+            fclose(file);
+        }
     } else if ((file = fopen("/sys/devices/virtual/dmi/id/product_name", "r"))) {
-        fscanf(file, "%[^\n]s", name);
-        fclose(file);
+        if (fscanf(file, "%[^\n]s", name)) {
+            fclose(file);
+        }
 
         file = fopen("/sys/devices/virtual/dmi/id/product_version", "r");
-        fscanf(file, "%[^\n]s", version);
-        fclose(file);
+        if (fscanf(file, "%[^\n]s", version)) {
+            fclose(file);
+        }
     } else if ((file = fopen("/sys/firmware/devicetree/base/model", "r"))) {
-        fscanf(file, "%[^\n]s", name);
-        fclose(file);
+        if (fscanf(file, "%[^\n]s", name)) {
+            fclose(file);
+        }
     } else {
         strcpy(name, "not found");
     }
@@ -200,10 +208,11 @@ void *get_cpu() {
     struct dirent *entry;
 
     if ((file = fopen(CACHE_CPU_PATH, "r"))) {
-        fscanf(file, "%[^\n]s", g_cpu);
-        fclose(file);
+        if (fscanf(file, "%[^\n]s", g_cpu)) {
+            fclose(file);
+        }
     } else if ((file = fopen("/proc/cpuinfo", "r"))) {
-        while (fscanf(file, " %19[^:]: %57[^\n]", filter, value) == 2) {
+        while (2 == fscanf(file, " %19[^:]: %57[^\n]", filter, value)) {
             if (0 == strcmp(filter, "model name	")) {
                 file = fopen(CACHE_CPU_PATH, "w");
                 fprintf(file, "%s", value);
@@ -227,8 +236,9 @@ void *get_cpu() {
                         "%.52s/name", temp_path);
 
                 if ((file = fopen(temp_name_path, "r"))) {
-                    fscanf(file, "%s", temp_name);
-                    fclose(file);
+                    if (fscanf(file, "%s", temp_name)) {
+                        fclose(file);
+                    }
 
                     size_t n = sizeof(CPU_TEMP_INPUT) / sizeof(CPU_TEMP_INPUT[0]);
 
@@ -244,7 +254,6 @@ void *get_cpu() {
 
                     if ((file != fopen(CACHE_CPU_TEMP_PATH, "r"))) {
                         file = fopen(CACHE_CPU_TEMP_PATH, "w");
-                        fprintf(file, "");
                         fclose(file);
                     }
                 }
@@ -253,16 +262,18 @@ void *get_cpu() {
     }
 
     if ((file = fopen(CACHE_CPU_TEMP_PATH, "r"))) {
-        fscanf(file, "%[^\n]s", temp_path);
-        fclose(file);
+        if (fscanf(file, "%[^\n]s", temp_path)) {
+            fclose(file);
+        }
 
         if ((file = fopen(temp_path, "r"))) {
-            fscanf(file, "%f", &temp);
+            if (fscanf(file, "%f", &temp)) {
+                fclose(file);
+            }
             temp /= 1000;
             if (0 != temp) {
                 sprintf(g_cpu, "%.56s [%.1f%s]", g_cpu, temp, CPU_TEMP);
             }
-            fclose(file);
         }
     }
 
@@ -292,7 +303,7 @@ void *get_mem() {
     FILE *file;
 
     if ((file = fopen("/proc/meminfo", "r"))) {
-        while (fscanf(file, "%15s  %d %*s", filter, &value) == 2) {
+        while (2 == fscanf(file, "%15s  %d %*s", filter, &value)) {
             if (0 == strcmp(filter, "MemTotal:")) {
                 mem_total = value;
             } else if (0 == strcmp(filter, "MemFree:")) {
@@ -391,8 +402,9 @@ void *get_uptime() {
     FILE *file;
 
     if ((file = fopen("/proc/uptime", "r"))) {
-        fscanf(file, "%d", &sec);
-        fclose(file);
+        if (fscanf(file, "%d", &sec)) {
+            fclose(file);
+        }
 
         day = sec / 60 / 60 / 24;
         hour = sec / 60 / 60 % 24;
@@ -427,9 +439,10 @@ void *get_uptime() {
     }
 
     if ((file = fopen("/proc/loadavg", "r"))) {
-        fscanf(file, "%[^\n]s", loadavg);
-        split_string(loadavg, loadavg_split, " ");
-        fclose(file);
+        if (fscanf(file, "%[^\n]s", loadavg)) {
+            split_string(loadavg, loadavg_split, " ");
+            fclose(file);
+        }
 
         sprintf(g_uptime, "%.57s%s%s, %s, %s", \
                 g_uptime, \
