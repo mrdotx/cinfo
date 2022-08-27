@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-08-27T13:07:06+0200
+ * date:   2022-08-27T18:36:04+0200
  */
 
 #include <stddef.h>
@@ -44,7 +44,7 @@ void *get_host() {
     FILE *file;
 
     if ((file = fopen("/proc/sys/kernel/hostname", "r"))) {
-        if (fscanf(file, "%s", g_host)) {
+        if (fscanf(file, "%64s", g_host)) {
             fclose(file);
         }
 
@@ -75,16 +75,16 @@ void *get_datetime() {
 
 void *get_distro() {
     char filter[15],
-         value[65];
+         value[63];
 
     FILE *file;
 
     if ((file = fopen(CACHE_DISTRO_PATH, "r"))) {
-        if (fscanf(file, "%[^\n]s", g_distro)) {
+        if (fscanf(file, "%64[^\n]s", g_distro)) {
             fclose(file);
         }
     } else if ((file = fopen("/etc/os-release", "r"))) {
-        while (2 == fscanf(file, " %14[^=]=%64[^\n]", filter, value)) {
+        while (2 == fscanf(file, " %14[^=]=%62[^\n]", filter, value)) {
             if (0 == strcmp(filter, "PRETTY_NAME")) {
                 file = fopen(CACHE_DISTRO_PATH, "w");
                 remove_char(value, "\"");
@@ -105,7 +105,7 @@ void *get_kernel() {
     FILE *file;
 
     if ((file = fopen("/proc/sys/kernel/osrelease", "r"))) {
-        if (fscanf(file, "%[^\n]s", g_kernel)) {
+        if (fscanf(file, "%64[^\n]s", g_kernel)) {
             fclose(file);
         }
     }
@@ -116,7 +116,8 @@ void *get_kernel() {
 }
 
 void *get_pkgs() {
-    int pkgs_count = 0;
+    int max_len = sizeof(g_pkgs),
+        pkgs_count = 0;
 
     FILE *file;
     DIR *dir;
@@ -143,7 +144,7 @@ void *get_pkgs() {
         closedir(dir);
     }
 
-    sprintf(g_pkgs, "%d%s", pkgs_count, PKGS_DESC);
+    snprintf(g_pkgs, max_len, "%d%s", pkgs_count, PKGS_DESC);
 
     g_line_len = update_line_len(g_pkgs, g_line_len);
 
@@ -151,6 +152,8 @@ void *get_pkgs() {
 }
 
 void *get_model() {
+    int max_len = sizeof(g_model);
+
     char name[65] = "",
          version[65] = "",
          model[130] = "";
@@ -158,20 +161,20 @@ void *get_model() {
     FILE *file;
 
     if ((file = fopen(CACHE_MODEL_PATH, "r"))) {
-        if (fscanf(file, "%[^\n]s", g_model)) {
+        if (fscanf(file, "%64[^\n]s", g_model)) {
             fclose(file);
         }
     } else if ((file = fopen("/sys/devices/virtual/dmi/id/product_name", "r"))) {
-        if (fscanf(file, "%[^\n]s", name)) {
+        if (fscanf(file, "%64[^\n]s", name)) {
             fclose(file);
         }
 
         file = fopen("/sys/devices/virtual/dmi/id/product_version", "r");
-        if (fscanf(file, "%[^\n]s", version)) {
+        if (fscanf(file, "%64[^\n]s", version)) {
             fclose(file);
         }
     } else if ((file = fopen("/sys/firmware/devicetree/base/model", "r"))) {
-        if (fscanf(file, "%[^\n]s", name)) {
+        if (fscanf(file, "%64[^\n]s", name)) {
             fclose(file);
         }
     } else {
@@ -180,9 +183,9 @@ void *get_model() {
 
     if ((file != fopen(CACHE_MODEL_PATH, "r"))) {
         file = fopen(CACHE_MODEL_PATH, "w");
-        sprintf(model, "%.64s %.64s", name, version);
-        fprintf(file, "%.64s", model);
-        sprintf(g_model, "%.64s", model);
+        snprintf(model, max_len,"%s %s", name, version);
+        fprintf(file, "%s", model);
+        snprintf(g_model, max_len, "%s", model);
         fclose(file);
     }
 
@@ -192,15 +195,17 @@ void *get_model() {
 }
 
 void *get_cpu() {
-    int i;
+    int max_len = sizeof(g_cpu),
+        i;
 
     float temp;
 
     char filter[20],
          value[58],
-         temp_path[64],
-         temp_name_path[58],
-         temp_name[16];
+         temp_path[65],
+         temp_name_path[59],
+         temp_name[16],
+         cpu[65];
 
     FILE *file;
     DIR *dir;
@@ -208,7 +213,7 @@ void *get_cpu() {
     struct dirent *entry;
 
     if ((file = fopen(CACHE_CPU_PATH, "r"))) {
-        if (fscanf(file, "%[^\n]s", g_cpu)) {
+        if (fscanf(file, "%64[^\n]s", cpu)) {
             fclose(file);
         }
     } else if ((file = fopen("/proc/cpuinfo", "r"))) {
@@ -216,7 +221,7 @@ void *get_cpu() {
             if (0 == strcmp(filter, "model name	")) {
                 file = fopen(CACHE_CPU_PATH, "w");
                 fprintf(file, "%s", value);
-                strcpy(g_cpu, value);
+                strcpy(cpu, value);
                 break;
             }
         }
@@ -231,12 +236,12 @@ void *get_cpu() {
                 0 == strcmp(entry->d_name,"..")) continue;
             else {
                 sprintf(temp_path, \
-                        "%s/%.46s", CPU_TEMP_PATH, entry->d_name);
+                        "%s/%.47s", CPU_TEMP_PATH, entry->d_name);
                 sprintf(temp_name_path, \
                         "%.52s/name", temp_path);
 
                 if ((file = fopen(temp_name_path, "r"))) {
-                    if (fscanf(file, "%s", temp_name)) {
+                    if (fscanf(file, "%15s", temp_name)) {
                         fclose(file);
                     }
 
@@ -262,7 +267,7 @@ void *get_cpu() {
     }
 
     if ((file = fopen(CACHE_CPU_TEMP_PATH, "r"))) {
-        if (fscanf(file, "%[^\n]s", temp_path)) {
+        if (fscanf(file, "%64[^\n]s", temp_path)) {
             fclose(file);
         }
 
@@ -272,7 +277,7 @@ void *get_cpu() {
             }
             temp /= 1000;
             if (0 != temp) {
-                sprintf(g_cpu, "%.56s [%.1f%s]", g_cpu, temp, CPU_TEMP);
+                snprintf(g_cpu, max_len, "%.56s [%.1f%s]", cpu, temp, CPU_TEMP);
             }
         }
     }
@@ -397,7 +402,8 @@ void *get_uptime() {
         min;
 
     char loadavg[35],
-         *loadavg_split[35];
+         *loadavg_split[35],
+         uptime[65];
 
     FILE *file;
 
@@ -412,26 +418,26 @@ void *get_uptime() {
         sec = sec % 60;
 
         if (0 == day && 0 == hour && 0 == min) {
-            sprintf(g_uptime, "%d second%s", \
+            sprintf(uptime, "%d second%s", \
                     sec, \
                     1 == sec ? "" : "s");
         } else {
             if (0 < day) {
-                sprintf(g_uptime, "%d day%s%s", \
+                sprintf(uptime, "%d day%s%s", \
                         day, \
                         1 == day ? "" : "s", \
                         0 < hour || 0 < min ? ", " : "");
             }
             if (0 < hour) {
-                sprintf(g_uptime, "%.54s%d hour%s%s", \
-                        g_uptime, \
+                sprintf(uptime, "%.54s%d hour%s%s", \
+                        uptime, \
                         hour, \
                         1 == hour ? "" : "s", \
                         0 < min ? ", " : "");
             }
             if (0 < min) {
-                sprintf(g_uptime, "%.54s%d minute%s", \
-                        g_uptime, \
+                sprintf(uptime, "%.54s%d minute%s", \
+                        uptime, \
                         min, \
                         1 == min ? "" : "s");
             }
@@ -439,13 +445,13 @@ void *get_uptime() {
     }
 
     if ((file = fopen("/proc/loadavg", "r"))) {
-        if (fscanf(file, "%[^\n]s", loadavg)) {
+        if (fscanf(file, "%34[^\n]s", loadavg)) {
             split_string(loadavg, loadavg_split, " ");
             fclose(file);
         }
 
         sprintf(g_uptime, "%.57s%s%s, %s, %s", \
-                g_uptime, \
+                uptime, \
                 INFO_DIVIDER, \
                 loadavg_split[0], \
                 loadavg_split[1], \
@@ -458,7 +464,10 @@ void *get_uptime() {
 }
 
 void *get_shell() {
-    char shell[20];
+    int max_len = sizeof(g_shell);
+
+    char shell[20],
+         shell_out[65];
 
     ssize_t len = readlink(SHELL_PATH, shell, sizeof(shell)-1);
 
@@ -466,12 +475,15 @@ void *get_shell() {
         sprintf(shell, "LINK ERR");
     }
 
-    sprintf(g_shell, "%s [%s]%s%s", \
+    if (0 != getenv("TERM")) {
+        snprintf(g_shell, max_len, "%s [%s]%s%s [%s]", \
+            SHELL_PATH, shell, \
+            INFO_DIVIDER, getenv("SHELL"), \
+            getenv("TERM"));
+    } else {
+        snprintf(g_shell, max_len, "%s [%s]%s%s", \
             SHELL_PATH, shell, \
             INFO_DIVIDER, getenv("SHELL"));
-
-    if (0 != getenv("TERM")) {
-        sprintf(g_shell, "%.61s [%s]", g_shell, getenv("TERM"));
     }
 
     g_line_len = update_line_len(g_shell, g_line_len);
