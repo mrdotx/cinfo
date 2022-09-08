@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-08-27T20:40:41+0200
+ * date:   2022-09-08T11:56:32+0200
  */
 
 #include <stddef.h>
@@ -273,12 +273,12 @@ void *get_cpu() {
 
         if ((file = fopen(temp_path, "r"))) {
             if (fscanf(file, "%f", &temp)) {
+                temp /= 1000;
+                snprintf(g_cpu, max_len, "%.56s [%.1f%s]", cpu, temp, CPU_TEMP);
                 fclose(file);
             }
-            temp /= 1000;
-            if (0 != temp) {
-                snprintf(g_cpu, max_len, "%.56s [%.1f%s]", cpu, temp, CPU_TEMP);
-            }
+        } else {
+            snprintf(g_cpu, max_len, "%s", cpu);
         }
     }
 
