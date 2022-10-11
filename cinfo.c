@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-09-08T11:56:32+0200
+ * date:   2022-10-11T12:34:44+0200
  */
 
 #include <stddef.h>
@@ -120,28 +120,21 @@ void *get_pkgs() {
         pkgs_count = 0;
 
     FILE *file;
-    DIR *dir;
-
-    struct dirent *entry;
 
     if ((file = fopen(CACHE_PKGS_PATH, "r"))) {
         if (fscanf(file, "%d", &pkgs_count)) {
             fclose(file);
         }
     } else {
-        if ((dir = opendir(PKGS_PATH)) == NULL) return 0;
-
-        while ((entry = readdir(dir)) != NULL) {
-            if (0 == strcmp(entry->d_name,".") ||
-                0 == strcmp(entry->d_name,"..")) continue;
-            if (entry->d_type == DT_DIR) {
-                pkgs_count++;
+        if ((file = popen(PKGS_CMD, "r"))) {
+            if (fscanf(file, "%d", &pkgs_count)) {
+                fclose(file);
             }
+
+            file = fopen(CACHE_PKGS_PATH, "w");
+            fprintf(file, "%d", pkgs_count);
+            fclose(file);
         }
-        file = fopen(CACHE_PKGS_PATH, "w");
-        fprintf(file, "%d", pkgs_count);
-        fclose(file);
-        closedir(dir);
     }
 
     snprintf(g_pkgs, max_len, "%d%s", pkgs_count, PKGS_DESC);
@@ -503,6 +496,7 @@ void *get_shell() {
 
 void get_infos(void *print()) {
     const void *routines[] = {
+        get_pkgs,
         get_cpu,
         get_mem,
         get_uptime,
@@ -511,7 +505,6 @@ void get_infos(void *print()) {
         get_distro,
         get_kernel,
         get_model,
-        get_pkgs,
         get_shell,
         get_user
     };
