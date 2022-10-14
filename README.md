@@ -6,6 +6,8 @@ a fast and minimal system information tool for linux-based operating systems
 
 ## Installation
 
+[![Repository status](https://repology.org/badge/vertical-allrepos/cinfo.svg)](https://repology.org/project/cinfo/versions)
+
 Edit config.mk to match your local setup (cinfo is installed into
 the /usr/local namespace by default)
 
