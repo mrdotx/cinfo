@@ -1,7 +1,7 @@
 # path:   /home/klassiker/.local/share/repos/cinfo/Makefile
 # author: klassiker [mrdotx]
 # github: https://github.com/mrdotx/cinfo
-# date:   2022-07-15T13:27:41+0200
+# date:   2022-10-14T18:50:02+0200
 
 .POSIX:
 
@@ -58,7 +58,7 @@ dist: clean man all
 
 install: all
 	@printf "$(NAME) -> install:\n"
-	@printf "  $(DESTDIR)$(BINDIR)/man1/$(NAME).1\n"
+	@printf "  $(DESTDIR)$(MANDIR)/man1/$(NAME).1\n"
 	@mkdir -p $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)/man1
 	@sed "s/VERSION/$(VERSION)/g" < $(NAME).1 > $(DESTDIR)$(MANDIR)/man1/$(NAME).1
 	@printf "  $(DESTDIR)$(BINDIR)/$(NAME)\n"
