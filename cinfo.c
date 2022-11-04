@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-10-11T12:34:44+0200
+ * date:   2022-11-04T08:52:12+0100
  */
 
 #include <stddef.h>
@@ -347,7 +347,7 @@ void *get_mem() {
         if (0 == strcmp(MEMORY_UNIT, "MiB") \
         || (0 == strcmp(MEMORY_UNIT, "auto") && 1024 > mem_total)) {
             if (0 < swap_total) {
-                sprintf(g_mem, "%dMiB%s%dMiB [%.1f%%]%s%dMiB%s%dMiB [%.1f%%]", \
+                sprintf(g_mem, "%d%s%d MiB [%.1f%%]%s%d%s%d MiB [%.1f%%]", \
                         mem_available, \
                         MEMORY_DIVIDER, \
                         mem_total, \
@@ -358,7 +358,7 @@ void *get_mem() {
                         swap_total, \
                         swap_percent);
             } else {
-                sprintf(g_mem, "%dMiB%s%dMiB [%.1f%%]", \
+                sprintf(g_mem, "%d%s%d MiB [%.1f%%]", \
                         mem_available, \
                         MEMORY_DIVIDER, \
                         mem_total, \
@@ -369,7 +369,7 @@ void *get_mem() {
         if (0 == strcmp(MEMORY_UNIT, "GiB") \
         || (0 == strcmp(MEMORY_UNIT, "auto") && 1024 <= mem_total)) {
             if (0 < swap_total) {
-                sprintf(g_mem, "%.2fGiB%s%.2fGiB [%.1f%%]%s%.2fGiB%s%.2fGiB [%.1f%%]", \
+                sprintf(g_mem, "%.2f%s%.2f GiB [%.1f%%]%s%.2f%s%.2f GiB [%.1f%%]", \
                         (float)mem_available / 1024, \
                         MEMORY_DIVIDER, \
                         (float)mem_total / 1024, \
@@ -380,7 +380,7 @@ void *get_mem() {
                         (float)swap_total / 1024, \
                         swap_percent);
             } else {
-                sprintf(g_mem, "%.2fGiB%s%.2fGiB [%.1f%%]", \
+                sprintf(g_mem, "%.2f%s%.2f GiB [%.1f%%]", \
                         (float)mem_available / 1024, \
                         MEMORY_DIVIDER, \
                         (float)mem_total / 1024, \
