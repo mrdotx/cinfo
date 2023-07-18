@@ -35,6 +35,19 @@ Without given settings, start colored version. If the environment variable **NO_
 ***PKGS\****
 : Values to configure package manager counting.
 
+Example values for some distros:
+
+| Distro  | **PKGS_CMD**                                 | **PKGS_DESC**  |
+| :------ | :--------------------------------------- | :--------- |
+| Arch    | ls -p /var/lib/pacman/local \| grep -c / |  [pacman]  |
+| Red Hat | rpm -qa \| wc -l                         |  [rpm]     |
+| Red Hat | dnf list installed \| wc -l              |  [dnf]     |
+| Red Hat | yum list installed \| wc -l              |  [yum]     |
+| Debian  | dpkg -l \| grep -c '^ii'                 |  [apt]     |
+| Gentoo  | qlist -I \| wc -l                        |  [portage] |
+
+The result of the shell command in **PKGS_CMD** must be an integer!
+
 ***CPU\****
 : Values to configure cpu information.
 

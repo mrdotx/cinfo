@@ -48,6 +48,66 @@ and (re-)compiling the source code.
 .TP
 \f[B]\f[BI]PKGS*\f[B]\f[R]
 Values to configure package manager counting.
+.PP
+Example values for some distros:
+.PP
+.TS
+tab(@);
+lw(8.6n) lw(49.1n) lw(12.3n).
+T{
+Distro
+T}@T{
+\f[B]PKGS_CMD\f[R]
+T}@T{
+\f[B]PKGS_DESC\f[R]
+T}
+_
+T{
+Arch
+T}@T{
+ls -p /var/lib/pacman/local | grep -c /
+T}@T{
+[pacman]
+T}
+T{
+Red Hat
+T}@T{
+rpm -qa | wc -l
+T}@T{
+[rpm]
+T}
+T{
+Red Hat
+T}@T{
+dnf list installed | wc -l
+T}@T{
+[dnf]
+T}
+T{
+Red Hat
+T}@T{
+yum list installed | wc -l
+T}@T{
+[yum]
+T}
+T{
+Debian
+T}@T{
+dpkg -l | grep -c `\[ha]ii'
+T}@T{
+[apt]
+T}
+T{
+Gentoo
+T}@T{
+qlist -I | wc -l
+T}@T{
+[portage]
+T}
+.TE
+.PP
+The result of the shell command in \f[B]PKGS_CMD\f[R] must be an
+integer!
 .TP
 \f[B]\f[BI]CPU*\f[B]\f[R]
 Values to configure cpu information.
