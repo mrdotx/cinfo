@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-11-04T08:52:12+0100
+ * date:   2023-07-18T14:03:42+0200
  */
 
 #include <stddef.h>
@@ -84,7 +84,7 @@ void *get_distro() {
             fclose(file);
         }
     } else if ((file = fopen("/etc/os-release", "r"))) {
-        while (2 == fscanf(file, " %14[^=]=%62[^\n]", filter, value)) {
+        while (2 == fscanf(file, " %32[^=]=%62[^\n]", filter, value)) {
             if (0 == strcmp(filter, "PRETTY_NAME")) {
                 file = fopen(CACHE_DISTRO_PATH, "w");
                 remove_char(value, "\"");
