@@ -2,10 +2,23 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2022-10-11T12:42:02+0200
+ * date:   2023-07-18T14:55:23+0200
  */
 
 /* packages */
+/* example values for some distros:
+
+| Distro  | PKGS_CMD                                | PKGS_DESC  |
+| :------ | :-------------------------------------- | :--------- |
+| Arch    | ls -p /var/lib/pacman/local | grep -c / |  [pacman]  |
+| Red Hat | rpm -qa | wc -l                         |  [rpm]     |
+| Red Hat | dnf list installed | wc -l              |  [dnf]     |
+| Red Hat | yum list installed | wc -l              |  [yum]     |
+| Debian  | dpkg -l | grep -c '^ii'                 |  [apt]     |
+| Gentoo  | qlist -I | wc -l                        |  [portage] |
+
+The result of the shell command in PKGS_CMD must be an integer!
+*/
 static const char *PKGS_CMD             = "ls -p /var/lib/pacman/local | grep -c /",
                   *PKGS_DESC            = " [pacman]";
 
@@ -20,8 +33,25 @@ static const char *CPU_TEMP             = "'C",
                   };
 
 /* memory */
+/* values for MEMORY_METHOD:
+
+| Value | Calculation                             | Comparable                  |
+| :---: | :-------------------------------------- | :-------------------------- |
+| 0     | total - available                       | htop = 3.1.0, btop, polybar |
+| 1     | total + shared - free - buffer - cached | htop < 3.1.0, neofetch      |
+| 2     | total - free - buffer - cached          | htop > 3.1.0, free          |
+*/
 static const int MEMORY_METHOD          = 0;
 
+/* values for MEMORY_UNIT:
+
+| Value | Condition         | Description                 |
+| :---- | :---------------- | :-------------------------- |
+| auto  | total => 1024 MiB | Displays result in Gibibyte |
+|       | total < 1024 MiB  | Displays result in Mebibyte |
+| GiB   |                   | Displays result in Gibibyte |
+| MiB   |                   | Displays result in Mebibyte |
+*/
 static const char *MEMORY_UNIT          = "auto",
                   *MEMORY_DIVIDER       = "/";
 
