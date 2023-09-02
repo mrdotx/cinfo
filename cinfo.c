@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2023-07-18T14:03:42+0200
+ * date:   2023-09-02T16:24:48+0200
  */
 
 #include <stddef.h>
@@ -33,7 +33,7 @@ char g_user[50],
      g_shell[65];
 
 void *get_user() {
-    sprintf(g_user, "%s", getenv("USER"));
+    sprintf(g_user, "%49s", getenv("USER"));
 
     g_header_len = update_header_len(g_user, g_header_len);
 
@@ -44,7 +44,7 @@ void *get_host() {
     FILE *file;
 
     if ((file = fopen("/proc/sys/kernel/hostname", "r"))) {
-        if (fscanf(file, "%64s", g_host)) {
+        if (fscanf(file, "%49s", g_host)) {
             fclose(file);
         }
 
