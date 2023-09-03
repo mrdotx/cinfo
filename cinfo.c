@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2023-09-02T16:24:48+0200
+ * date:   2023-09-03T09:24:34+0200
  */
 
 #include <stddef.h>
@@ -34,6 +34,7 @@ char g_user[50],
 
 void *get_user() {
     sprintf(g_user, "%49s", getenv("USER"));
+    remove_char(g_user, " ");
 
     g_header_len = update_header_len(g_user, g_header_len);
 
