@@ -1,30 +1,13 @@
-.ie "\f[CB]x\f[]"x" \{\
-. ftr V B
-. ftr VI BI
-. ftr VB B
-. ftr VBI BI
-.\}
-.el \{\
-. ftr V CR
-. ftr VI CI
-. ftr VB CB
-. ftr VBI CBI
-.\}
 .TH "CINFO" "1" "" "Version-VERSION" "cinfo Manual"
-.hy
 .SH NAME
-.PP
 cinfo - system information utility
 .SH SYNOPSIS
-.PP
 \f[B]cinfo\f[R] [\f[B]-a\f[R]] [\f[B]-c\f[R]] [\f[B]-d\f[R]]
 [\f[B]-i\f[R]]
 .SH DESCRIPTION
-.PP
 \f[B]cinfo\f[R] is a fast and minimal system information tool for
 linux-based operating systems
 .SH OPTIONS
-.PP
 Without given settings, start colored version.
 If the environment variable \f[B]NO_COLOR\f[R] is set, start plain ascii
 version.
@@ -42,7 +25,6 @@ Delete the cached files defined in the config.
 Displays information about execution times of the individual functions
 for optimization and the version number of the tool
 .SH CUSTOMIZATION
-.PP
 \f[B]cinfo\f[R] can be customized by creating/editing a custom config.h
 and (re-)compiling the source code.
 .TP
@@ -228,15 +210,11 @@ Values to configure the cache paths.
 .PD
 \f[B]cinfo\f[R] -i
 .SH BUGS
-.PP
 See GitHub Issues: \f[I]https://github.com/mrdotx/cinfo/issues\f[R]
 .SH AUTHORS
-.PP
 \f[B]cinfo\f[R] was written by mrdotx <\f[I]klassiker\[at]gmx.de\f[R]>
 .SH SEE ALSO
-.PP
 \f[B]htop\f[R](1), \f[B]free\f[R](1), \f[B]neofetch\f[R](1),
 \f[B]polybar\f[R](1)
 .SH LICENSE
-.PP
 See the \f[I]LICENSE.md\f[R] file for the terms of redistribution.
