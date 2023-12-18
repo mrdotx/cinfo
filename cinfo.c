@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2023-09-03T09:24:34+0200
+ * date:   2023-12-18T09:25:45+0100
  */
 
 #include <stddef.h>
@@ -75,7 +75,7 @@ void *get_datetime() {
 }
 
 void *get_distro() {
-    char filter[15],
+    char filter[33],
          value[63];
 
     FILE *file;
