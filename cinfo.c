@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2023-12-18T09:25:45+0100
+ * date:   2024-02-05T09:00:23+0100
  */
 
 #include <stddef.h>
@@ -396,17 +396,17 @@ void *get_mem() {
 }
 
 void *get_uptime() {
-    int sec,
-        day,
+    int day,
         hour,
-        min;
+        min,
+        sec;
 
-    char loadavg[35],
-         *loadavg_split[35],
-         uptime_sec[12],
-         uptime_min[11],
+    char uptime_day[13],
          uptime_hour[11],
-         uptime_day[13];
+         uptime_min[11],
+         uptime_sec[12],
+         loadavg[65],
+         *loadavg_split[10];
 
     FILE *file;
 
@@ -468,24 +468,23 @@ void *get_uptime() {
 }
 
 void *get_shell() {
-    int max_len = sizeof(g_shell);
+    int max_len = sizeof(g_shell)-1;
 
-    char shell[20],
-         shell_out[65];
+    char shell[65];
 
     ssize_t len = readlink(SHELL_PATH, shell, sizeof(shell)-1);
 
-    if (len == -1) {
+    if (-1 == len) {
         sprintf(shell, "LINK ERR");
     }
 
     if (0 != getenv("TERM")) {
-        snprintf(g_shell, max_len, "%s [%s]%s%s [%s]", \
+        snprintf(g_shell, max_len, "%s [%.10s]%s%s [%s]", \
             SHELL_PATH, shell, \
             INFO_DIVIDER, getenv("SHELL"), \
             getenv("TERM"));
     } else {
-        snprintf(g_shell, max_len, "%s [%s]%s%s", \
+        snprintf(g_shell, max_len, "%s [%.10s]%s%s", \
             SHELL_PATH, shell, \
             INFO_DIVIDER, getenv("SHELL"));
     }
