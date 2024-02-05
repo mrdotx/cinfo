@@ -1,32 +1,32 @@
-.TH "CINFO" "1" "" "Version-VERSION" "cinfo Manual"
+.TH "CINFO" "1" "" "Version\-VERSION" "cinfo Manual"
 .SH NAME
-cinfo - system information utility
+cinfo \- system information utility
 .SH SYNOPSIS
-\f[B]cinfo\f[R] [\f[B]-a\f[R]] [\f[B]-c\f[R]] [\f[B]-d\f[R]]
-[\f[B]-i\f[R]]
+\f[B]cinfo\f[R] [\f[B]\-a\f[R]] [\f[B]\-c\f[R]] [\f[B]\-d\f[R]]
+[\f[B]\-i\f[R]]
 .SH DESCRIPTION
 \f[B]cinfo\f[R] is a fast and minimal system information tool for
-linux-based operating systems
+linux\-based operating systems
 .SH OPTIONS
 Without given settings, start colored version.
 If the environment variable \f[B]NO_COLOR\f[R] is set, start plain ascii
 version.
 .TP
-\f[B]-a\f[R]
+\f[B]\-a\f[R]
 Start plain ascii version.
 .TP
-\f[B]-c\f[R]
+\f[B]\-c\f[R]
 Start colored version.
 .TP
-\f[B]-d\f[R]
+\f[B]\-d\f[R]
 Delete the cached files defined in the config.
 .TP
-\f[B]-i\f[R]
+\f[B]\-i\f[R]
 Displays information about execution times of the individual functions
 for optimization and the version number of the tool
 .SH CUSTOMIZATION
 \f[B]cinfo\f[R] can be customized by creating/editing a custom config.h
-and (re-)compiling the source code.
+and (re\-)compiling the source code.
 .TP
 \f[B]\f[BI]PKGS*\f[B]\f[R]
 Values to configure package manager counting.
@@ -47,42 +47,42 @@ _
 T{
 Arch
 T}@T{
-ls -p /var/lib/pacman/local | grep -c /
+ls \-p /var/lib/pacman/local | grep \-c /
 T}@T{
 [pacman]
 T}
 T{
 Red Hat
 T}@T{
-rpm -qa | wc -l
+rpm \-qa | wc \-l
 T}@T{
 [rpm]
 T}
 T{
 Red Hat
 T}@T{
-dnf list installed | wc -l
+dnf list installed | wc \-l
 T}@T{
 [dnf]
 T}
 T{
 Red Hat
 T}@T{
-yum list installed | wc -l
+yum list installed | wc \-l
 T}@T{
 [yum]
 T}
 T{
 Debian
 T}@T{
-dpkg -l | grep -c `\[ha]ii'
+dpkg \-l | grep \-c `\[ha]ii'
 T}@T{
 [apt]
 T}
 T{
 Gentoo
 T}@T{
-qlist -I | wc -l
+qlist \-I | wc \-l
 T}@T{
 [portage]
 T}
@@ -113,21 +113,21 @@ _
 T{
 0
 T}@T{
-total - available
+total \- available
 T}@T{
 htop = 3.1.0, btop, polybar
 T}
 T{
 1
 T}@T{
-total + shared - free - buffer - cached
+total + shared \- free \- buffer \- cached
 T}@T{
 htop < 3.1.0, neofetch
 T}
 T{
 2
 T}@T{
-total - free - buffer - cached
+total \- free \- buffer \- cached
 T}@T{
 htop > 3.1.0, free
 T}
@@ -196,19 +196,19 @@ Values to configure the cache paths.
 .PD 0
 .P
 .PD
-\f[B]cinfo\f[R] -a
+\f[B]cinfo\f[R] \-a
 .PD 0
 .P
 .PD
-\f[B]cinfo\f[R] -c
+\f[B]cinfo\f[R] \-c
 .PD 0
 .P
 .PD
-\f[B]cinfo\f[R] -d
+\f[B]cinfo\f[R] \-d
 .PD 0
 .P
 .PD
-\f[B]cinfo\f[R] -i
+\f[B]cinfo\f[R] \-i
 .SH BUGS
 See GitHub Issues: \f[I]https://github.com/mrdotx/cinfo/issues\f[R]
 .SH AUTHORS
