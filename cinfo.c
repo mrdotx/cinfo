@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2024-02-05T09:00:23+0100
+ * date:   2024-02-06T18:31:32+0100
  */
 
 #include <stddef.h>
@@ -496,17 +496,17 @@ void *get_shell() {
 
 void get_infos(void *print()) {
     const void *routines[] = {
-        get_pkgs,
         get_cpu,
         get_mem,
-        get_uptime,
-        get_datetime,
+        get_user,
         get_host,
+        get_datetime,
+        get_uptime,
         get_distro,
-        get_kernel,
+        get_pkgs,
         get_model,
-        get_shell,
-        get_user
+        get_kernel,
+        get_shell
     };
 
     const int THREADS_NUM = (int)sizeof(routines) / sizeof(routines[0]);
