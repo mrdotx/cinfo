@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2024-02-06T18:31:32+0100
+ * date:   2024-05-02T14:52:33+0200
  */
 
 #include <stddef.h>
@@ -405,7 +405,7 @@ void *get_uptime() {
          uptime_hour[11],
          uptime_min[11],
          uptime_sec[12],
-         loadavg[65],
+         loadavg[130],
          *loadavg_split[10];
 
     FILE *file;
@@ -470,7 +470,7 @@ void *get_uptime() {
 void *get_shell() {
     int max_len = sizeof(g_shell)-1;
 
-    char shell[65];
+    char shell[130];
 
     ssize_t len = readlink(SHELL_PATH, shell, sizeof(shell)-1);
 
