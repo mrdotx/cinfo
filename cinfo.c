@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2024-05-02T17:31:25+0200
+ * date:   2024-05-02T17:59:18+0200
  */
 
 #include <stddef.h>
@@ -75,7 +75,7 @@ void *get_datetime() {
 }
 
 void *get_distro() {
-    char filter[33],
+    char filter[65],
          value[63];
 
     FILE *file;
@@ -194,7 +194,7 @@ void *get_cpu() {
 
     float temp;
 
-    char filter[20],
+    char filter[65],
          value[58],
          temp_path[65],
          temp_name_path[59],
@@ -297,7 +297,7 @@ void *get_mem() {
     float mem_percent,
           swap_percent;
 
-    char filter[40];
+    char filter[65];
 
     FILE *file;
 
