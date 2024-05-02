@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2024-05-02T14:52:33+0200
+ * date:   2024-05-02T17:31:25+0200
  */
 
 #include <stddef.h>
@@ -297,7 +297,7 @@ void *get_mem() {
     float mem_percent,
           swap_percent;
 
-    char filter[20];
+    char filter[40];
 
     FILE *file;
 
