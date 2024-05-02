@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2024-05-02T17:59:18+0200
+ * date:   2024-05-03T00:36:51+0200
  */
 
 #include <stddef.h>
@@ -75,7 +75,7 @@ void *get_datetime() {
 }
 
 void *get_distro() {
-    char filter[65],
+    char filter[33],
          value[63];
 
     FILE *file;
@@ -194,7 +194,7 @@ void *get_cpu() {
 
     float temp;
 
-    char filter[65],
+    char filter[20],
          value[58],
          temp_path[65],
          temp_name_path[59],
@@ -297,7 +297,7 @@ void *get_mem() {
     float mem_percent,
           swap_percent;
 
-    char filter[65];
+    char filter[20];
 
     FILE *file;
 
@@ -401,11 +401,11 @@ void *get_uptime() {
         min,
         sec;
 
-    char uptime_day[13],
-         uptime_hour[11],
-         uptime_min[11],
-         uptime_sec[12],
-         loadavg[130],
+    char uptime_day[13] = {0},
+         uptime_hour[11] = {0},
+         uptime_min[11] = {0},
+         uptime_sec[12] = {0},
+         loadavg[35],
          *loadavg_split[10];
 
     FILE *file;
@@ -470,7 +470,7 @@ void *get_uptime() {
 void *get_shell() {
     int max_len = sizeof(g_shell)-1;
 
-    char shell[130];
+    char shell[20];
 
     ssize_t len = readlink(SHELL_PATH, shell, sizeof(shell)-1);
 
