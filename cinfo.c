@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2024-05-03T00:36:51+0200
+ * date:   2024-05-13T08:07:06+0200
  */
 
 #include <stddef.h>
@@ -61,12 +61,12 @@ void *get_datetime() {
     time(&raw);
     part = localtime(&raw);
 
-    sprintf(g_datetime, "%02d.%02d.%d %02d:%02d:%02d", \
-            part->tm_mday, \
-            part->tm_mon + 1, \
-            part->tm_year + 1900, \
-            part->tm_hour, \
-            part->tm_min, \
+    sprintf(g_datetime, "%02d.%02d.%d %02d:%02d:%02d",
+            part->tm_mday,
+            part->tm_mon + 1,
+            part->tm_year + 1900,
+            part->tm_hour,
+            part->tm_min,
             part->tm_sec);
 
     g_header_len = update_header_len(g_datetime, g_header_len);
@@ -229,9 +229,9 @@ void *get_cpu() {
             if (0 == strcmp(entry->d_name,".") ||
                 0 == strcmp(entry->d_name,"..")) continue;
             else {
-                sprintf(temp_path, \
+                sprintf(temp_path,
                         "%s/%.47s", CPU_TEMP_PATH, entry->d_name);
-                sprintf(temp_name_path, \
+                sprintf(temp_name_path,
                         "%.52s/name", temp_path);
 
                 if ((file = fopen(temp_name_path, "r"))) {
@@ -244,7 +244,7 @@ void *get_cpu() {
                     for (i = 0; i < n; i++) {
                         if (0 == strcmp(CPU_TEMP_INPUT[i], temp_name)) {
                             file = fopen(CACHE_CPU_TEMP_PATH, "w");
-                            fprintf(file, \
+                            fprintf(file,
                                     "%s/%s", temp_path, CPU_TEMP_INPUT_FILE);
                             fclose(file);
                             break;
@@ -327,10 +327,10 @@ void *get_mem() {
         fclose(file);
 
         if (2 == MEMORY_METHOD) {
-            mem_available = (mem_total - mem_free - mem_buffers - mem_cached \
+            mem_available = (mem_total - mem_free - mem_buffers - mem_cached
                     - mem_reclaimable) / 1024;
         } else if (1 == MEMORY_METHOD) {
-            mem_available = (mem_total + mem_shared - mem_free - mem_buffers \
+            mem_available = (mem_total + mem_shared - mem_free - mem_buffers
                     - mem_cached - mem_reclaimable) / 1024;
         } else {
             mem_available = (mem_total - mem_available) / 1024;
@@ -345,46 +345,46 @@ void *get_mem() {
             swap_percent = (float)swap_available / swap_total * 100;
         }
 
-        if (0 == strcmp(MEMORY_UNIT, "MiB") \
+        if (0 == strcmp(MEMORY_UNIT, "MiB")
         || (0 == strcmp(MEMORY_UNIT, "auto") && 1024 > mem_total)) {
             if (0 < swap_total) {
-                sprintf(g_mem, "%d%s%d MiB [%.1f%%]%s%d%s%d MiB [%.1f%%]", \
-                        mem_available, \
-                        MEMORY_DIVIDER, \
-                        mem_total, \
-                        mem_percent, \
-                        INFO_DIVIDER, \
-                        swap_available, \
-                        MEMORY_DIVIDER, \
-                        swap_total, \
+                sprintf(g_mem, "%d%s%d MiB [%.1f%%]%s%d%s%d MiB [%.1f%%]",
+                        mem_available,
+                        MEMORY_DIVIDER,
+                        mem_total,
+                        mem_percent,
+                        INFO_DIVIDER,
+                        swap_available,
+                        MEMORY_DIVIDER,
+                        swap_total,
                         swap_percent);
             } else {
-                sprintf(g_mem, "%d%s%d MiB [%.1f%%]", \
-                        mem_available, \
-                        MEMORY_DIVIDER, \
-                        mem_total, \
+                sprintf(g_mem, "%d%s%d MiB [%.1f%%]",
+                        mem_available,
+                        MEMORY_DIVIDER,
+                        mem_total,
                         mem_percent);
             }
         }
 
-        if (0 == strcmp(MEMORY_UNIT, "GiB") \
+        if (0 == strcmp(MEMORY_UNIT, "GiB")
         || (0 == strcmp(MEMORY_UNIT, "auto") && 1024 <= mem_total)) {
             if (0 < swap_total) {
-                sprintf(g_mem, "%.2f%s%.2f GiB [%.1f%%]%s%.2f%s%.2f GiB [%.1f%%]", \
-                        (float)mem_available / 1024, \
-                        MEMORY_DIVIDER, \
-                        (float)mem_total / 1024, \
-                        mem_percent, \
-                        INFO_DIVIDER, \
-                        (float)swap_available / 1024, \
-                        MEMORY_DIVIDER, \
-                        (float)swap_total / 1024, \
+                sprintf(g_mem, "%.2f%s%.2f GiB [%.1f%%]%s%.2f%s%.2f GiB [%.1f%%]",
+                        (float)mem_available / 1024,
+                        MEMORY_DIVIDER,
+                        (float)mem_total / 1024,
+                        mem_percent,
+                        INFO_DIVIDER,
+                        (float)swap_available / 1024,
+                        MEMORY_DIVIDER,
+                        (float)swap_total / 1024,
                         swap_percent);
             } else {
-                sprintf(g_mem, "%.2f%s%.2f GiB [%.1f%%]", \
-                        (float)mem_available / 1024, \
-                        MEMORY_DIVIDER, \
-                        (float)mem_total / 1024, \
+                sprintf(g_mem, "%.2f%s%.2f GiB [%.1f%%]",
+                        (float)mem_available / 1024,
+                        MEMORY_DIVIDER,
+                        (float)mem_total / 1024,
                         mem_percent);
             }
         }
@@ -421,25 +421,25 @@ void *get_uptime() {
         sec = sec % 60;
 
         if (0 == day && 0 == hour && 0 == min) {
-            sprintf(uptime_sec, "%d second%s", \
-                    sec, \
+            sprintf(uptime_sec, "%d second%s",
+                    sec,
                     1 == sec ? "" : "s");
         } else {
             if (0 < day) {
-                sprintf(uptime_day, "%d day%s%s", \
-                        day, \
-                        1 == day ? "" : "s", \
+                sprintf(uptime_day, "%d day%s%s",
+                        day,
+                        1 == day ? "" : "s",
                         0 < hour || 0 < min ? ", " : "");
             }
             if (0 < hour) {
-                sprintf(uptime_hour, "%d hour%s%s", \
-                        hour, \
-                        1 == hour ? "" : "s", \
+                sprintf(uptime_hour, "%d hour%s%s",
+                        hour,
+                        1 == hour ? "" : "s",
                         0 < min ? ", " : "");
             }
             if (0 < min) {
-                sprintf(uptime_min, "%d minute%s", \
-                        min, \
+                sprintf(uptime_min, "%d minute%s",
+                        min,
                         1 == min ? "" : "s");
             }
         }
@@ -451,14 +451,14 @@ void *get_uptime() {
             fclose(file);
         }
 
-        sprintf(g_uptime, "%s%s%s%s%s%s, %s, %s", \
-                uptime_day, \
-                uptime_hour, \
-                uptime_min, \
-                uptime_sec, \
-                INFO_DIVIDER, \
-                loadavg_split[0], \
-                loadavg_split[1], \
+        sprintf(g_uptime, "%s%s%s%s%s%s, %s, %s",
+                uptime_day,
+                uptime_hour,
+                uptime_min,
+                uptime_sec,
+                INFO_DIVIDER,
+                loadavg_split[0],
+                loadavg_split[1],
                 loadavg_split[2]);
     }
 
@@ -479,13 +479,13 @@ void *get_shell() {
     }
 
     if (0 != getenv("TERM")) {
-        snprintf(g_shell, max_len, "%s [%.10s]%s%s [%s]", \
-            SHELL_PATH, shell, \
-            INFO_DIVIDER, getenv("SHELL"), \
+        snprintf(g_shell, max_len, "%s [%.10s]%s%s [%s]",
+            SHELL_PATH, shell,
+            INFO_DIVIDER, getenv("SHELL"),
             getenv("TERM"));
     } else {
-        snprintf(g_shell, max_len, "%s [%.10s]%s%s", \
-            SHELL_PATH, shell, \
+        snprintf(g_shell, max_len, "%s [%.10s]%s%s",
+            SHELL_PATH, shell,
             INFO_DIVIDER, getenv("SHELL"));
     }
 
@@ -535,8 +535,8 @@ void print_header(const int left_len,
         g_line_len = g_header_len - left_len - 1;
     }
 
-    printf("%s%s%s@%s%s%s", \
-            color_primary, g_user, color_secondary, \
+    printf("%s%s%s@%s%s%s",
+            color_primary, g_user, color_secondary,
             color_primary, g_host, color_secondary);
     printf("%s", set_spacer(" ", g_line_len - g_header_len + left_len + 2));
     printf("%s%s\n", g_datetime, color_table);
@@ -559,7 +559,7 @@ void print_info(const char *label,
         printf("\x1b[1;%dm%s", color_code, COLOR_SYMBOL);
         color_code++;
     } else {
-        printf("%s", set_spacer(" ", COLOR_LEFT_LEN \
+        printf("%s", set_spacer(" ", COLOR_LEFT_LEN
                     - strlen(LABEL_DISTRO) - 1));
     }
 
@@ -638,15 +638,15 @@ void delete_cache() {
 
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
 
-    printf(" [%s]%s%s\n", remove_file(CACHE_DISTRO_PATH), \
+    printf(" [%s]%s%s\n", remove_file(CACHE_DISTRO_PATH),
             ASCII_DIVIDER, CACHE_DISTRO_PATH);
-    printf(" [%s]%s%s\n", remove_file(CACHE_PKGS_PATH), \
+    printf(" [%s]%s%s\n", remove_file(CACHE_PKGS_PATH),
             ASCII_DIVIDER, CACHE_PKGS_PATH);
-    printf(" [%s]%s%s\n", remove_file(CACHE_MODEL_PATH), \
+    printf(" [%s]%s%s\n", remove_file(CACHE_MODEL_PATH),
             ASCII_DIVIDER, CACHE_MODEL_PATH);
-    printf(" [%s]%s%s\n", remove_file(CACHE_CPU_PATH), \
+    printf(" [%s]%s%s\n", remove_file(CACHE_CPU_PATH),
             ASCII_DIVIDER, CACHE_CPU_PATH);
-    printf(" [%s]%s%s\n", remove_file(CACHE_CPU_TEMP_PATH), \
+    printf(" [%s]%s%s\n", remove_file(CACHE_CPU_TEMP_PATH),
             ASCII_DIVIDER, CACHE_CPU_TEMP_PATH);
 
     print_line(line_len, ASCII_LINE, ASCII_DIVIDER_TOP);
