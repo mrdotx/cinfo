@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2023-07-18T14:55:23+0200
+ * date:   2024-05-13T08:12:10+0200
  */
 
 /* packages */
@@ -19,17 +19,17 @@
 
 The result of the shell command in PKGS_CMD must be an integer!
 */
-static const char *PKGS_CMD             = "ls -p /var/lib/pacman/local | grep -c /",
-                  *PKGS_DESC            = " [pacman]";
+static const char *PKGS_CMD               = "ls -p /var/lib/pacman/local | grep -c /",
+                  *PKGS_DESC              = " [pacman]";
 
 /* cpu */
-static const char *CPU_TEMP             = "'C",
-                  *CPU_TEMP_PATH        = "/sys/class/hwmon",
-                  *CPU_TEMP_INPUT_FILE  = "temp1_input",
-                  *CPU_TEMP_INPUT[]     = {
-                                          "k10temp",      // amd
-                                          "coretemp",     // intel
-                                          "cpu_thermal"   // arm
+static const char *CPU_TEMP               = "'C",
+                  *CPU_TEMP_PATH          = "/sys/class/hwmon",
+                  *CPU_TEMP_INPUT_FILE    = "temp1_input",
+                  *CPU_TEMP_INPUT[]       = {
+                                            "k10temp",      // amd
+                                            "coretemp",     // intel
+                                            "cpu_thermal"   // arm
                   };
 
 /* memory */
@@ -41,7 +41,7 @@ static const char *CPU_TEMP             = "'C",
 | 1     | total + shared - free - buffer - cached | htop < 3.1.0, neofetch      |
 | 2     | total - free - buffer - cached          | htop > 3.1.0, free          |
 */
-static const int MEMORY_METHOD          = 0;
+static const int MEMORY_METHOD            = 0;
 
 /* values for MEMORY_UNIT:
 
@@ -52,48 +52,50 @@ static const int MEMORY_METHOD          = 0;
 | GiB   |                   | Displays result in Gibibyte |
 | MiB   |                   | Displays result in Mebibyte |
 */
-static const char *MEMORY_UNIT          = "auto",
-                  *MEMORY_DIVIDER       = "/";
+static const char *MEMORY_UNIT            = "auto",
+                  *MEMORY_DIVIDER         = "/";
 
 /* shell */
-static const char *SHELL_PATH           = "/bin/sh";
+static const char *SHELL_PATH             = "/bin/sh";
 
 /* general */
-static const char *INFO_DIVIDER         = " | ";
+static const char *INFO_DIVIDER           = " | ";
 
 /* labels */
-static const char *LABEL_DISTRO         = " distro",
-                  *LABEL_MODEL          = "  model",
-                  *LABEL_KERNEL         = " kernel",
-                  *LABEL_UPTIME         = " uptime",
-                  *LABEL_PKGS           = "   pkgs",
-                  *LABEL_SHELL          = "  shell",
-                  *LABEL_CPU            = "    cpu",
-                  *LABEL_MEM            = " memory";
+static const char *LABEL_DISTRO           = " distro",
+                  *LABEL_MODEL            = "  model",
+                  *LABEL_KERNEL           = " kernel",
+                  *LABEL_UPTIME           = " uptime",
+                  *LABEL_PKGS             = "   pkgs",
+                  *LABEL_SHELL            = "  shell",
+                  *LABEL_CPU              = "    cpu",
+                  *LABEL_MEM              = " memory";
 
 /* color version */
-static const int COLOR_LEFT_LEN         = 13;
+static const int COLOR_LEFT_LEN           = 13;
 
-static const char *COLOR_LINE           = "─",
-                  *COLOR_DIVIDER_TOP    = "┬",
-                  *COLOR_DIVIDER        = " │ ",
-                  *COLOR_DIVIDER_BOTTOM = "┴",
-                  *COLOR_SYMBOL         = "██",
-                  *COLOR_PRIMARY        = "\x1b[1;37m",
-                  *COLOR_SECONDARY      = "\x1b[0;37m",
-                  *COLOR_TABLE          = "\x1b[1;34m";
+static const char *COLOR_LINE             = "─",
+                  *COLOR_DIVIDER_TOP      = "┬",
+                  *COLOR_DIVIDER          = " │ ",
+                  *COLOR_DIVIDER_BOTTOM   = "┴",
+                  *COLOR_SYMBOL           = "██",
+                  *COLOR_HEADER_PRIMARY   = "\x1b[1;37m",
+                  *COLOR_HEADER_SECONDARY = "\x1b[0;37m",
+                  *COLOR_PRIMARY          = "\x1b[0;37m",
+                  *COLOR_SECONDARY        = "\x1b[1;37m",
+                  *COLOR_TABLE            = "\x1b[1;34m";
 
 /* ascii version */
-static const int ASCII_LEFT_LEN         = 8;
+static const int ASCII_LEFT_LEN           = 8;
 
-static const char *ASCII_LINE           = "-",
-                  *ASCII_DIVIDER_TOP    = "-",
-                  *ASCII_DIVIDER        = " | ",
-                  *ASCII_DIVIDER_BOTTOM = "-";
+static const char *ASCII_LINE             = "-",
+                  *ASCII_DIVIDER_TOP      = "-",
+                  *ASCII_DIVIDER          = " | ",
+                  *ASCII_DIVIDER_BOTTOM   = "-";
 
 /* cache */
-static const char *CACHE_DISTRO_PATH    = "/tmp/distro.cinfo",
-                  *CACHE_PKGS_PATH      = "/tmp/pkgs.cinfo",
-                  *CACHE_MODEL_PATH     = "/tmp/model.cinfo",
-                  *CACHE_CPU_PATH       = "/tmp/cpu.cinfo",
-                  *CACHE_CPU_TEMP_PATH  = "/tmp/cpu_temp_path.cinfo";
+static const char *CACHE_DISTRO_PATH      = "/tmp/distro.cinfo",
+                  *CACHE_PKGS_PATH        = "/tmp/pkgs.cinfo",
+                  *CACHE_MODEL_PATH       = "/tmp/model.cinfo",
+                  *CACHE_CPU_PATH         = "/tmp/cpu.cinfo",
+                  *CACHE_CPU_TEMP_PATH    = "/tmp/cpu_temp_path.cinfo";
