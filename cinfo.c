@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2024-05-13T08:07:06+0200
+ * date:   2024-05-13T08:09:43+0200
  */
 
 #include <stddef.h>
@@ -563,9 +563,9 @@ void print_info(const char *label,
                     - strlen(LABEL_DISTRO) - 1));
     }
 
-    printf("%s%s%s", COLOR_PRIMARY, label, COLOR_TABLE);
+    printf("%s%s%s", COLOR_SECONDARY, label, COLOR_TABLE);
     printf("%s", COLOR_DIVIDER);
-    printf("%s%s%s\n", COLOR_SECONDARY, info, COLOR_TABLE);
+    printf("%s%s%s\n", COLOR_PRIMARY, info, COLOR_TABLE);
 }
 
 void *print_ascii() {
@@ -588,7 +588,8 @@ void *print_ascii() {
 }
 
 void *print_color() {
-    print_header(COLOR_LEFT_LEN, COLOR_PRIMARY, COLOR_SECONDARY, COLOR_TABLE);
+    print_header(COLOR_LEFT_LEN, COLOR_HEADER_PRIMARY,
+                 COLOR_HEADER_SECONDARY, COLOR_TABLE);
 
     print_line(COLOR_LEFT_LEN, COLOR_LINE, COLOR_DIVIDER_TOP);
 
