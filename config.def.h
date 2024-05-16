@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2024-05-13T08:12:10+0200
+ * date:   2024-05-15T18:23:22+0200
  */
 
 /* packages */
@@ -79,11 +79,11 @@ static const char *COLOR_LINE             = "─",
                   *COLOR_DIVIDER          = " │ ",
                   *COLOR_DIVIDER_BOTTOM   = "┴",
                   *COLOR_SYMBOL           = "██",
-                  *COLOR_HEADER_PRIMARY   = "\x1b[1;37m",
-                  *COLOR_HEADER_SECONDARY = "\x1b[0;37m",
-                  *COLOR_PRIMARY          = "\x1b[0;37m",
-                  *COLOR_SECONDARY        = "\x1b[1;37m",
-                  *COLOR_TABLE            = "\x1b[1;34m";
+                  *COLOR_HEADER_PRIMARY   = "\033[1;37m",
+                  *COLOR_HEADER_SECONDARY = "\033[0;37m",
+                  *COLOR_PRIMARY          = "\033[0;37m",
+                  *COLOR_SECONDARY        = "\033[1;37m",
+                  *COLOR_TABLE            = "\033[1;34m";
 
 /* ascii version */
 static const int ASCII_LEFT_LEN           = 8;

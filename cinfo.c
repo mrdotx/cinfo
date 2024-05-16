@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2024-05-13T08:09:43+0200
+ * date:   2024-05-15T18:23:48+0200
  */
 
 #include <stddef.h>
@@ -555,8 +555,8 @@ void print_info(const char *label,
     static int color_code = 30;
 
     if (37 >= color_code) {
-        printf(" \x1b[0;%dm%s", color_code, COLOR_SYMBOL);
-        printf("\x1b[1;%dm%s", color_code, COLOR_SYMBOL);
+        printf(" \033[0;%dm%s", color_code, COLOR_SYMBOL);
+        printf("\033[1;%dm%s", color_code, COLOR_SYMBOL);
         color_code++;
     } else {
         printf("%s", set_spacer(" ", COLOR_LEFT_LEN
@@ -604,7 +604,7 @@ void *print_color() {
 
     print_line(COLOR_LEFT_LEN, COLOR_LINE, COLOR_DIVIDER_BOTTOM);
 
-    printf("\x1b[0m");
+    printf("\033[0m");
     return NULL;
 }
 
