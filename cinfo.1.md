@@ -56,11 +56,12 @@ The result of the shell command in **PKGS_CMD** must be an integer!
 
 **MEMORY_METHOD**
 
-| Value | Calculation                             | Comparable                  |
-| :---: | :-------------------------------------- | :-------------------------- |
-| 0     | total - available                       | htop = 3.1.0, btop, polybar |
-| 1     | total + shared - free - buffer - cached | htop < 3.1.0, neofetch      |
-| 2     | total - free - buffer - cached          | htop > 3.1.0, free          |
+| Value | Calculation                             | Comparable                    |
+| :---: | :-------------------------------------- | :---------------------------- |
+| 0     | total - available                       | btop, polybar, free, neofetch |
+| 1     | total + shared - free - buffer - cached | htop                          |
+
+Since Linux 3.14, *MemAvailable* (method 0) is the preferred choice.
 
 **MEMORY_UNIT**
 

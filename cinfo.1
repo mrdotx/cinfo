@@ -101,7 +101,7 @@ Values to configure memory information.
 .PP
 .TS
 tab(@);
-cw(4.9n) lw(38.5n) lw(26.6n).
+cw(4.8n) lw(37.4n) lw(27.8n).
 T{
 Value
 T}@T{
@@ -115,23 +115,19 @@ T{
 T}@T{
 total \- available
 T}@T{
-htop = 3.1.0, btop, polybar
+btop, polybar, free, neofetch
 T}
 T{
 1
 T}@T{
 total + shared \- free \- buffer \- cached
 T}@T{
-htop < 3.1.0, neofetch
-T}
-T{
-2
-T}@T{
-total \- free \- buffer \- cached
-T}@T{
-htop > 3.1.0, free
+htop
 T}
 .TE
+.PP
+Since Linux 3.14, \f[I]MemAvailable\f[R] (method 0) is the preferred
+choice.
 .PP
 \f[B]MEMORY_UNIT\f[R]
 .PP

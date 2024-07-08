@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2024-05-15T18:23:22+0200
+ * date:   2024-07-08T08:20:02+0200
  */
 
 /* packages */
@@ -35,11 +35,12 @@ static const char *CPU_TEMP               = "'C",
 /* memory */
 /* values for MEMORY_METHOD:
 
-| Value | Calculation                             | Comparable                  |
-| :---: | :-------------------------------------- | :-------------------------- |
-| 0     | total - available                       | htop = 3.1.0, btop, polybar |
-| 1     | total + shared - free - buffer - cached | htop < 3.1.0, neofetch      |
-| 2     | total - free - buffer - cached          | htop > 3.1.0, free          |
+| Value | Calculation                             | Comparable                    |
+| :---: | :-------------------------------------- | :---------------------------- |
+| 0     | total - available                       | btop, polybar, free, neofetch |
+| 1     | total + shared - free - buffer - cached | htop                          |
+
+Since Linux 3.14, MemAvailable (method 0) is the preferred choice.
 */
 static const int MEMORY_METHOD            = 0;
 
