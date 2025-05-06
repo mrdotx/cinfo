@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2025-05-06T05:49:44+0200
+ * date:   2025-05-06T06:33:53+0200
  */
 
 #include <stddef.h>
@@ -467,7 +467,7 @@ void *get_uptime() {
 void *get_shell() {
     int max_len = sizeof(g_shell)-1;
 
-    char shell[10];
+    char shell[10] = {0};
 
     ssize_t len = readlink(SHELL_PATH, shell, sizeof(shell)-1);
 
