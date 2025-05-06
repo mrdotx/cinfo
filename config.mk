@@ -1,11 +1,11 @@
 # path:   /home/klassiker/.local/share/repos/cinfo/config.mk
 # author: klassiker [mrdotx]
 # github: https://github.com/mrdotx/cinfo
-# date:   2025-05-06T05:50:08+0200
+# date:   2025-05-06T07:14:27+0200
 
 # tool info
 NAME = cinfo
-VERSION = 0.5.11
+VERSION = 0.5.12
 
 # paths
 PREFIX ?= /usr/local
