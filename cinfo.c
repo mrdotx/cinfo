@@ -2,7 +2,7 @@
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * github: https://github.com/mrdotx/cinfo
- * date:   2024-07-08T08:19:23+0200
+ * date:   2025-05-06T05:49:44+0200
  */
 
 #include <stddef.h>
@@ -250,11 +250,11 @@ void *get_cpu() {
                             break;
                         }
                     }
+                }
 
-                    if ((file != fopen(CACHE_CPU_TEMP_PATH, "r"))) {
-                        file = fopen(CACHE_CPU_TEMP_PATH, "w");
-                        fclose(file);
-                    }
+                if ((file != fopen(CACHE_CPU_TEMP_PATH, "r"))) {
+                    file = fopen(CACHE_CPU_TEMP_PATH, "w");
+                    fclose(file);
                 }
             }
         }
@@ -467,7 +467,7 @@ void *get_uptime() {
 void *get_shell() {
     int max_len = sizeof(g_shell)-1;
 
-    char shell[20];
+    char shell[10];
 
     ssize_t len = readlink(SHELL_PATH, shell, sizeof(shell)-1);
 
@@ -476,12 +476,12 @@ void *get_shell() {
     }
 
     if (0 != getenv("TERM")) {
-        snprintf(g_shell, max_len, "%s [%.10s]%s%s [%s]",
+        snprintf(g_shell, max_len, "%s [%.9s]%s%s [%s]",
             SHELL_PATH, shell,
             INFO_DIVIDER, getenv("SHELL"),
             getenv("TERM"));
     } else {
-        snprintf(g_shell, max_len, "%s [%.10s]%s%s",
+        snprintf(g_shell, max_len, "%s [%.9s]%s%s",
             SHELL_PATH, shell,
             INFO_DIVIDER, getenv("SHELL"));
     }
