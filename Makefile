@@ -1,7 +1,7 @@
 # path:   /home/klassiker/.local/share/repos/cinfo/Makefile
 # author: klassiker [mrdotx]
 # github: https://github.com/mrdotx/cinfo
-# date:   2022-10-14T18:50:02+0200
+# date:   2025-07-10T05:39:41+0200
 
 .POSIX:
 
@@ -72,7 +72,7 @@ uninstall:
 	@rm -f $(DESTDIR)$(MANDIR)/man1/$(NAME).1
 
 clean:
-	@printf "$(NAME) -> clean build directory:\n"
+	@printf "$(NAME) -> clean up build directory:\n"
 	@printf "  $(NAME)-$(VERSION).tar.gz\n"
 	@rm -f $(NAME)-$(VERSION).tar.gz
 	@printf "  $(NAME)\n"
