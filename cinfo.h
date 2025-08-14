@@ -1,8 +1,8 @@
 /*
  * path:   /home/klassiker/.local/share/repos/cinfo/cinfo.h
  * author: klassiker [mrdotx]
- * github: https://github.com/mrdotx/cinfo
- * date:   2022-07-15T11:48:58+0200
+ * url:    https://github.com/mrdotx/cinfo
+ * date:   2025-08-14T03:54:00+0200
  */
 
 void *get_user();

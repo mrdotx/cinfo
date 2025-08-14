@@ -1,7 +1,7 @@
 # path:   /home/klassiker/.local/share/repos/cinfo/config.mk
 # author: klassiker [mrdotx]
-# github: https://github.com/mrdotx/cinfo
-# date:   2025-05-06T07:14:27+0200
+# url:    https://github.com/mrdotx/cinfo
+# date:   2025-08-14T03:54:11+0200
 
 # tool info
 NAME = cinfo
