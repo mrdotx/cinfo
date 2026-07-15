@@ -1,7 +1,7 @@
-# path:   /home/klassiker/.local/share/repos/cinfo/Makefile
+# path:   /home/klassiker/Projects/repos/cinfo/Makefile
 # author: klassiker [mrdotx]
 # url:    https://github.com/mrdotx/cinfo
-# date:   2025-08-14T03:54:16+0200
+# date:   2026-07-15T03:27:35+0200
 
 .POSIX:
 

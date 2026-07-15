@@ -1,8 +1,8 @@
 /*
- * path:   /home/klassiker/.local/share/repos/cinfo/util.h
+ * path:   /home/klassiker/Projects/repos/cinfo/util.h
  * author: klassiker [mrdotx]
  * url:    https://github.com/mrdotx/cinfo
- * date:   2025-08-14T03:54:28+0200
+ * date:   2026-07-15T03:27:47+0200
  */
 
 void split_string(char* input, char** output, char* delimiter);
