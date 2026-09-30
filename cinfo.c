@@ -2,7 +2,7 @@
  * path:   /home/klassiker/Projects/repos/cinfo/cinfo.c
  * author: klassiker [mrdotx]
  * url:    https://github.com/mrdotx/cinfo
- * date:   2026-07-15T03:26:29+0200
+ * date:   2026-09-30T05:29:48+0200
  */
 
 #include <stddef.h>
@@ -345,44 +345,56 @@ void *get_mem() {
         if (0 == strcmp(MEMORY_UNIT, "MiB")
         || (0 == strcmp(MEMORY_UNIT, "auto") && 1024 > mem_total)) {
             if (0 < swap_total) {
-                sprintf(g_mem, "%d%s%d MiB [%.1f%%]%s%d%s%d MiB [%.1f%%]",
+                sprintf(g_mem, "%d%s%d%sMiB [%.1f%s]%s%d%s%d%sMiB [%.1f%s]",
                         mem_available,
                         MEMORY_DIVIDER,
                         mem_total,
+                        MEMORY_UNIT_DIVIDER,
                         mem_percent,
+                        MEMORY_PERCENT,
                         INFO_DIVIDER,
                         swap_available,
                         MEMORY_DIVIDER,
                         swap_total,
-                        swap_percent);
+                        MEMORY_UNIT_DIVIDER,
+                        swap_percent,
+                        MEMORY_PERCENT);
             } else {
-                sprintf(g_mem, "%d%s%d MiB [%.1f%%]",
+                sprintf(g_mem, "%d%s%d%sMiB [%.1f%s]",
                         mem_available,
                         MEMORY_DIVIDER,
                         mem_total,
-                        mem_percent);
+                        MEMORY_UNIT_DIVIDER,
+                        mem_percent,
+                        MEMORY_PERCENT);
             }
         }
 
         if (0 == strcmp(MEMORY_UNIT, "GiB")
         || (0 == strcmp(MEMORY_UNIT, "auto") && 1024 <= mem_total)) {
             if (0 < swap_total) {
-                sprintf(g_mem, "%.2f%s%.2f GiB [%.1f%%]%s%.2f%s%.2f GiB [%.1f%%]",
+                sprintf(g_mem, "%.2f%s%.2f%sGiB [%.1f%s]%s%.2f%s%.2f%sGiB [%.1f%s]",
                         (float)mem_available / 1024,
                         MEMORY_DIVIDER,
                         (float)mem_total / 1024,
+                        MEMORY_UNIT_DIVIDER,
                         mem_percent,
+                        MEMORY_PERCENT,
                         INFO_DIVIDER,
                         (float)swap_available / 1024,
                         MEMORY_DIVIDER,
                         (float)swap_total / 1024,
-                        swap_percent);
+                        MEMORY_UNIT_DIVIDER,
+                        swap_percent,
+                        MEMORY_PERCENT);
             } else {
-                sprintf(g_mem, "%.2f%s%.2f GiB [%.1f%%]",
+                sprintf(g_mem, "%.2f%s%.2f%sGiB [%.1f%s]",
                         (float)mem_available / 1024,
                         MEMORY_DIVIDER,
                         (float)mem_total / 1024,
-                        mem_percent);
+                        MEMORY_UNIT_DIVIDER,
+                        mem_percent,
+                        MEMORY_PERCENT);
             }
         }
     }

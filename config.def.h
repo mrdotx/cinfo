@@ -2,7 +2,7 @@
  * path:   /home/klassiker/Projects/repos/cinfo/config.def.h
  * author: klassiker [mrdotx]
  * url:    https://github.com/mrdotx/cinfo
- * date:   2026-07-15T03:26:40+0200
+ * date:   2026-09-30T05:29:11+0200
  */
 
 /* packages */
@@ -54,7 +54,9 @@ static const int MEMORY_METHOD            = 0;
 | MiB   |                   | Displays result in Mebibyte |
 */
 static const char *MEMORY_UNIT            = "auto",
-                  *MEMORY_DIVIDER         = "/";
+                  *MEMORY_DIVIDER         = "/",
+                  *MEMORY_UNIT_DIVIDER    = " ",
+                  *MEMORY_PERCENT         = "%";
 
 /* shell */
 static const char *SHELL_PATH             = "/bin/sh";
